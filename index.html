@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROBOTIX // Advanced Robotics & Cybernetics Engineering Platform</title>
+  <meta name="description" content="A futuristic, interactive 3D learning platform dedicated to robotics, cybernetics, kinematics, actuators, and digital electronics for engineering students." />
+
+  <!-- Google Fonts: Orbitron (Headings), Inter (Body), Fira Code (Formulas & Telemetry) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- CDN Dependencies: Three.js, GSAP + ScrollTrigger, Lenis Smooth Scroll, Confetti -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="bg-dark text-slate-100 font-inter antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Custom Glowing Cybernetic Cursor -->
+  <div id="cursor-dot" class="cursor-dot"></div>
+  <div id="cursor-ring" class="cursor-ring"></div>
+
+  <!-- Ambient Sound / Audio Mute Toggle (Synthesizes futuristic Sci-Fi UI sounds) -->
+  <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Toggle Sound Effects" title="Toggle Sci-Fi UI Audio">
+    <svg id="audio-icon-on" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    </svg>
+    <svg id="audio-icon-off" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+    <span class="audio-label text-xs font-mono">SFX: OFF</span>
+  </button>
+
+  <!-- Preloader Screen -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-logo">
+        <span class="logo-bracket">[</span>
+        <span class="logo-core">ROBOTIX</span>
+        <span class="logo-bracket">]</span>
+      </div>
+      <div class="preloader-title font-orbitron">SYSTEM INITIALIZATION</div>
+      <div class="preloader-bar-wrap">
+        <div id="preloader-bar" class="preloader-bar"></div>
+      </div>
+      <div class="preloader-meta">
+        <span id="preloader-status" class="font-mono text-cyan">Booting robotics system...</span>
+        <span id="preloader-pct" class="font-mono text-cyan">0%</span>
+      </div>
+      <div id="preloader-logs" class="preloader-logs font-mono">
+        <div>> Mounting 6-DOF Kinematics Engine...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress" class="scroll-progress"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header id="main-nav" class="navbar-fixed">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand" aria-label="ROBOTIX Homepage">
+        <div class="brand-hex">
+          <span class="hex-glow"></span>
+          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ENGINEERING LAB</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <nav class="nav-links font-orbitron hidden lg:flex">
+        <a href="#what-is-robotics" class="nav-item">Overview</a>
+        <a href="#components" class="nav-item">Components</a>
+        <a href="#types" class="nav-item">Robot Types</a>
+        <a href="#sensors-actuators" class="nav-item">Sensors & Motors</a>
+        <a href="#kinematics" class="nav-item">Kinematics</a>
+        <a href="#electronics" class="nav-item">Electronics</a>
+        <a href="#applications" class="nav-item">Applications</a>
+        <a href="#quiz" class="nav-item">Quiz</a>
+        <a href="#resources" class="nav-item">Resources</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Theme Toggle (Dark Sci-Fi / High-Contrast Matrix) -->
+        <button id="theme-toggle-btn" class="theme-toggle" aria-label="Toggle Color Theme" title="Toggle Theme">
+          <span class="theme-mode-text font-mono text-xs">CYBER</span>
+        </button>
+
+        <!-- CTA Launch Simulator -->
+        <a href="#kinematics" class="nav-cta-btn font-orbitron">
+          <span>LAB DEMO</span>
+          <div class="btn-flare"></div>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-toggle" class="mobile-toggle lg:hidden" aria-label="Toggle navigation menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobile-drawer" class="mobile-drawer lg:hidden">
+      <div class="mobile-nav-inner font-orbitron">
+        <a href="#what-is-robotics" class="mobile-nav-item">01 // Overview & History</a>
+        <a href="#components" class="mobile-nav-item">02 // Robot Anatomy</a>
+        <a href="#types" class="mobile-nav-item">03 // Robot Taxonomies</a>
+        <a href="#sensors-actuators" class="mobile-nav-item">04 // Sensors & Actuators</a>
+        <a href="#kinematics" class="mobile-nav-item">05 // Kinematics Simulator</a>
+        <a href="#electronics" class="mobile-nav-item">06 // Digital Electronics & PWM</a>
+        <a href="#applications" class="mobile-nav-item">07 // Real-World Applications</a>
+        <a href="#quiz" class="mobile-nav-item">08 // Knowledge Assessment</a>
+        <a href="#resources" class="mobile-nav-item">09 // Textbooks & Resources</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================== HERO SECTION ======================== -->
+  <section id="hero" class="hero-section relative">
+    <!-- 3D Three.js WebGL Canvas -->
+    <div id="hero-canvas-container" class="hero-canvas-container">
+      <canvas id="hero-canvas"></canvas>
+    </div>
+
+    <!-- Cyberpunk Grid Overlay -->
+    <div class="cyber-grid-overlay"></div>
+
+    <!-- Hero Content Overlay -->
+    <div class="hero-content-wrap">
+      <div class="hero-badge font-mono">
+        <span class="badge-pulse"></span>
+        <span class="text-cyan">AUTONOMOUS CYBERNETICS // v4.9</span>
+        <span class="badge-sep">|</span>
+        <span class="text-muted">6-DOF KINEMATICS ACTIVE</span>
+      </div>
+
+      <h1 class="hero-title font-orbitron">
+        <span class="glitch-text" data-text="EXPLORE THE WORLD OF ROBOTICS">EXPLORE THE WORLD OF ROBOTICS</span>
+      </h1>
+
+      <p class="hero-subtitle font-inter">
+        Master the engineering science of intelligent machines — from mechanical linkages and inverse kinematics to closed-loop PID actuators, sensor fusion, and digital electronics.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="#what-is-robotics" class="btn-glow-primary font-orbitron">
+          <span>Start Learning</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <a href="#kinematics" class="btn-outline-cyan font-orbitron">
+          <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+          </svg>
+          <span>Interactive 2D/3D Lab</span>
+        </a>
+      </div>
+
+      <!-- Telemetry Status Bar -->
+      <div class="hero-telemetry font-mono">
+        <div class="telem-item">
+          <span class="telem-label">MANIPULATOR DOF:</span>
+          <span class="telem-val text-cyan">6-AXIS ARTICULATED</span>
+        </div>
+        <div class="telem-item">
+          <span class="telem-label">CONTROL LOOP:</span>
+          <span class="telem-val text-purple">1000 HZ CLOSED-LOOP</span>
+        </div>
+        <div class="telem-item">
+          <span class="telem-label">STATUS:</span>
+          <span class="telem-val text-green">NOMINAL 60 FPS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mouse Scroll Indicator -->
+    <div class="scroll-down-indicator font-mono">
+      <span class="scroll-text">SCROLL TO DISCOVER</span>
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 1: WHAT IS ROBOTICS ======================== -->
+  <section id="what-is-robotics" class="content-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">01 // FOUNDATIONS</div>
+        <h2 class="section-title font-orbitron">What is Robotics?</h2>
+        <p class="section-desc font-inter">
+          Robotics is the multidisciplinary branch of engineering and computer science dedicated to the conception, design, manufacture, and operational intelligence of mechanical agents capable of interacting with the physical world.
+        </p>
+      </div>
+
+      <!-- Three Pillars Grid -->
+      <div class="pillars-grid">
+        <div class="pillar-card glass-panel">
+          <div class="pillar-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h3 class="pillar-title font-orbitron">Mechanical Body</h3>
+          <p class="pillar-text">
+            Chassis, linkages, gear trains, harmonic drives, and end-effectors engineered with rigid materials, kinematics synthesis, and structural stress analysis.
+          </p>
+          <div class="pillar-badge font-mono">PHYSICAL EMBODIMENT</div>
+        </div>
+
+        <div class="pillar-card glass-panel">
+          <div class="pillar-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7c4dff" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+          </div>
+          <h3 class="pillar-title font-orbitron">Electrical Subsystems</h3>
+          <p class="pillar-text">
+            Power distribution, motor drivers (H-Bridges), sensor transducers (LiDAR, IMUs), power converters, and high-speed communication buses (CAN, SPI).
+          </p>
+          <div class="pillar-badge font-mono">ENERGY & SIGNALS</div>
+        </div>
+
+        <div class="pillar-card glass-panel">
+          <div class="pillar-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+              <line x1="9" y1="1" x2="9" y2="4"></line>
+              <line x1="15" y1="1" x2="15" y2="4"></line>
+              <line x1="9" y1="20" x2="9" y2="23"></line>
+              <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
+            </svg>
+          </div>
+          <h3 class="pillar-title font-orbitron">Computational Intelligence</h3>
+          <p class="pillar-text">
+            The classic "Sense-Plan-Act" cycle implemented across RTOS microcontrollers and GPU edge computers running SLAM, path planning, and neural policies.
+          </p>
+          <div class="pillar-badge font-mono">AUTONOMY & CONTROL</div>
+        </div>
+      </div>
+
+      <!-- Sense-Plan-Act Interactive Diagram -->
+      <div class="glass-panel spa-container my-12 p-8">
+        <div class="spa-header text-center">
+          <div class="font-mono text-cyan text-xs">CYBERNETIC FEEDBACK ARCHITECTURE</div>
+          <h3 class="font-orbitron text-2xl mt-1">The Sense &mdash; Plan &mdash; Act Paradigm</h3>
+        </div>
+        <div class="spa-flow mt-8">
+          <div class="spa-step" id="spa-sense">
+            <div class="spa-step-circle font-orbitron">1</div>
+            <div class="spa-step-label font-orbitron">SENSE</div>
+            <div class="spa-step-desc font-inter">Perceive external environment via LiDAR, IMU, cameras, and encoders.</div>
+          </div>
+          <div class="spa-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+          <div class="spa-step" id="spa-plan">
+            <div class="spa-step-circle font-orbitron">2</div>
+            <div class="spa-step-label font-orbitron">PLAN</div>
+            <div class="spa-step-desc font-inter">Compute trajectory, resolve collision constraints, solve Inverse Kinematics.</div>
+          </div>
+          <div class="spa-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+          <div class="spa-step" id="spa-act">
+            <div class="spa-step-circle font-orbitron">3</div>
+            <div class="spa-step-label font-orbitron">ACT</div>
+            <div class="spa-step-desc font-inter">Send PWM voltage pulses to motors and servo drives to effect motion.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historical Timeline -->
+      <div class="timeline-wrapper mt-16">
+        <div class="text-center mb-10">
+          <div class="font-mono text-purple text-xs">CHRONICLES OF AUTOMATION</div>
+          <h3 class="font-orbitron text-3xl">Pioneering Milestones</h3>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-line"></div>
+
+          <!-- Item 1: 1920 -->
+          <div class="timeline-item" data-year="1920">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content glass-panel">
+              <span class="timeline-year font-orbitron text-cyan">1920</span>
+              <h4 class="font-orbitron text-lg text-white">Etymology of the "Robot"</h4>
+              <p class="font-inter text-slate-300 text-sm mt-2">
+                Czech playwright Karel Čapek premieres <em>R.U.R.</em> (Rossum's Universal Robots), introducing the word "robot" from the Slavic <em>robota</em>, meaning forced labor or servitude.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 2: 1954 -->
+          <div class="timeline-item" data-year="1954">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content glass-panel">
+              <span class="timeline-year font-orbitron text-purple">1954</span>
+              <h4 class="font-orbitron text-lg text-white">Unimate: The First Industrial Arm</h4>
+              <p class="font-inter text-slate-300 text-sm mt-2">
+                George Devol and Joseph Engelberger patent and build the <strong>Unimate</strong>, installed on a General Motors diecasting line in 1961 to lift scorching hot metal parts safely.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 3: 1969 -->
+          <div class="timeline-item" data-year="1969">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content glass-panel">
+              <span class="timeline-year font-orbitron text-cyan">1969</span>
+              <h4 class="font-orbitron text-lg text-white">The Stanford Arm (Scheinman)</h4>
+              <p class="font-inter text-slate-300 text-sm mt-2">
+                Victor Scheinman invents the Stanford Arm: the first computer-controlled, 6-axis, all-electric robot arm, establishing the kinematics basis for all modern industrial manipulators.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 4: 1997 -->
+          <div class="timeline-item" data-year="1997">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content glass-panel">
+              <span class="timeline-year font-orbitron text-green">1997</span>
+              <h4 class="font-orbitron text-lg text-white">Sojourner on Mars</h4>
+              <p class="font-inter text-slate-300 text-sm mt-2">
+                NASA deploys <strong>Sojourner</strong> on Mars via Mars Pathfinder. With a rocker-bogie suspension and semi-autonomous laser hazard avoidance, planetary rover exploration begins.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 5: 2000 -->
+          <div class="timeline-item" data-year="2000">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content glass-panel">
+              <span class="timeline-year font-orbitron text-purple">2000</span>
+              <h4 class="font-orbitron text-lg text-white">Honda ASIMO & da Vinci Surgery</h4>
+              <p class="font-inter text-slate-300 text-sm mt-2">
+                Honda reveals ASIMO demonstrating dynamic bipedal walking balance, while Intuitive Surgical earns FDA approval for the <strong>da Vinci Surgical System</strong>, pioneering robotic teleoperation.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 6: 2020s -->
+          <div class="timeline-item" data-year="2024+">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content glass-panel">
+              <span class="timeline-year font-orbitron text-cyan">2024+</span>
+              <h4 class="font-orbitron text-lg text-white">Embodied AI & Humanoids</h4>
+              <p class="font-inter text-slate-300 text-sm mt-2">
+                Integration of Vision-Language-Action (VLA) foundation models into agile humanoids (Boston Dynamics Atlas, Figure 01, Tesla Optimus) transforming unstructured real-world dexterity.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 2: COMPONENTS OF A ROBOT ======================== -->
+  <section id="components" class="content-section bg-darker relative">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">02 // ANATOMY</div>
+        <h2 class="section-title font-orbitron">Components of a Robot</h2>
+        <p class="section-desc font-inter">
+          Click or hover on any subsystem below to inspect its role, electrical specifications, and engineering trade-offs in an autonomous robot architecture.
+        </p>
+      </div>
+
+      <div class="components-layout">
+        <!-- 3D Interactive Robot Model Canvas / Hotspot Viewer -->
+        <div class="components-visual glass-panel relative">
+          <div class="visual-header">
+            <span class="font-mono text-xs text-cyan">INTERACTIVE 3D CAD VISUALIZER</span>
+            <span id="active-component-tag" class="font-mono text-xs text-purple">ACTIVE: SENSORS</span>
+          </div>
+
+          <!-- Subsystem Canvas -->
+          <div id="subsystem-canvas-container" class="subsystem-canvas-container">
+            <canvas id="subsystem-canvas"></canvas>
+          </div>
+
+          <!-- 3D Hotspot Buttons for mobile / direct selection -->
+          <div class="hotspot-controls">
+            <button class="hotspot-btn active" data-part="sensors">01. Sensors</button>
+            <button class="hotspot-btn" data-part="actuators">02. Actuators</button>
+            <button class="hotspot-btn" data-part="controller">03. Controller</button>
+            <button class="hotspot-btn" data-part="power">04. Power Supply</button>
+            <button class="hotspot-btn" data-part="effector">05. End Effector</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Spec Card -->
+        <div class="components-info glass-panel">
+          <div class="info-badge font-mono" id="comp-category">SUBSYSTEM DOSSIER</div>
+          <h3 class="info-title font-orbitron" id="comp-name">Sensors: The Senses</h3>
+          <p class="info-desc font-inter" id="comp-desc">
+            Transducers that convert physical environmental phenomena into calibrated digital or analog electrical signals for computational perception.
+          </p>
+
+          <div class="info-specs-grid font-mono">
+            <div class="spec-cell">
+              <span class="spec-label">TYPICAL HARDWARE</span>
+              <span class="spec-value" id="comp-hw">LiDAR, Stereo Camera, IMU, Ultrasonic</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-label">SIGNAL PROTOCOLS</span>
+              <span class="spec-value" id="comp-bus">I2C, SPI, CAN, Ethernet (GigE)</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-label">REFRESH FREQUENCY</span>
+              <span class="spec-value" id="comp-freq">10 Hz – 1000 Hz</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-label">CRITICAL METRIC</span>
+              <span class="spec-value" id="comp-metric">Signal-to-Noise Ratio & Latency</span>
+            </div>
+          </div>
+
+          <!-- Interactive Deep Dive Box -->
+          <div class="comp-deep-dive mt-6 p-4 rounded-lg bg-black/40 border border-slate-800">
+            <div class="font-mono text-xs text-cyan flex items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>ENGINEERING PRINCIPLE</span>
+            </div>
+            <p class="text-xs font-inter text-slate-300 mt-2 leading-relaxed" id="comp-principle">
+              Sensor fusion algorithms (Extended Kalman Filters, Particle Filters) combine noisy high-frequency IMU telemetry with lower-frequency absolute positional fixes (GPS/LiDAR) to eliminate drift.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 3: TYPES OF ROBOTS ======================== -->
+  <section id="types" class="content-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">03 // TAXONOMY</div>
+        <h2 class="section-title font-orbitron">Classification of Robotics</h2>
+        <p class="section-desc font-inter">
+          Modern robotics spans diverse mechanical topologies customized for specific environments, payload capacities, kinematic envelopes, and operating regimes. Hover or click cards to flip.
+        </p>
+      </div>
+
+      <!-- 3D Perspective Tilt Cards Grid -->
+      <div class="cards-grid-3d">
+        <!-- Card 1: Industrial Robots -->
+        <div class="tilt-card" data-tilt>
+          <div class="card-inner">
+            <div class="card-face card-front glass-panel">
+              <div class="card-tag font-mono text-cyan">MANIPULATION</div>
+              <div class="card-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
+              <h3 class="card-title font-orbitron">Industrial Robots</h3>
+              <p class="card-excerpt font-inter">
+                High-speed articulated arms, SCARA, and Delta manipulators delivering repeatability down to ±0.01 mm in high-throughput assembly lines.
+              </p>
+              <div class="card-specs font-mono">
+                <span>DOF: 4 &ndash; 7 AXIS</span>
+                <span>PAYLOAD: UP TO 2300 KG</span>
+              </div>
+              <div class="card-flip-prompt font-mono text-cyan">CLICK FOR SPECS &rarr;</div>
+            </div>
+            <div class="card-face card-back glass-panel">
+              <h4 class="font-orbitron text-cyan text-sm mb-2">CONTROL & SPECS</h4>
+              <ul class="card-specs-list font-inter text-xs">
+                <li><strong>Kinematics:</strong> Denavit-Hartenberg (D-H) parameter modeling.</li>
+                <li><strong>Drive System:</strong> Harmonic Drive reducers + AC brushless servomotors.</li>
+                <li><strong>Primary Roles:</strong> Spot welding, painting, high-speed pick-and-place, CNC tending.</li>
+              </ul>
+              <div class="mt-4 pt-3 border-t border-slate-700 text-xs font-mono text-muted">
+                TOP MANUFACTURERS: FANUC, KUKA, ABB, Yaskawa
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Mobile Autonomous Robots (AMR/AGV) -->
+        <div class="tilt-card" data-tilt>
+          <div class="card-inner">
+            <div class="card-face card-front glass-panel">
+              <div class="card-tag font-mono text-purple">NAVIGATION</div>
+              <div class="card-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#7c4dff" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <line x1="12" y1="2" x2="12" y2="5"></line>
+                  <line x1="12" y1="19" x2="12" y2="22"></line>
+                </svg>
+              </div>
+              <h3 class="card-title font-orbitron">Mobile AMRs & AGVs</h3>
+              <p class="card-excerpt font-inter">
+                Wheeled and tracked platforms employing 2D/3D LiDAR SLAM, optical flow, and obstacle avoidance for intra-warehouse logistics.
+              </p>
+              <div class="card-specs font-mono">
+                <span>STEERING: DIFFERENTIAL / MECANUM</span>
+                <span>LOCALIZATION: SLAM / UWB</span>
+              </div>
+              <div class="card-flip-prompt font-mono text-purple">CLICK FOR SPECS &rarr;</div>
+            </div>
+            <div class="card-face card-back glass-panel">
+              <h4 class="font-orbitron text-purple text-sm mb-2">CONTROL & SPECS</h4>
+              <ul class="card-specs-list font-inter text-xs">
+                <li><strong>Algorithm:</strong> A* / Dijkstra global planner + DWA local obstacle avoidance.</li>
+                <li><strong>Safety:</strong> PL-d rated safety LiDAR zones (IEC 61496).</li>
+                <li><strong>Wheels:</strong> Mecanum omnidirectional rollers or differential twin traction.</li>
+              </ul>
+              <div class="mt-4 pt-3 border-t border-slate-700 text-xs font-mono text-muted">
+                EXAMPLES: Amazon Kiva, MiR, Fetch Robotics
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Humanoid Robots -->
+        <div class="tilt-card" data-tilt>
+          <div class="card-inner">
+            <div class="card-face card-front glass-panel">
+              <div class="card-tag font-mono text-cyan">BIOMIMICRY</div>
+              <div class="card-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+                  <circle cx="12" cy="7" r="4"></circle>
+                  <path d="M5.5 21v-3a6.5 6.5 0 0 1 13 0v3"></path>
+                </svg>
+              </div>
+              <h3 class="card-title font-orbitron">Humanoid Robotics</h3>
+              <p class="card-excerpt font-inter">
+                Bipedal morphometry configured to navigate human architectures, climb stairs, open doors, and wield off-the-shelf manual tools.
+              </p>
+              <div class="card-specs font-mono">
+                <span>DOF: 28 &ndash; 54+ DEGREES</span>
+                <span>LOCOMOTION: DYNAMIC BALANCE</span>
+              </div>
+              <div class="card-flip-prompt font-mono text-cyan">CLICK FOR SPECS &rarr;</div>
+            </div>
+            <div class="card-face card-back glass-panel">
+              <h4 class="font-orbitron text-cyan text-sm mb-2">CONTROL & SPECS</h4>
+              <ul class="card-specs-list font-inter text-xs">
+                <li><strong>Balance:</strong> Zero Moment Point (ZMP) & Model Predictive Control (MPC).</li>
+                <li><strong>Hands:</strong> Tendon-driven dexterous 5-finger tactile arrays.</li>
+                <li><strong>AI Core:</strong> Vision-Language-Action policies trained in Isaac Sim/MuJoCo.</li>
+              </ul>
+              <div class="mt-4 pt-3 border-t border-slate-700 text-xs font-mono text-muted">
+                EXAMPLES: Figure 01, Atlas, Optimus, Unitree H1
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Medical & Surgical Robots -->
+        <div class="tilt-card" data-tilt>
+          <div class="card-inner">
+            <div class="card-face card-front glass-panel">
+              <div class="card-tag font-mono text-green">HEALTHCARE</div>
+              <div class="card-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
+              <h3 class="card-title font-orbitron">Surgical Tele-Robots</h3>
+              <p class="card-excerpt font-inter">
+                Master-slave teleoperation platforms executing tremor filtration and motion scaling (5:1) for sub-millimeter laparoscopic interventions.
+              </p>
+              <div class="card-specs font-mono">
+                <span>PRECISION: SUB-MILLIMETER</span>
+                <span>LATENCY: &lt; 5 MS HAPTIC</span>
+              </div>
+              <div class="card-flip-prompt font-mono text-green">CLICK FOR SPECS &rarr;</div>
+            </div>
+            <div class="card-face card-back glass-panel">
+              <h4 class="font-orbitron text-green text-sm mb-2">CONTROL & SPECS</h4>
+              <ul class="card-specs-list font-inter text-xs">
+                <li><strong>Teleoperation:</strong> Bilateral impedance control with haptic reflection.</li>
+                <li><strong>Degrees:</strong> 7-DOF wrist articulation mimicking human surgeon wrists.</li>
+                <li><strong>Vision:</strong> Stereoscopic 3D 4K magnified real-time endoscopic vision.</li>
+              </ul>
+              <div class="mt-4 pt-3 border-t border-slate-700 text-xs font-mono text-muted">
+                EXAMPLES: da Vinci Xi, Stryker Mako, CMR Versius
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Drones & Aerial Robotics -->
+        <div class="tilt-card" data-tilt>
+          <div class="card-inner">
+            <div class="card-face card-front glass-panel">
+              <div class="card-tag font-mono text-purple">AEROSPACE</div>
+              <div class="card-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#7c4dff" stroke-width="2">
+                  <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"></path>
+                </svg>
+              </div>
+              <h3 class="card-title font-orbitron">Drones & Aerial UAVs</h3>
+              <p class="card-excerpt font-inter">
+                Multirotor and fixed-wing autonomous aerial systems utilizing cascaded PID attitude control loops and GPS-denied visual-inertial odometry.
+              </p>
+              <div class="card-specs font-mono">
+                <span>CONFIGURATION: QUAD/HEXA/VTOL</span>
+                <span>ATTITUDE LOOP: 8 KHZ GYRO</span>
+              </div>
+              <div class="card-flip-prompt font-mono text-purple">CLICK FOR SPECS &rarr;</div>
+            </div>
+            <div class="card-face card-back glass-panel">
+              <h4 class="font-orbitron text-purple text-sm mb-2">CONTROL & SPECS</h4>
+              <ul class="card-specs-list font-inter text-xs">
+                <li><strong>Flight Controller:</strong> STM32F4/F7/H7 running PX4 or ArduPilot.</li>
+                <li><strong>ESC Drivers:</strong> DShot600 digital ESC protocol to BLDC motors.</li>
+                <li><strong>State Estimation:</strong> EKF2 estimating attitude, velocity, and position.</li>
+              </ul>
+              <div class="mt-4 pt-3 border-t border-slate-700 text-xs font-mono text-muted">
+                EXAMPLES: Skydio X10, DJI Agras, NASA Ingenuity
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Swarm Robotics -->
+        <div class="tilt-card" data-tilt>
+          <div class="card-inner">
+            <div class="card-face card-front glass-panel">
+              <div class="card-tag font-mono text-cyan">COLLECTIVE</div>
+              <div class="card-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+                  <circle cx="6" cy="6" r="3"></circle>
+                  <circle cx="18" cy="6" r="3"></circle>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <circle cx="18" cy="18" r="3"></circle>
+                  <line x1="9" y1="6" x2="15" y2="6"></line>
+                  <line x1="6" y1="9" x2="6" y2="15"></line>
+                  <line x1="18" y1="9" x2="18" y2="15"></line>
+                  <line x1="9" y1="18" x2="15" y2="18"></line>
+                </svg>
+              </div>
+              <h3 class="card-title font-orbitron">Swarm Robotics</h3>
+              <p class="card-excerpt font-inter">
+                Decentralized ensembles of simple robots coordinating through local communication and stigmergy to execute emergent complex collective tasks.
+              </p>
+              <div class="card-specs font-mono">
+                <span>TOPOLOGY: DECENTRALIZED MESH</span>
+                <span>BEHAVIOR: FLOCKING / BOIDS</span>
+              </div>
+              <div class="card-flip-prompt font-mono text-cyan">CLICK FOR SPECS &rarr;</div>
+            </div>
+            <div class="card-face card-back glass-panel">
+              <h4 class="font-orbitron text-cyan text-sm mb-2">CONTROL & SPECS</h4>
+              <ul class="card-specs-list font-inter text-xs">
+                <li><strong>Communication:</strong> Infrared peer-to-peer / Bluetooth Mesh / ZigBee.</li>
+                <li><strong>Resilience:</strong> Zero single-point-of-failure; 99% fault-tolerant.</li>
+                <li><strong>Applications:</strong> Environmental search & rescue, light shows, pipeline surveys.</li>
+              </ul>
+              <div class="mt-4 pt-3 border-t border-slate-700 text-xs font-mono text-muted">
+                EXAMPLES: Harvard Kilobots, Intel Drone Swarms
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 4: SENSORS & ACTUATORS INTERACTIVE DEMOS ======================== -->
+  <section id="sensors-actuators" class="content-section bg-darker">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">04 // INTERACTIVE HARDWARE LAB</div>
+        <h2 class="section-title font-orbitron">Sensors & Actuators in Action</h2>
+        <p class="section-desc font-inter">
+          Interact with three fundamental robotic hardware simulations: ultrasonic wave propagation, motor encoder feedback, and pulse-width modulated servo control.
+        </p>
+      </div>
+
+      <div class="demos-grid">
+        <!-- Demo 1: Ultrasonic Wave Radar -->
+        <div class="demo-card glass-panel">
+          <div class="demo-badge font-mono text-cyan">SIMULATION 01 // SENSOR</div>
+          <h3 class="demo-title font-orbitron">Ultrasonic Distance Echo (HC-SR04)</h3>
+          <p class="demo-desc font-inter text-sm">
+            Emits 40 kHz ultrasound bursts. Distance is computed from round-trip Time-of-Flight ($d = \frac{v \cdot \Delta t}{2}$ where $v = 343\text{ m/s}$).
+          </p>
+
+          <!-- Wave Radar Canvas -->
+          <div class="demo-canvas-wrap">
+            <canvas id="ultrasonic-canvas" class="demo-canvas"></canvas>
+          </div>
+
+          <!-- Slider Control -->
+          <div class="slider-control-group mt-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>OBSTACLE DISTANCE:</span>
+              <span id="sonar-dist-val" class="text-cyan font-bold">120 cm</span>
+            </div>
+            <input type="range" id="sonar-slider" min="10" max="300" value="120" class="cyber-slider" />
+          </div>
+
+          <!-- Telemetry Output -->
+          <div class="demo-telemetry-box font-mono text-xs mt-3">
+            <div>TOF DURATION: <span id="sonar-time-val" class="text-white">6997 µs</span></div>
+            <div>STATUS: <span id="sonar-status-val" class="text-green">SAFE CORRIDOR</span></div>
+          </div>
+        </div>
+
+        <!-- Demo 2: Motor Rotation & Optical Encoder -->
+        <div class="demo-card glass-panel">
+          <div class="demo-badge font-mono text-purple">SIMULATION 02 // ACTUATOR</div>
+          <h3 class="demo-title font-orbitron">DC Motor & Optical Encoder</h3>
+          <p class="demo-desc font-inter text-sm">
+            High-speed DC motor with a slotted optical encoder wheel generating quadrature pulses (Channel A/B) for closed-loop velocity regulation.
+          </p>
+
+          <!-- Motor Canvas -->
+          <div class="demo-canvas-wrap">
+            <canvas id="motor-canvas" class="demo-canvas"></canvas>
+          </div>
+
+          <!-- Sliders and Buttons -->
+          <div class="slider-control-group mt-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>TARGET SPEED:</span>
+              <span id="motor-rpm-val" class="text-purple font-bold">1500 RPM</span>
+            </div>
+            <input type="range" id="motor-slider" min="0" max="3000" step="50" value="1500" class="cyber-slider purple-slider" />
+          </div>
+
+          <div class="flex items-center justify-between mt-3 font-mono text-xs">
+            <button id="motor-dir-btn" class="cyber-btn-sm font-mono">DIR: CLOCKWISE</button>
+            <div class="text-muted">ENCODER: <span id="encoder-ticks-val" class="text-white">0</span> TICKS</div>
+          </div>
+        </div>
+
+        <!-- Demo 3: Servo Motor Position & PWM Pulse Width -->
+        <div class="demo-card glass-panel">
+          <div class="demo-badge font-mono text-cyan">SIMULATION 03 // SERVO</div>
+          <h3 class="demo-title font-orbitron">Servo Horn & PWM Pulse-Width</h3>
+          <p class="demo-desc font-inter text-sm">
+            Standard hobby servos position their output shaft proportionally to pulse width between 1.0 ms (0°) and 2.0 ms (180°) inside a 20 ms period (50 Hz).
+          </p>
+
+          <!-- Servo Canvas -->
+          <div class="demo-canvas-wrap">
+            <canvas id="servo-canvas" class="demo-canvas"></canvas>
+          </div>
+
+          <!-- Angle Slider -->
+          <div class="slider-control-group mt-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>SERVO TARGET ANGLE:</span>
+              <span id="servo-angle-val" class="text-cyan font-bold">90° (NEUTRAL)</span>
+            </div>
+            <input type="range" id="servo-slider" min="0" max="180" value="90" class="cyber-slider" />
+          </div>
+
+          <!-- Pulse Width Info -->
+          <div class="demo-telemetry-box font-mono text-xs mt-3">
+            <div>PULSE DURATION: <span id="servo-pulse-val" class="text-cyan">1.50 ms</span> / 20.0 ms</div>
+            <div>PWM DUTY: <span id="servo-duty-val" class="text-white">7.50%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 5: KINEMATICS & CONTROL ======================== -->
+  <section id="kinematics" class="content-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">05 // MATHEMATICAL FOUNDATIONS</div>
+        <h2 class="section-title font-orbitron">Robot Kinematics & Linkage Lab</h2>
+        <p class="section-desc font-inter">
+          Forward Kinematics maps joint angles ($\theta_1, \theta_2$) to Cartesian workspace position $(x, y)$. Inverse Kinematics solves the inverse: determining necessary joint angles to place the gripper at a target coordinate.
+        </p>
+      </div>
+
+      <div class="kinematics-layout">
+        <!-- Interactive 2-Link Arm Canvas -->
+        <div class="kinematics-viewport glass-panel">
+          <div class="viewport-header">
+            <span class="font-mono text-xs text-cyan">PLANAR 2-DOF MANIPULATOR SIMULATOR</span>
+            <span class="font-mono text-xs text-muted">DRAG END-EFFECTOR FOR INVERSE KINEMATICS</span>
+          </div>
+
+          <div class="kinematics-canvas-wrap">
+            <canvas id="kinematics-canvas"></canvas>
+          </div>
+
+          <div class="viewport-footer font-mono text-xs">
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="trace-toggle" checked class="cyber-checkbox" />
+                <span>TRACE TRAJECTORY</span>
+              </label>
+              <button id="clear-trace-btn" class="cyber-btn-xs">CLEAR TRACE</button>
+            </div>
+            <div class="coord-display">
+              END-EFFECTOR (X, Y): <span id="ee-coords" class="text-cyan font-bold">(150, 150)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls & Mathematical Formulas -->
+        <div class="kinematics-panel glass-panel">
+          <h3 class="font-orbitron text-lg text-white mb-4">Joint Control Parameters</h3>
+
+          <!-- Theta 1 Control -->
+          <div class="slider-control-group mb-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>JOINT 1 (&theta;<sub>1</sub> Base Shoulder):</span>
+              <span id="theta1-val" class="text-cyan font-bold">45°</span>
+            </div>
+            <input type="range" id="theta1-slider" min="0" max="180" value="45" class="cyber-slider" />
+          </div>
+
+          <!-- Theta 2 Control -->
+          <div class="slider-control-group mb-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>JOINT 2 (&theta;<sub>2</sub> Elbow):</span>
+              <span id="theta2-val" class="text-purple font-bold">45°</span>
+            </div>
+            <input type="range" id="theta2-slider" min="-150" max="150" value="45" class="cyber-slider purple-slider" />
+          </div>
+
+          <!-- Link Lengths -->
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="slider-control-group">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>LINK 1 (L<sub>1</sub>):</span>
+                <span id="l1-val" class="text-slate-300">120 mm</span>
+              </div>
+              <input type="range" id="l1-slider" min="60" max="180" value="120" class="cyber-slider" />
+            </div>
+            <div class="slider-control-group">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>LINK 2 (L<sub>2</sub>):</span>
+                <span id="l2-val" class="text-slate-300">100 mm</span>
+              </div>
+              <input type="range" id="l2-slider" min="50" max="150" value="100" class="cyber-slider purple-slider" />
+            </div>
+          </div>
+
+          <!-- Formulas Box -->
+          <div class="formulas-card p-4 rounded-lg bg-black/50 border border-slate-800">
+            <div class="font-mono text-xs text-cyan mb-2">FORWARD KINEMATICS EQUATIONS</div>
+            <div class="formula-line font-mono text-xs text-slate-200">
+              x = L<sub>1</sub> &middot; cos(&theta;<sub>1</sub>) + L<sub>2</sub> &middot; cos(&theta;<sub>1</sub> + &theta;<sub>2</sub>)
+            </div>
+            <div class="formula-line font-mono text-xs text-slate-200 mt-1">
+              y = L<sub>1</sub> &middot; sin(&theta;<sub>1</sub>) + L<sub>2</sub> &middot; sin(&theta;<sub>1</sub> + &theta;<sub>2</sub>)
+            </div>
+
+            <div class="font-mono text-xs text-purple mt-4 mb-2">INVERSE KINEMATICS (LAW OF COSINES)</div>
+            <div class="formula-line font-mono text-xs text-slate-300">
+              cos(&theta;<sub>2</sub>) = (x<sup>2</sup> + y<sup>2</sup> - L<sub>1</sub><sup>2</sup> - L<sub>2</sub><sup>2</sup>) / (2 &middot; L<sub>1</sub> &middot; L<sub>2</sub>)
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="mt-4 pt-3 border-t border-slate-800 flex flex-wrap gap-2">
+            <span class="text-xs font-mono text-muted mr-2 self-center">PRESETS:</span>
+            <button class="preset-btn font-mono text-xs" data-t1="90" data-t2="0">Home (90°, 0°)</button>
+            <button class="preset-btn font-mono text-xs" data-t1="30" data-t2="90">Reach Forward</button>
+            <button class="preset-btn font-mono text-xs" data-t1="120" data-t2="-60">Fold Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 6: DIGITAL ELECTRONICS IN ROBOTICS ======================== -->
+  <section id="electronics" class="content-section bg-darker">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">06 // CIRCUITS & SIGNALS</div>
+        <h2 class="section-title font-orbitron">Digital Electronics in Robotics</h2>
+        <p class="section-desc font-inter">
+          Digital logic, microcontrollers, and Pulse-Width Modulation (PWM) bridge computational algorithms with physical electro-mechanical power delivery.
+        </p>
+      </div>
+
+      <div class="electronics-grid">
+        <!-- Interactive Logic Gate Simulator -->
+        <div class="circuit-card glass-panel">
+          <div class="card-badge font-mono text-cyan">CIRCUIT LAB 01 // COMBINATIONAL LOGIC</div>
+          <h3 class="font-orbitron text-xl text-white mt-1">Interactive Logic Gate Tester</h3>
+          <p class="font-inter text-sm text-slate-300 mt-1">
+            Logic gates form the foundational decision circuits in safety interlocks, quadrature decoding, and emergency stop triggers.
+          </p>
+
+          <!-- Gate Selection -->
+          <div class="gate-selector mt-4 flex flex-wrap gap-2">
+            <button class="gate-btn active" data-gate="AND">AND</button>
+            <button class="gate-btn" data-gate="OR">OR</button>
+            <button class="gate-btn" data-gate="NOT">NOT</button>
+            <button class="gate-btn" data-gate="NAND">NAND</button>
+            <button class="gate-btn" data-gate="NOR">NOR</button>
+            <button class="gate-btn" data-gate="XOR">XOR</button>
+          </div>
+
+          <!-- Schematic Interactive Area -->
+          <div class="logic-schematic mt-6 p-4 rounded-lg bg-black/60 border border-slate-800">
+            <div class="flex items-center justify-between">
+              <!-- Inputs -->
+              <div class="inputs-column flex flex-col gap-4">
+                <div class="input-switch-row flex items-center gap-3">
+                  <button id="switch-a" class="toggle-switch-btn font-mono">IN A: 0</button>
+                  <span class="font-mono text-xs text-muted" id="volt-a">0.0 V (LOW)</span>
+                </div>
+                <div class="input-switch-row flex items-center gap-3" id="switch-b-wrap">
+                  <button id="switch-b" class="toggle-switch-btn font-mono">IN B: 0</button>
+                  <span class="font-mono text-xs text-muted" id="volt-b">0.0 V (LOW)</span>
+                </div>
+              </div>
+
+              <!-- Schematic Symbol Display -->
+              <div class="gate-symbol-display px-6 py-4 border border-cyan/30 rounded bg-cyan/5">
+                <div id="gate-icon-text" class="font-orbitron text-2xl text-cyan">AND</div>
+                <div class="font-mono text-xs text-slate-400 mt-1 text-center" id="gate-boolean">Y = A &middot; B</div>
+              </div>
+
+              <!-- Output LED -->
+              <div class="output-column flex flex-col items-center">
+                <div id="logic-led" class="logic-led-indicator"></div>
+                <span class="font-mono text-xs mt-2" id="logic-out-val">OUT: 0 (LOW)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Truth Table -->
+          <div class="truth-table-wrap mt-4">
+            <div class="font-mono text-xs text-muted mb-2">DYNAMIC TRUTH TABLE:</div>
+            <table class="truth-table font-mono text-xs w-full">
+              <thead>
+                <tr><th>Input A</th><th>Input B</th><th>Output Y</th></tr>
+              </thead>
+              <tbody id="truth-table-body">
+                <!-- Dynamically generated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Interactive PWM Duty Cycle Simulator -->
+        <div class="circuit-card glass-panel">
+          <div class="card-badge font-mono text-purple">CIRCUIT LAB 02 // POWER MODULATION</div>
+          <h3 class="font-orbitron text-xl text-white mt-1">PWM Duty Cycle & Motor Voltage</h3>
+          <p class="font-inter text-sm text-slate-300 mt-1">
+            PWM switches full supply voltage on and off at kilohertz frequencies. The average voltage delivered to the load is directly proportional to duty cycle: $V_{\text{avg}} = V_{\text{in}} \cdot D$.
+          </p>
+
+          <!-- Oscilloscope Waveform Canvas -->
+          <div class="oscilloscope-wrap mt-4">
+            <div class="scope-header font-mono text-xs flex justify-between px-3 py-1 bg-black/60 border-b border-slate-800">
+              <span class="text-cyan">OSCILLOSCOPE: CH1 (5V/DIV, 100 µs/DIV)</span>
+              <span id="scope-freq-label" class="text-muted">FREQ: 1.0 kHz</span>
+            </div>
+            <canvas id="pwm-canvas" class="pwm-canvas"></canvas>
+          </div>
+
+          <!-- Duty Cycle Slider -->
+          <div class="slider-control-group mt-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>DUTY CYCLE:</span>
+              <span id="pwm-duty-label" class="text-purple font-bold">50%</span>
+            </div>
+            <input type="range" id="pwm-duty-slider" min="0" max="100" value="50" class="cyber-slider purple-slider" />
+          </div>
+
+          <!-- Connected Load Simulation -->
+          <div class="load-simulation-grid mt-4 grid grid-cols-2 gap-3 font-mono text-xs">
+            <div class="p-3 bg-black/40 rounded border border-slate-800 flex flex-col items-center">
+              <span class="text-muted">EQUIVALENT VOLTAGE</span>
+              <span id="pwm-volt-val" class="text-lg text-cyan font-bold mt-1">6.00 V</span>
+              <span class="text-[10px] text-muted">OF 12.0 V BUS</span>
+            </div>
+
+            <div class="p-3 bg-black/40 rounded border border-slate-800 flex flex-col items-center">
+              <span class="text-muted">SIMULATED LED LOAD</span>
+              <div id="pwm-led-glow" class="w-6 h-6 rounded-full bg-cyan/50 mt-1 transition-all duration-100"></div>
+              <span class="text-[10px] text-muted mt-1">BRIGHTNESS: 50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 7: REAL-WORLD APPLICATIONS ======================== -->
+  <section id="applications" class="content-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">07 // FRONTIERS</div>
+        <h2 class="section-title font-orbitron">Transformative Applications</h2>
+        <p class="section-desc font-inter">
+          From micro-surgical intervention inside human arteries to autonomous extraterrestrial exploration on Mars and subterranean asteroid mining.
+        </p>
+      </div>
+
+      <!-- Horizontal Scroll / Swipe Gallery -->
+      <div class="gallery-controls flex justify-end gap-3 mb-4">
+        <button id="gallery-prev-btn" class="cyber-nav-btn font-mono" aria-label="Previous application">&larr; PREV</button>
+        <button id="gallery-next-btn" class="cyber-nav-btn font-mono" aria-label="Next application">NEXT &rarr;</button>
+      </div>
+
+      <div class="horizontal-gallery-track" id="gallery-track">
+        <!-- Item 1: Advanced Manufacturing -->
+        <div class="gallery-card glass-panel">
+          <div class="gallery-card-badge font-mono text-cyan">AEROSPACE & AUTOMOTIVE</div>
+          <h3 class="gallery-card-title font-orbitron">Automated Gigafactories</h3>
+          <p class="gallery-card-desc font-inter">
+            Thousands of synchronized 6-DOF industrial robots cooperating with automated guided vehicles to assemble electric vehicles, battery packs, and commercial airframes with sub-millimeter repeatable precision.
+          </p>
+          <div class="gallery-telemetry font-mono text-xs">
+            <div class="telem-row"><span>CYCLE TIME:</span><span class="text-cyan">42 SEC / VEHICLE</span></div>
+            <div class="telem-row"><span>REPEATABILITY:</span><span class="text-white">&plusmn; 0.02 MM</span></div>
+            <div class="telem-row"><span>UPTIME:</span><span class="text-green">99.8% CONTINUOUS</span></div>
+          </div>
+        </div>
+
+        <!-- Item 2: Robotic Surgery -->
+        <div class="gallery-card glass-panel">
+          <div class="gallery-card-badge font-mono text-purple">BIO-ENGINEERING</div>
+          <h3 class="gallery-card-title font-orbitron">Micro-Surgical Teleoperation</h3>
+          <p class="gallery-card-desc font-inter">
+            Multi-arm tele-surgical robotic consoles that eliminate natural human physiological tremors, allowing surgeons to operate with 3D high-definition magnification on delicate ophthalmic, cardiac, and neurological tissues.
+          </p>
+          <div class="gallery-telemetry font-mono text-xs">
+            <div class="telem-row"><span>TREMOR REDUCTION:</span><span class="text-purple">100% ELIMINATED</span></div>
+            <div class="telem-row"><span>MOTION SCALING:</span><span class="text-white">5:1 RATIO</span></div>
+            <div class="telem-row"><span>INCISION SIZE:</span><span class="text-cyan">&lt; 8 MM KEYHOLE</span></div>
+          </div>
+        </div>
+
+        <!-- Item 3: Space Exploration -->
+        <div class="gallery-card glass-panel">
+          <div class="gallery-card-badge font-mono text-cyan">AEROSPACE</div>
+          <h3 class="gallery-card-title font-orbitron">Deep Space Planetary Rovers</h3>
+          <p class="gallery-card-desc font-inter">
+            Autonomous rovers on Mars and lunar orbiters engineered to withstand radiation, temperature swings of &plusmn;150°C, and 20-minute radio latency through on-board terrain classification and autonomous visual hazard avoidance.
+          </p>
+          <div class="gallery-telemetry font-mono text-xs">
+            <div class="telem-row"><span>MISSION DURATION:</span><span class="text-cyan">12+ YEARS ACTIVE</span></div>
+            <div class="telem-row"><span>RADIATION RATING:</span><span class="text-white">RAD-HARDENED FPGA</span></div>
+            <div class="telem-row"><span>TEMPERATURE RANGE:</span><span class="text-purple">-130°C TO +30°C</span></div>
+          </div>
+        </div>
+
+        <!-- Item 4: Autonomous Agriculture -->
+        <div class="gallery-card glass-panel">
+          <div class="gallery-card-badge font-mono text-green">AGRITECH</div>
+          <h3 class="gallery-card-title font-orbitron">Autonomous Precision Agriculture</h3>
+          <p class="gallery-card-desc font-inter">
+            Autonomous tractors and targeted laser-weeding rovers utilizing multispectral computer vision to identify individual invasive plants and eliminate them at 20 shots per second without chemical herbicides.
+          </p>
+          <div class="gallery-telemetry font-mono text-xs">
+            <div class="telem-row"><span>HERBICIDE REDUCTION:</span><span class="text-green">95% SAVINGS</span></div>
+            <div class="telem-row"><span>TARGETING SPEED:</span><span class="text-white">20 HZ LASER PULSE</span></div>
+            <div class="telem-row"><span>ACCURACY:</span><span class="text-cyan">&plusmn; 1 MM TARGETING</span></div>
+          </div>
+        </div>
+
+        <!-- Item 5: Physical AI & Humanoids -->
+        <div class="gallery-card glass-panel">
+          <div class="gallery-card-badge font-mono text-purple">EMBODIED AI</div>
+          <h3 class="gallery-card-title font-orbitron">General-Purpose Humanoids</h3>
+          <p class="gallery-card-desc font-inter">
+            Bipedal robots powered by large Vision-Language-Action (VLA) neural networks capable of learning multi-step household or factory tasks through teleoperated demonstrations and reinforcement learning in physics engines.
+          </p>
+          <div class="gallery-telemetry font-mono text-xs">
+            <div class="telem-row"><span>POLICY REFRESH:</span><span class="text-purple">50 HZ VLA MODEL</span></div>
+            <div class="telem-row"><span>SIM-TO-REAL GAP:</span><span class="text-white">&lt; 3% ZERO-SHOT</span></div>
+            <div class="telem-row"><span>WALK SPEED:</span><span class="text-cyan">1.8 M/S DYNAMIC</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 8: ROBOTICS QUIZ ======================== -->
+  <section id="quiz" class="content-section bg-darker">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">08 // EVALUATION</div>
+        <h2 class="section-title font-orbitron">Robotics Engineering Quiz</h2>
+        <p class="section-desc font-inter">
+          Test your comprehension of core kinematics, electrical actuators, control theory, and sensor systems through 5 multiple-choice questions.
+        </p>
+      </div>
+
+      <div class="quiz-container glass-panel max-w-3xl mx-auto p-8 relative">
+        <!-- Quiz Progress Bar -->
+        <div class="quiz-progress-bar-wrap mb-6">
+          <div id="quiz-progress-bar" class="quiz-progress-bar"></div>
+        </div>
+
+        <div class="quiz-meta flex justify-between font-mono text-xs text-muted mb-4">
+          <span id="quiz-counter">QUESTION 01 OF 05</span>
+          <span id="quiz-score-live">SCORE: 0 / 5</span>
+        </div>
+
+        <!-- Question Body -->
+        <div id="quiz-card-content">
+          <h3 id="quiz-question-text" class="font-orbitron text-xl text-white mb-6">
+            Loading question...
+          </h3>
+
+          <div id="quiz-options-container" class="options-list flex flex-col gap-3 font-inter">
+            <!-- Dynamically injected options -->
+          </div>
+
+          <div id="quiz-explanation" class="quiz-explanation mt-6 p-4 rounded-lg bg-black/60 border border-slate-800 hidden">
+            <div class="font-mono text-xs font-bold text-cyan mb-1" id="quiz-expl-status">CORRECT</div>
+            <p class="text-xs text-slate-300 font-inter" id="quiz-expl-text"></p>
+          </div>
+
+          <div class="quiz-actions flex justify-end mt-6">
+            <button id="quiz-next-btn" class="btn-glow-primary font-orbitron py-2 px-6 text-sm hidden">
+              <span>Next Question &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Card (Hidden by default) -->
+        <div id="quiz-results-card" class="quiz-results text-center py-8 hidden">
+          <div class="text-5xl mb-4" id="quiz-medal">&#127942;</div>
+          <h3 class="font-orbitron text-3xl text-white">Assessment Complete!</h3>
+          <p class="font-inter text-slate-300 text-sm mt-2" id="quiz-result-rank">
+            Evaluation Rank: Cybernetics Specialist
+          </p>
+          <div class="quiz-final-score font-orbitron text-5xl text-cyan my-6" id="quiz-final-score-val">
+            5 / 5
+          </div>
+          <p class="font-inter text-xs text-slate-400 max-w-md mx-auto" id="quiz-summary-text">
+            Outstanding mastery of forward/inverse kinematics, PWM signal modulation, sensor architectures, and autonomous closed-loop control!
+          </p>
+          <button id="quiz-retake-btn" class="btn-outline-cyan font-orbitron mt-8 inline-flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+            <span>Retake Assessment</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 9: RESOURCES & FOOTER ======================== -->
+  <section id="resources" class="content-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-tag font-mono">09 // CURRICULUM</div>
+        <h2 class="section-title font-orbitron">Academic Textbooks & Open Tools</h2>
+        <p class="section-desc font-inter">
+          Recommended reference manuals, simulation engines, and open-source frameworks used by roboticists at NASA JPL, Boston Dynamics, and university research laboratories.
+        </p>
+      </div>
+
+      <!-- Resource Cards Grid -->
+      <div class="resources-grid">
+        <a href="https://modernrobotics.northwestern.edu/" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
+          <div class="res-tag font-mono text-cyan">TEXTBOOK</div>
+          <h3 class="res-title font-orbitron">Modern Robotics: Mechanics, Planning, and Control</h3>
+          <p class="res-author font-inter text-xs text-slate-400">Kevin M. Lynch & Frank C. Park (Cambridge Univ. Press)</p>
+          <p class="res-desc font-inter text-sm mt-2">
+            The gold-standard treatise on screw theory, Lie algebra, and spatial cross-product kinematics for roboticists.
+          </p>
+        </a>
+
+        <a href="https://docs.ros.org/en/rolling/" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
+          <div class="res-tag font-mono text-purple">FRAMEWORK</div>
+          <h3 class="res-title font-orbitron">ROS 2 (Robot Operating System)</h3>
+          <p class="res-author font-inter text-xs text-slate-400">Open Robotics Community</p>
+          <p class="res-desc font-inter text-sm mt-2">
+            Industrial-grade DDS middleware providing message-passing nodes, transform coordinate trees (tf2), and real-time lifecycle management.
+          </p>
+        </a>
+
+        <a href="https://gazebosim.org/" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
+          <div class="res-tag font-mono text-green">SIMULATION</div>
+          <h3 class="res-title font-orbitron">Gazebo & Isaac Sim Physics Engines</h3>
+          <p class="res-author font-inter text-xs text-slate-400">Open Source Robotics Foundation / NVIDIA</p>
+          <p class="res-desc font-inter text-sm mt-2">
+            High-fidelity rigid-body dynamics simulators modeling friction, contacts, optical sensor rays, and LiDAR point clouds in real time.
+          </p>
+        </a>
+
+        <a href="https://www.probabilistic-robotics.org/" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
+          <div class="res-tag font-mono text-cyan">ESTIMATION</div>
+          <h3 class="res-title font-orbitron">Probabilistic Robotics</h3>
+          <p class="res-author font-inter text-xs text-slate-400">Sebastian Thrun, Wolfram Burgard & Dieter Fox</p>
+          <p class="res-desc font-inter text-sm mt-2">
+            The definitive mathematical textbook on uncertainty modeling, Kalman Filtering, Particle Filters, and Simultaneous Localization and Mapping (SLAM).
+          </p>
+        </a>
+      </div>
+
+      <!-- Quick Formula Cheat Sheet Card -->
+      <div class="cheatsheet-card glass-panel mt-12 p-8">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="font-mono text-xs text-cyan">ENGINEERING QUICK REFERENCE</div>
+            <h3 class="font-orbitron text-xl text-white mt-1">Robotics Formula Cheatsheet</h3>
+            <p class="font-inter text-xs text-slate-300 mt-1">Essential kinematic, electrical, and control formulas for engineering students.</p>
+          </div>
+          <button id="copy-cheatsheet-btn" class="cyber-btn font-mono text-xs flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span id="copy-btn-text">COPY FORMULAS</span>
+          </button>
+        </div>
+
+        <div class="cheatsheet-grid mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="p-3 bg-black/50 rounded border border-slate-800">
+            <span class="text-cyan block mb-1">PWM AVERAGE VOLTAGE</span>
+            <code class="text-white">V_avg = V_bus &times; (Duty% / 100)</code>
+          </div>
+          <div class="p-3 bg-black/50 rounded border border-slate-800">
+            <span class="text-purple block mb-1">ACOUSTIC DISTANCE (HC-SR04)</span>
+            <code class="text-white">d = (343 m/s &times; &Delta;t_echo) / 2</code>
+          </div>
+          <div class="p-3 bg-black/50 rounded border border-slate-800">
+            <span class="text-green block mb-1">PID CONTROLLER OUTPUT</span>
+            <code class="text-white">u(t) = K_p&middot;e + K_i&int;e dt + K_d&middot;(de/dt)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer class="main-footer border-t border-slate-800 bg-black/90 py-12">
+    <div class="section-container flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="brand-hex w-8 h-8">
+          <svg class="hex-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-orbitron text-sm font-bold text-white tracking-wider">ROBOTIX // LAB</span>
+          <p class="font-inter text-xs text-muted">Dedicated to the education of autonomous robotics and cybernetics.</p>
+        </div>
+      </div>
+
+      <div class="footer-links font-mono text-xs text-slate-400 flex flex-wrap gap-6">
+        <a href="#hero" class="hover:text-cyan transition-colors">TOP &uarr;</a>
+        <a href="#what-is-robotics" class="hover:text-cyan transition-colors">FOUNDATIONS</a>
+        <a href="#kinematics" class="hover:text-cyan transition-colors">SIMULATOR</a>
+        <a href="#quiz" class="hover:text-cyan transition-colors">ASSESSMENT</a>
+      </div>
+
+      <div class="font-mono text-xs text-muted text-right">
+        <div>STANDARDS: IEEE ROBOTICS & AUTOMATION SOCIETY</div>
+        <div class="text-[10px] text-slate-600 mt-1">&copy; 2026 ROBOTIX LAB. OPEN EDUCATIONAL RESOURCE.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript Application Logic -->
+  <script src="script.js" defer></script>
+</body>
+</html>

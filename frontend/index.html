@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City Life — San Francisco Smart City Companion</title>
+  <meta name="description" content="A city companion that tells you where to go, and how to get there safely, right now.">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"></script>
+
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans select-none">
+
+  <!-- TOP APP BAR -->
+  <header class="h-14 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 z-30 px-3 md:px-5 flex items-center justify-between shadow-sm shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm md:text-base font-bold tracking-tight text-slate-900 dark:text-white leading-none">City Life</h1>
+          <span id="city-title" class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border border-blue-200 dark:border-blue-800">San Francisco, USA</span>
+        </div>
+        <p class="text-[11px] text-slate-500 hidden sm:block">A city companion that tells you where to go, and how to get there safely, right now.</p>
+      </div>
+    </div>
+
+    <!-- Time of Day & Action Controls -->
+    <div class="flex items-center gap-1.5 md:gap-2">
+      <!-- Time of Day Toggle -->
+      <div class="hidden lg:flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+        <button data-tod="morning" class="px-2 py-1 rounded text-[11px] font-semibold text-slate-600 dark:text-slate-300">🌅 Morning</button>
+        <button data-tod="afternoon" class="px-2 py-1 rounded text-[11px] font-semibold text-slate-600 dark:text-slate-300">☀️ Noon</button>
+        <button data-tod="evening" class="px-2 py-1 rounded text-[11px] font-semibold bg-blue-600 text-white shadow">🌆 Dusk</button>
+        <button data-tod="night" class="px-2 py-1 rounded text-[11px] font-semibold text-slate-600 dark:text-slate-300">🌙 Night</button>
+      </div>
+
+      <!-- Live Weather Card -->
+      <div id="weather-card" class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+        <span class="text-amber-500 font-bold">☁</span>
+        <span id="weather-temp" class="font-bold text-slate-800 dark:text-slate-200">17°C</span>
+        <span id="weather-condition" class="text-slate-500 text-[11px]">Coastal Air</span>
+      </div>
+
+      <!-- Tourist vs Local Mode Toggle -->
+      <button id="mode-toggle" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs transition">
+        <span id="mode-indicator" class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Tourist Mode</span>
+        <span class="text-[10px] text-slate-400">⇄</span>
+      </button>
+
+      <!-- Language Switcher -->
+      <button id="lang-toggle" class="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+        🌐 <span id="lang-indicator">EN</span>
+      </button>
+
+      <!-- Theme Switcher -->
+      <button id="theme-toggle" class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- SECONDARY ACTION BAR (The 5 Pillars Quick Access) -->
+  <nav class="h-10 bg-slate-100/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-3 md:px-5 flex items-center justify-between text-xs overflow-x-auto scrollbar-none z-20 shrink-0">
+    <div class="flex items-center gap-1.5 md:gap-2">
+      <button id="nav-routes-btn" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1 shadow-sm transition">
+        🛡 Safe Route
+      </button>
+      <button id="nav-report-btn" class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold flex items-center gap-1 shadow-sm transition">
+        📢 Drop Report
+      </button>
+      <button id="nav-compare-btn" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1 transition">
+        ⚖ Compare
+      </button>
+      <button id="nav-leaderboard-btn" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1 transition">
+        🏆 Leaderboards
+      </button>
+      <button id="nav-insights-btn" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1 transition">
+        📊 City Insights
+      </button>
+      <button id="nav-heritage-btn" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1 transition">
+        🏛 Heritage Hub
+      </button>
+    </div>
+
+    <!-- AI Companion Button -->
+    <button id="nav-assistant-btn" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold flex items-center gap-1.5 shadow-sm transition shrink-0">
+      🤖 AI Assistant
+    </button>
+  </nav>
+
+  <!-- MAIN MAP & OVERLAYS CONTAINER -->
+  <main class="relative flex-1 w-full h-[calc(100vh-6rem)] overflow-hidden">
+
+    <!-- FLOATING SEARCH & HORIZONTAL LAYER BAR -->
+    <div class="absolute top-3 left-3 right-3 md:left-5 md:right-auto md:w-[440px] z-20 flex flex-col gap-2">
+      <div class="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur rounded-xl shadow-lg border border-slate-200/80 dark:border-slate-800/80 p-1.5 flex items-center gap-1.5">
+        <div class="pl-2.5 text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <input 
+          id="search-input" 
+          type="text" 
+          placeholder="Search food, landmarks, museums..." 
+          class="w-full bg-transparent text-xs md:text-sm py-1.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
+        />
+        <button id="filter-btn" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition" title="Filter Places">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        </button>
+        <button id="locate-me-btn" class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 hover:bg-blue-100 transition" title="Find places near me">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0013 3.06V1h-2v2.06A8.994 8.994 0 003.06 11H1v2h2.06A8.994 8.994 0 0011 20.94V23h2v-2.06A8.994 8.994 0 0020.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></path></svg>
+        </button>
+      </div>
+
+      <!-- Instant Search Results Dropdown -->
+      <div id="search-results" class="hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 max-h-64 overflow-y-auto"></div>
+
+      <!-- HORIZONTAL LAYER TOGGLES -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <button data-layer-key="attractions" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">★ Attractions</button>
+        <button data-layer-key="food" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">🍴 Food & Dining</button>
+        <button data-layer-key="hotels" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">🏨 Hotels</button>
+        <button data-layer-key="heritage" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">🏛 Heritage</button>
+        <button data-layer-key="budget" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">🏷 Budget</button>
+        <button data-layer-key="emergency" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">🏥 Emergency</button>
+        <button data-layer-key="unsafe_zones" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">⚠ Hazards (Simulated)</button>
+        <button data-layer-key="hotspots" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">⭕ Hotspots</button>
+        <button data-layer-key="citizen_reports" class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-600 text-white shadow-sm whitespace-nowrap transition">📢 Reports</button>
+        <button data-layer-key="traffic" class="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700 shadow-sm whitespace-nowrap transition">🚦 Traffic</button>
+      </div>
+    </div>
+
+    <!-- ONBOARDING BANNER -->
+    <div id="onboarding-banner" class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl">
+      <div class="flex items-start justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600">Smart City Companion</span>
+          <h3 class="text-xs font-bold text-slate-900 dark:text-white mt-0.5">Where to go, and how to get there safely right now.</h3>
+        </div>
+        <button id="dismiss-banner" class="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+      </div>
+      <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
+        Explore verified landmarks, cultural routes, live weather, and community reports in <b>San Francisco</b>. Use <b>Safe Route</b> for hazard-bypassing directions.
+      </p>
+      <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+        <span class="text-slate-400">All 5 Pillars Active</span>
+        <span class="bg-amber-100 text-amber-800 text-[10px] font-semibold px-1.5 py-0.5 rounded">Simulated safety data labeled</span>
+      </div>
+    </div>
+
+    <!-- ROUTE RESULT FLOATING CARD -->
+    <div id="route-result-card" class="hidden absolute top-28 left-4 right-4 md:left-5 md:right-auto md:w-96 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Route Comparison</h4>
+        <button onclick="document.getElementById('route-result-card').classList.add('hidden')" class="text-slate-400 text-xs font-bold">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
+          <span class="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">⚡ Fastest Route</span>
+          <p id="fastest-route-time" class="text-base font-black text-amber-900 dark:text-amber-200">14 min</p>
+          <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+            <span id="fastest-route-dist">3.8 km</span>
+            <span id="fastest-route-risk" class="font-bold text-amber-600">Risk: 72/100</span>
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+          <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase">🛡 Safest Route</span>
+          <p id="safest-route-time" class="text-base font-black text-emerald-900 dark:text-emerald-200">17 min</p>
+          <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+            <span id="safest-route-dist">4.2 km</span>
+            <span id="safest-route-risk" class="font-bold text-emerald-600">Risk: 24/100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
+        <span id="route-reduction-badge" class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">🛡 66.7% Risk Reduction</span>
+        <p id="route-explanation-text" class="text-xs text-slate-700 dark:text-slate-300 mt-1.5 leading-relaxed"></p>
+      </div>
+    </div>
+
+    <!-- LEAFLET MAP ELEMENT -->
+    <div id="map"></div>
+
+    <!-- LOADING INDICATOR -->
+    <div id="loading-indicator" class="hidden absolute top-4 right-4 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1.5 rounded-full shadow border border-slate-200 text-xs font-medium flex items-center gap-2">
+      <div class="w-3.5 h-3.5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      <span>Loading city data...</span>
+    </div>
+
+    <!-- PLACE DETAIL DRAWER -->
+    <aside 
+      id="place-drawer" 
+      class="drawer-transition absolute bottom-0 right-0 w-full sm:w-[410px] max-h-[85vh] sm:max-h-full sm:h-full bg-white dark:bg-slate-900 border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-800 shadow-2xl z-40 translate-y-full sm:translate-y-0 sm:translate-x-full flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden"
+    >
+      <div class="relative h-44 sm:h-48 w-full bg-slate-200 dark:bg-slate-800 overflow-hidden shrink-0">
+        <img id="drawer-photo" src="" alt="Place Photo" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+        <button id="close-drawer-btn" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center text-xs transition">✕</button>
+        <div class="absolute bottom-3 left-3 right-3 text-white">
+          <div class="flex items-center gap-2 mb-1">
+            <span id="drawer-category" class="bg-blue-600 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">Attraction</span>
+            <span id="drawer-rating" class="text-xs font-semibold">★ 4.8</span>
+            <span id="drawer-price" class="text-xs font-semibold text-emerald-400">$$</span>
+          </div>
+          <h2 id="drawer-title" class="text-base sm:text-lg font-bold leading-tight drop-shadow-sm">Place Title</h2>
+          <p id="drawer-neighborhood" class="text-xs text-slate-200 font-medium drop-shadow-sm">Neighborhood, City</p>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5">
+        <div class="flex items-center justify-between">
+          <div id="drawer-safety-badge" class="badge-safe px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1">
+            ● High Safety Verified
+          </div>
+          <span class="text-xs text-slate-400" id="drawer-hours">Hours not specified</span>
+        </div>
+
+        <p id="drawer-address" class="text-xs text-slate-500"></p>
+
+        <!-- 5-Metric Scorecard -->
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Scorecard (0-100)</span>
+            <span id="score-val-composite" class="text-xs font-black text-blue-600">85/100</span>
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1">
+            <div id="score-bar-composite" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 85%"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+            <div>
+              <div class="flex justify-between text-slate-500 mb-0.5"><span>Safety</span><span id="score-val-safety" class="font-bold">85/100</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full"><div id="score-bar-safety" class="bg-emerald-500 h-full rounded-full" style="width: 85%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-500 mb-0.5"><span>Cleanliness</span><span id="score-val-clean" class="font-bold">80/100</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full"><div id="score-bar-clean" class="bg-blue-500 h-full rounded-full" style="width: 80%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-500 mb-0.5"><span>Affordability</span><span id="score-val-afford" class="font-bold">90/100</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full"><div id="score-bar-afford" class="bg-amber-500 h-full rounded-full" style="width: 90%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-500 mb-0.5"><span>Accessibility</span><span id="score-val-access" class="font-bold">88/100</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full"><div id="score-bar-access" class="bg-purple-500 h-full rounded-full" style="width: 88%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">About</h4>
+          <p id="drawer-desc" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+        </div>
+
+        <div id="drawer-heritage-box" class="p-3 bg-amber-50/70 dark:bg-amber-950/30 rounded-xl border border-amber-200/80 dark:border-amber-800/80">
+          <div class="flex items-center gap-1.5 mb-1 text-amber-800 dark:text-amber-300">
+            <span class="text-xs">🏛</span>
+            <h4 class="text-xs font-bold uppercase tracking-wider">Heritage & Culture Notes</h4>
+          </div>
+          <p id="drawer-heritage-text" class="text-xs text-amber-900/90 dark:text-amber-200/90 leading-relaxed"></p>
+        </div>
+
+        <button id="drawer-compare-trigger" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1 transition">
+          ⚖ Compare With Another Place
+        </button>
+
+        <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+          <span>Phone: <b id="drawer-phone" class="text-slate-700 dark:text-slate-300">N/A</b></span>
+        </div>
+      </div>
+
+      <div class="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
+        <button id="drawer-directions-btn" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 transition">
+          Get Safe Directions
+        </button>
+      </div>
+    </aside>
+
+    <!-- ASSISTANT CHAT DRAWER -->
+    <aside id="assistant-drawer" class="drawer-transition absolute bottom-0 right-0 w-full sm:w-[410px] h-[85vh] sm:h-full bg-white dark:bg-slate-900 border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-800 shadow-2xl z-40 translate-x-full flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden">
+      <div class="p-3.5 bg-blue-600 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-sm font-bold">🤖</div>
+          <div>
+            <h3 class="text-xs font-bold leading-none">City AI Companion</h3>
+            <span class="text-[10px] text-blue-100">Grounded strictly in verified city data</span>
+          </div>
+        </div>
+        <button onclick="document.getElementById('assistant-drawer').classList.add('translate-x-full')" class="text-white/80 hover:text-white font-bold text-sm">✕</button>
+      </div>
+
+      <!-- Quick prompts -->
+      <div class="p-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center gap-1.5 overflow-x-auto scrollbar-none text-[11px] shrink-0">
+        <button class="assistant-prompt-chip px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap border shadow-sm">Cheap and safe food tonight?</button>
+        <button class="assistant-prompt-chip px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap border shadow-sm">Safest historical landmarks?</button>
+        <button class="assistant-prompt-chip px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap border shadow-sm">Areas to avoid at night?</button>
+      </div>
+
+      <!-- Messages Feed -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-3 flex flex-col gap-3">
+        <div class="self-start max-w-[85%] bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs leading-relaxed shadow-sm">
+          👋 Hello! I am your <b>City Life Companion</b> for San Francisco. Ask me for recommendations, safety comparisons, or historical facts. I respond strictly using verified database records.
+        </div>
+      </div>
+
+      <!-- Input box -->
+      <div class="p-2.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2 shrink-0">
+        <input id="chat-input" type="text" placeholder="Ask about places, safety, history..." class="flex-1 text-xs p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none" />
+        <button id="send-chat-btn" class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow transition">Send</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- MODAL: COMPARE VIEW (RADAR CHART & METRIC TABLE) -->
+  <div id="compare-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Side-by-Side Place Comparison</h3>
+          <p class="text-[11px] text-slate-500">Transparent 5-dimension radar analysis and winner breakdown</p>
+        </div>
+        <button onclick="document.getElementById('compare-modal').classList.add('hidden')" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+        <!-- Place Selectors -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-bold text-blue-600 uppercase">Place A (Blue)</label>
+            <select id="compare-select-a" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"></select>
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-amber-600 uppercase">Place B (Amber)</label>
+            <select id="compare-select-b" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"></select>
+          </div>
+        </div>
+
+        <!-- Radar Chart Canvas & Table -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <div class="flex flex-col items-center justify-center p-2 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-700">
+            <canvas id="radar-canvas" width="260" height="240"></canvas>
+            <div class="flex items-center gap-3 text-[10px] mt-2">
+              <span class="flex items-center gap-1 text-blue-600 font-bold"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span> Place A</span>
+              <span class="flex items-center gap-1 text-amber-600 font-bold"><span class="w-2.5 h-2.5 rounded-full bg-amber-600 inline-block"></span> Place B</span>
+            </div>
+          </div>
+
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-700 text-[11px] text-slate-400 text-left">
+                <th class="py-1.5">Metric</th>
+                <th class="py-1.5 text-center text-blue-600">Place A</th>
+                <th class="py-1.5 text-center text-amber-600">Place B</th>
+              </tr>
+            </thead>
+            <tbody id="compare-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Weight Sliders Section -->
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+          <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Adjust Weighted Formula Sliders</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px]">
+            <div>
+              <div class="flex justify-between mb-0.5"><span>Safety Weight</span><span id="val-weight-safety" class="font-bold">25%</span></div>
+              <input id="weight-safety" type="range" min="0.05" max="0.6" step="0.05" value="0.25" class="w-full accent-blue-600" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-0.5"><span>Cleanliness</span><span id="val-weight-cleanliness" class="font-bold">20%</span></div>
+              <input id="weight-cleanliness" type="range" min="0.05" max="0.6" step="0.05" value="0.20" class="w-full accent-blue-600" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-0.5"><span>Affordability</span><span id="val-weight-affordability" class="font-bold">20%</span></div>
+              <input id="weight-affordability" type="range" min="0.05" max="0.6" step="0.05" value="0.20" class="w-full accent-blue-600" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-0.5"><span>Rating</span><span id="val-weight-rating" class="font-bold">20%</span></div>
+              <input id="weight-rating" type="range" min="0.05" max="0.6" step="0.05" value="0.20" class="w-full accent-blue-600" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-0.5"><span>Accessibility</span><span id="val-weight-accessibility" class="font-bold">15%</span></div>
+              <input id="weight-accessibility" type="range" min="0.05" max="0.6" step="0.05" value="0.15" class="w-full accent-blue-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LEADERBOARDS (BEST OF / WORST OF) -->
+  <div id="leaderboard-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-xl max-h-[85vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">City Leaderboards</h3>
+          <p class="text-[11px] text-slate-500">Best vs Worst places and neighborhood benchmarks</p>
+        </div>
+        <button onclick="document.getElementById('leaderboard-modal').classList.add('hidden')" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+        <div>
+          <h4 class="text-xs font-bold text-emerald-600 uppercase mb-2">🏆 Top 5 Highest Scored Places</h4>
+          <div id="leaderboard-best-places" class="flex flex-col gap-1.5"></div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-rose-600 uppercase mb-2">⚠ Lowest Ranked Locations</h4>
+          <div id="leaderboard-worst-places" class="flex flex-col gap-1.5"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div>
+            <h5 class="text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Safest Neighborhoods</h5>
+            <div id="leaderboard-safe-nhoods" class="flex flex-col gap-1"></div>
+          </div>
+          <div>
+            <h5 class="text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Caution Neighborhoods</h5>
+            <div id="leaderboard-caution-nhoods" class="flex flex-col gap-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SAFE ROUTE PLANNER -->
+  <div id="routes-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-5 flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Plan Safe Route</h3>
+          <p class="text-[11px] text-slate-500">Compare fastest corridor vs hazard-bypassing path</p>
+        </div>
+        <button onclick="document.getElementById('routes-modal').classList.add('hidden')" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Origin Point (A)</label>
+        <select id="route-origin-select" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"></select>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Destination Point (B)</label>
+        <select id="route-dest-select" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"></select>
+      </div>
+
+      <button id="calculate-route-btn" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition">
+        Calculate Fastest vs Safest Route
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: CITIZEN REPORT SUBMISSION (PHOTO + AUDIO NOTE + NLP) -->
+  <div id="report-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg max-h-[90vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Submit Citizen Incident Report</h3>
+          <p class="text-[11px] text-slate-500">Report civic hazards, potholes, lighting, or incidents</p>
+        </div>
+        <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+
+      <form id="submit-report-form" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5">
+        <div class="flex items-center justify-between">
+          <button type="button" id="drop-pin-btn" class="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 font-bold text-xs border border-blue-200 flex items-center gap-1">
+            📍 Drop Pin on Map
+          </button>
+          <span id="report-coords-badge" class="text-xs text-slate-500">Pinned: 37.7749, -122.4194</span>
+        </div>
+
+        <input type="hidden" id="report-lat" value="37.7749" />
+        <input type="hidden" id="report-lon" value="-122.4194" />
+
+        <div>
+          <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Category</label>
+          <select id="report-category" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+            <option value="pothole">Pothole / Road Damage</option>
+            <option value="lighting">Poor Street Lighting</option>
+            <option value="accident">Traffic Accident</option>
+            <option value="harassment">Harassment / Theft</option>
+            <option value="flooding">Flooding / Water Leak</option>
+            <option value="garbage">Garbage / Illegal Dumping</option>
+            <option value="traffic">Traffic Congestion</option>
+            <option value="other">Other Civic Issue</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Description</label>
+          <textarea id="report-desc" rows="3" placeholder="Describe the hazard in detail..." class="w-full text-xs p-2.5 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none" required></textarea>
+        </div>
+
+        <!-- Voice Recorder -->
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Voice Note & Auto-Transcript</span>
+            <button type="button" id="record-voice-btn" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition">
+              🎤 Record Voice Note
+            </button>
+          </div>
+          <p id="record-status" class="text-[11px] text-slate-400">Ready to record audio note.</p>
+          <audio id="voice-audio-preview" controls class="hidden w-full mt-2 h-8"></audio>
+          <input type="hidden" id="report-transcript" />
+        </div>
+
+        <div>
+          <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Photo URL (Optional)</label>
+          <input id="report-photo-url" type="url" placeholder="https://..." class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200" />
+        </div>
+
+        <!-- Live NLP Prediction Box -->
+        <div id="nlp-preview-box" class="hidden p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[11px]">
+          <span class="font-bold text-blue-700 dark:text-blue-300">AI NLP Live Assessment:</span>
+          <div class="flex items-center gap-3 mt-1">
+            <span>Category: <b id="nlp-pred-cat" class="text-blue-600">SAFETY</b></span>
+            <span>Urgency: <b id="nlp-pred-urgency" class="text-amber-600">HIGH</b></span>
+            <span>Sentiment: <b id="nlp-pred-sentiment" class="text-slate-700 dark:text-slate-300">NEGATIVE</b></span>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow transition">
+          Submit Report Live
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: INSIGHTS & ANALYTICS DASHBOARD -->
+  <div id="insights-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[85vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Smart City Insights & Analytics</h3>
+          <p class="text-[11px] text-slate-500">Live city telemetry, civic resolution rates, and trending signals</p>
+        </div>
+        <button onclick="document.getElementById('insights-modal').classList.add('hidden')" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-center">
+            <span class="text-xs text-slate-400">Total POIs</span>
+            <p id="stat-total-places" class="text-lg font-black text-blue-600 mt-0.5">16</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-center">
+            <span class="text-xs text-slate-400">Citizen Reports</span>
+            <p id="stat-total-reports" class="text-lg font-black text-amber-500 mt-0.5">4</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-center">
+            <span class="text-xs text-slate-400">Resolution Rate</span>
+            <p id="stat-resolution-rate" class="text-lg font-black text-emerald-500 mt-0.5">72%</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-center">
+            <span class="text-xs text-slate-400">Active Hotspots</span>
+            <p id="stat-active-hotspots" class="text-lg font-black text-rose-500 mt-0.5">3</p>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1.5">Top Civic Issues by Category</h4>
+          <div id="insights-cats-list" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 flex flex-col gap-2"></div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1.5">Trending News Signals & Advisories</h4>
+          <div id="insights-news-list" class="flex flex-col gap-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: HERITAGE HUB & ITINERARY GENERATOR -->
+  <div id="heritage-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-xl max-h-[85vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Cultural Heritage Hub & Itinerary</h3>
+          <p class="text-[11px] text-slate-500">Historical discovery walk optimized for time and budget</p>
+        </div>
+        <button onclick="document.getElementById('heritage-modal').classList.add('hidden')" class="text-slate-400 font-bold text-sm">✕</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Available Duration</label>
+            <select id="itinerary-duration" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+              <option value="2">2 Hours (Quick Walk)</option>
+              <option value="4" selected>4 Hours (Half Day + Lunch)</option>
+              <option value="6">6 Hours (Full Cultural Tour)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-600 dark:text-slate-300">Budget Level</label>
+            <select id="itinerary-budget" class="w-full text-xs p-2 mt-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+              <option value="1">$ (Budget)</option>
+              <option value="2" selected>$$ (Moderate)</option>
+              <option value="3">$$$ (High End)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="generate-itinerary-btn" class="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow transition">
+          Generate Walking Schedule
+        </button>
+
+        <div>
+          <h4 id="itinerary-title" class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase mb-2">4-Hour Historic Discovery</h4>
+          <div id="itinerary-schedule-list" class="flex flex-col gap-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration fail:', err));
+      });
+    }
+  </script>
+
+  <!-- Application Entry Point -->
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

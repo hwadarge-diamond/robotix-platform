@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+mainframe/node_modules/
+
+# Production builds
+dist/
+mainframe/dist/
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.local
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.log

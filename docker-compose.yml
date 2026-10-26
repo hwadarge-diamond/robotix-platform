@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: citylife_db
+    restart: always
+    environment:
+      POSTGRES_DB: citylife_db
+      POSTGRES_USER: citylife_user
+      POSTGRES_PASSWORD: securepassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./backend/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/001_initial_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citylife_user -d citylife_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: citylife_web
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - CITY_NAME=San Francisco
+      - CITY_COUNTRY=USA
+      - CITY_CENTER_LAT=37.7749
+      - CITY_CENTER_LON=-122.4194
+      - DATABASE_URL=postgresql://citylife_user:securepassword@db:5432/citylife_db
+      - HOST=0.0.0.0
+      - PORT=8000
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgis_data:

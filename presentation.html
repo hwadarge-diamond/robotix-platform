@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Digital Electronics Powers Robotics</title>
+  <!-- Three.js for 3D Graphics -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Orbitron & Inter Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070b14;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --card-border: rgba(56, 189, 248, 0.25);
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.35);
+      --magenta: #ff007f;
+      --magenta-glow: rgba(255, 0, 127, 0.35);
+      --green: #10b981;
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* Background animated grid & canvas */
+    #bg-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Cyber grid overlay */
+    .cyber-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Slides container */
+    .slides-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 60px 90px;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.96) translateY(20px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
+
+    /* Typography */
+    h1, h2, h3, .brand-font {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .slide-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--cyan);
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--cyan-glow);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+    }
+
+    .slide-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+      text-align: center;
+      text-shadow: 0 0 30px var(--cyan-glow);
+    }
+
+    .slide-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      text-align: center;
+      font-weight: 400;
+      max-width: 800px;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255,255,255,0.02);
+      padding: 24px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-4px);
+    }
+
+    /* SLIDE 1: Title */
+    .hero-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 950px;
+    }
+
+    .main-hero-title {
+      font-size: 3.2rem;
+      line-height: 1.15;
+      font-weight: 900;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #ffffff 10%, var(--cyan) 60%, var(--magenta) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      from { filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)); }
+      to { filter: drop-shadow(0 0 35px rgba(255, 0, 127, 0.5)); }
+    }
+
+    .author-badge-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 35px;
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border-left: 3px solid var(--cyan);
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .info-val {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* SLIDE 2: Sense Decide Act 3D loop */
+    .loop-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 15px;
+    }
+
+    .loop-card {
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loop-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent-color, var(--cyan));
+      box-shadow: 0 0 12px var(--accent-color, var(--cyan));
+    }
+
+    .loop-icon {
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: floatIcon 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatIcon {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+
+    .loop-points {
+      list-style: none;
+      text-align: left;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    .loop-points li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .loop-points li::before {
+      content: '▶';
+      font-size: 0.7rem;
+      color: var(--cyan);
+      margin-top: 4px;
+    }
+
+    /* SLIDE 3: Interactive Logic Gates */
+    .logic-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .sensor-toggles {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.25s;
+    }
+
+    .toggle-btn.active {
+      border-color: var(--cyan);
+      background: rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.3);
+    }
+
+    .bit-display {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--cyan);
+      margin-top: 4px;
+    }
+
+    .truth-table-container {
+      overflow-x: auto;
+    }
+
+    table.truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    table.truth-table th {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--cyan);
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    table.truth-table td {
+      padding: 7px;
+      border: 1px solid rgba(255,255,255,0.05);
+      color: #cbd5e1;
+    }
+
+    table.truth-table tr.active-row {
+      background: rgba(16, 185, 129, 0.25);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* SLIDE 4: Combinational Circuits */
+    .comb-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      width: 100%;
+      max-width: 1150px;
+    }
+
+    .comb-card h4 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+
+    .comb-card p {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .chip-badge {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      margin-top: 10px;
+      color: var(--magenta);
+    }
+
+    /* SLIDE 5: Sequential Circuits */
+    .seq-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+      max-width: 1050px;
+    }
+
+    .fsm-visualizer {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    .fsm-state-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      border-left: 4px solid var(--text-muted);
+      transition: all 0.3s ease;
+    }
+
+    .fsm-state-box.current-state {
+      border-left-color: var(--cyan);
+      background: rgba(0, 240, 255, 0.12);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    /* SLIDE 6: Applications */
+    .app-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      width: 100%;
+      max-width: 1150px;
+    }
+
+    .app-box {
+      text-align: center;
+      padding: 20px 15px;
+    }
+
+    .app-box-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    /* SLIDE 7: DANCING ROBOT SLIDE */
+    .dance-slide-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      width: 100%;
+      max-width: 1150px;
+      align-items: center;
+    }
+
+    .dance-stage-card {
+      position: relative;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #1e1b4b 0%, #090919 80%);
+      border: 2px solid var(--magenta);
+      box-shadow: 0 0 35px rgba(255, 0, 127, 0.35);
+    }
+
+    #dance-3d-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .speech-bubble {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.9);
+      border: 2px solid var(--cyan);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.95rem;
+      box-shadow: 0 0 20px var(--cyan-glow);
+      text-align: center;
+      pointer-events: none;
+      z-index: 5;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: var(--cyan) transparent transparent;
+    }
+
+    .dance-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .dance-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .dance-action-btn {
+      padding: 14px 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .dance-action-btn:hover {
+      background: var(--magenta);
+      border-color: #fff;
+      box-shadow: 0 0 20px var(--magenta-glow);
+      transform: translateY(-2px);
+    }
+
+    .dance-action-btn.active {
+      background: linear-gradient(135deg, var(--magenta), #8b5cf6);
+      border-color: #fff;
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.6);
+    }
+
+    .music-btn {
+      width: 100%;
+      padding: 14px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--cyan), #3b82f6);
+      border: none;
+      color: #070b14;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 0 20px var(--cyan-glow);
+      transition: all 0.2s;
+    }
+
+    .music-btn:hover {
+      filter: brightness(1.15);
+      transform: scale(1.02);
+    }
+
+    /* Floating Confetti Canvas */
+    #confetti-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Navigation Controls */
+    .nav-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      padding: 8px 20px;
+      border-radius: 40px;
+      z-index: 50;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: var(--cyan);
+      color: #000;
+      box-shadow: 0 0 15px var(--cyan);
+    }
+
+    .slide-pills {
+      display: flex;
+      gap: 8px;
+    }
+
+    .slide-pill {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .slide-pill.active {
+      width: 28px;
+      border-radius: 10px;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+    }
+
+    .fullscreen-btn {
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-muted);
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .fullscreen-btn:hover {
+      color: #fff;
+      border-color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cyber-grid"></div>
+  <canvas id="bg-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="slides-wrapper">
+
+    <!-- ================= SLIDE 1: TITLE ================= -->
+    <div class="slide active" id="slide-1">
+      <div class="hero-container">
+        <div class="slide-badge">⚡ SPPU • DELD • 2026 EDITION ⚡</div>
+        <h1 class="main-hero-title">HOW DIGITAL ELECTRONICS POWERS ROBOTICS</h1>
+        <p class="slide-subtitle" style="font-size: 1.35rem; color: var(--cyan);">
+          Logic Makes Robots Sense, Decide, and Act
+        </p>
+
+        <div class="author-badge-card glass-card">
+          <div class="info-item">
+            <span class="info-label">Presenter</span>
+            <span class="info-val">[Your Name Here]</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Roll Number</span>
+            <span class="info-val">[Your Roll No.]</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Class & Department</span>
+            <span class="info-val">2nd Year CSE, DELD</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Institution</span>
+            <span class="info-val">Dr. D.Y. Patil Technical Campus, SPPU, Pune</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 2: ROBOTS & DIGITAL ELECTRONICS ================= -->
+    <div class="slide" id="slide-2">
+      <div class="slide-badge">01 // FOUNDATION</div>
+      <h2 class="slide-title">ROBOTS AND DIGITAL ELECTRONICS</h2>
+      <p class="slide-subtitle">Digital signals make robot decisions ultra-fast, deterministic, and noise-immune.</p>
+
+      <div class="loop-container">
+        <!-- Sense Card -->
+        <div class="loop-card glass-card" style="--accent-color: var(--cyan);">
+          <div class="loop-icon">📡</div>
+          <h3 style="color: var(--cyan); margin-bottom: 6px;">SENSE</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); font-family: 'Share Tech Mono';">ENVIRONMENT TO 0s & 1s</p>
+          <ul class="loop-points">
+            <li>Robots are built to sense their surrounding environment.</li>
+            <li>Sensors translate light, distance & touch into binary voltages.</li>
+            <li>Threshold circuits filter analog sensor noise into clean logic.</li>
+          </ul>
+        </div>
+
+        <!-- Decide Card -->
+        <div class="loop-card glass-card" style="--accent-color: var(--magenta);">
+          <div class="loop-icon">🧠</div>
+          <h3 style="color: var(--magenta); margin-bottom: 6px;">DECIDE</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); font-family: 'Share Tech Mono';">BINARY LOGIC PROCESSING</p>
+          <ul class="loop-points">
+            <li>The Sense → Decide → Act loop keeps robots intelligent.</li>
+            <li>Robots use 0s and 1s as their fundamental brain language.</li>
+            <li>Digital gates evaluate conditions in nanoseconds.</li>
+          </ul>
+        </div>
+
+        <!-- Act Card -->
+        <div class="loop-card glass-card" style="--accent-color: var(--green);">
+          <div class="loop-icon">⚙️</div>
+          <h3 style="color: var(--green); margin-bottom: 6px;">ACT</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); font-family: 'Share Tech Mono';">ACTUATION & MOTIONS</p>
+          <ul class="loop-points">
+            <li>Digital signals make robot decisions fast and clear.</li>
+            <li>Motor drivers, PWM signals, and servos execute actions.</li>
+            <li>Closed feedback loop verifies the physical movement.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 3: LOGIC GATES IN ROBOTICS ================= -->
+    <div class="slide" id="slide-3">
+      <div class="slide-badge">02 // DECISION MAKING</div>
+      <h2 class="slide-title">LOGIC GATES AND BOOLEAN ALGEBRA</h2>
+      <p class="slide-subtitle">Simple rules control complex robotic behavior. Toggle the sensors below to see live logic!</p>
+
+      <div class="logic-grid">
+        <!-- Interactive Gates Panel -->
+        <div class="glass-card">
+          <h4 style="font-family: 'Orbitron'; color: var(--cyan); margin-bottom: 12px;">SIMULATE ROBOT SENSORS</h4>
+          
+          <div class="sensor-toggles">
+            <button class="toggle-btn" id="btn-sensor-a" onclick="toggleSensor('A')">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">OBSTACLE SENSOR (A)</span>
+              <div class="bit-display" id="val-sensor-a">0</div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">CLICK TO TOGGLE</span>
+            </button>
+            <button class="toggle-btn" id="btn-sensor-b" onclick="toggleSensor('B')">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">BUMPER SENSOR (B)</span>
+              <div class="bit-display" id="val-sensor-b">0</div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">CLICK TO TOGGLE</span>
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;">
+            <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--cyan); font-family: 'Orbitron';">AND (A·B)</div>
+              <div style="font-size: 1.5rem; font-weight: bold; color: #fff;" id="gate-and-out">0</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Emergency Stop</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--magenta); font-family: 'Orbitron';">OR (A+B)</div>
+              <div style="font-size: 1.5rem; font-weight: bold; color: #fff;" id="gate-or-out">0</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Warning LED</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--amber); font-family: 'Orbitron';">NOT (Ā)</div>
+              <div style="font-size: 1.5rem; font-weight: bold; color: #fff;" id="gate-not-out">1</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Path Clear</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--green); font-family: 'Orbitron';">XOR (A⊕B)</div>
+              <div style="font-size: 1.5rem; font-weight: bold; color: #fff;" id="gate-xor-out">0</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Steer Pivot</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Truth Tables -->
+        <div class="glass-card truth-table-container">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h4 style="font-family: 'Orbitron'; color: #fff; font-size: 0.95rem;">LIVE TRUTH TABLE EVALUATION</h4>
+            <span style="font-size: 0.75rem; color: var(--green); font-family: 'Share Tech Mono';">● REALTIME SYNC</span>
+          </div>
+          <table class="truth-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>AND (A·B)</th>
+                <th>OR (A+B)</th>
+                <th>NOT (Ā)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="row-0-0" class="active-row">
+                <td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
+              </tr>
+              <tr id="row-0-1">
+                <td>0</td><td>1</td><td>0</td><td>1</td><td>1</td>
+              </tr>
+              <tr id="row-1-0">
+                <td>1</td><td>0</td><td>0</td><td>1</td><td>0</td>
+              </tr>
+              <tr id="row-1-1">
+                <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">
+            *Logic gates turn raw sensor voltages into decisions. They are the essential building blocks of robotic thinking.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 4: COMBINATIONAL CIRCUITS ================= -->
+    <div class="slide" id="slide-4">
+      <div class="slide-badge">03 // CIRCUIT ARCHITECTURE</div>
+      <h2 class="slide-title">COMBINATIONAL CIRCUITS IN ROBOTS</h2>
+      <p class="slide-subtitle">Output depends purely on the current input combination to navigate smoothly.</p>
+
+      <div class="comb-grid">
+        <div class="glass-card comb-card">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🔀</div>
+          <h4>MULTIPLEXER</h4>
+          <p>Chooses the right sensor signal at any moment from ultrasonic, infrared, or bumper arrays.</p>
+          <div class="chip-badge">MUX 8:1 / SENSORS</div>
+        </div>
+
+        <div class="glass-card comb-card">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🔢</div>
+          <h4>DECODER</h4>
+          <p>Turns sensor data into motor actions (Turn Left, Turn Right) or 7-segment status display patterns.</p>
+          <div class="chip-badge">DECODER / ACTUATORS</div>
+        </div>
+
+        <div class="glass-card comb-card">
+          <div style="font-size: 2rem; margin-bottom: 8px;">⌨️</div>
+          <h4>ENCODER</h4>
+          <p>Converts user keypad coordinates or wheel slot pulses into compressed digital signals.</p>
+          <div class="chip-badge">KEYPAD ENCODER</div>
+        </div>
+
+        <div class="glass-card comb-card">
+          <div style="font-size: 2rem; margin-bottom: 8px;">➕</div>
+          <h4>ADDER</h4>
+          <p>Calculates precise distance (e.g. 124 cm) and trajectory offsets by summing sensor ticks.</p>
+          <div class="chip-badge">ALU ADDER / 124cm</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 5: SEQUENTIAL CIRCUITS ================= -->
+    <div class="slide" id="slide-5">
+      <div class="slide-badge">04 // MEMORY & STATE</div>
+      <h2 class="slide-title">SEQUENTIAL CIRCUITS IN ROBOTS</h2>
+      <p class="slide-subtitle">Store, remember, and move with intent using clock pulses and memory registers.</p>
+
+      <div class="seq-layout">
+        <div class="glass-card">
+          <h4 style="font-family: 'Orbitron'; color: var(--cyan); margin-bottom: 12px;">MEMORY BUILDING BLOCKS</h4>
+          <ul class="loop-points" style="font-size: 0.95rem;">
+            <li><strong>Flip-Flops:</strong> Keep one bit of memory (remember previous obstacle direction).</li>
+            <li><strong>Counters:</strong> Track wheel rotations for precision odometry.</li>
+            <li><strong>Registers:</strong> Hold multi-bit steering and velocity commands.</li>
+            <li><strong>Finite State Machine (FSM):</strong> Evaluates present state + inputs to decide the next action.</li>
+          </ul>
+        </div>
+
+        <div class="glass-card fsm-visualizer">
+          <h4 style="font-family: 'Orbitron'; color: var(--magenta); margin-bottom: 8px;">ROBOT FSM STATE ENGINE</h4>
+          
+          <div class="fsm-state-box current-state" id="fsm-s1">
+            <div>
+              <span style="font-family: 'Orbitron'; font-weight: bold; color: var(--cyan);">STATE 0: FORWARD</span>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Motors synchronized, path clear</p>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--green); font-family: 'Share Tech Mono';">ACTIVE</span>
+          </div>
+
+          <div class="fsm-state-box" id="fsm-s2">
+            <div>
+              <span style="font-family: 'Orbitron'; font-weight: bold;">STATE 1: SENSE OBSTACLE</span>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Bumper switch closed, latch flip-flop</p>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: 'Share Tech Mono';">IDLE</span>
+          </div>
+
+          <div class="fsm-state-box" id="fsm-s3">
+            <div>
+              <span style="font-family: 'Orbitron'; font-weight: bold;">STATE 2: STOP & TURN</span>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Reverse right motor, pivot away</p>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: 'Share Tech Mono';">IDLE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 6: REAL-WORLD APPLICATIONS ================= -->
+    <div class="slide" id="slide-6">
+      <div class="slide-badge">05 // PRACTICAL IMPACT</div>
+      <h2 class="slide-title">REAL-WORLD APPLICATIONS & CONCLUSION</h2>
+      <p class="slide-subtitle">Digital electronics powers every robot's intelligence from home to sky.</p>
+
+      <div class="app-cards">
+        <div class="glass-card app-box">
+          <div class="app-box-icon">🧹</div>
+          <h4 style="font-family: 'Orbitron'; font-size: 1rem; color: var(--cyan);">SMART VACUUM</h4>
+          <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 8px;">
+            IR cliff sensors & bumper logic prevent falls and map rooms with FSM cleaning states.
+          </p>
+        </div>
+
+        <div class="glass-card app-box">
+          <div class="app-box-icon">🏎️</div>
+          <h4 style="font-family: 'Orbitron'; font-size: 1rem; color: var(--green);">LINE-FOLLOWER</h4>
+          <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 8px;">
+            Comparator ICs read photodiode pairs to compute XOR steering corrections in real time.
+          </p>
+        </div>
+
+        <div class="glass-card app-box">
+          <div class="app-box-icon">🦾</div>
+          <h4 style="font-family: 'Orbitron'; font-size: 1rem; color: var(--magenta);">ROBOTIC ARM</h4>
+          <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 8px;">
+            Optical rotary encoders track joint angles with digital PWM servo actuation.
+          </p>
+        </div>
+
+        <div class="glass-card app-box">
+          <div class="app-box-icon">🛸</div>
+          <h4 style="font-family: 'Orbitron'; font-size: 1rem; color: var(--amber);">DRONE</h4>
+          <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 8px;">
+            Digital flight controllers crunch accelerometer & gyro bus data at 400Hz.
+          </p>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-top: 24px; max-width: 900px; text-align: center; border-color: rgba(0, 240, 255, 0.4);">
+        <p style="font-size: 1.05rem; color: #fff; font-weight: 600;">
+          "Advances in AI and digital sensor fusion will unlock even more robotic autonomy for the future."
+        </p>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 7: DANCING ROBOT & THANK YOU ================= -->
+    <div class="slide" id="slide-7">
+      <div class="slide-badge">06 // THE GRAND FINALE 💃🤖</div>
+      <h2 class="slide-title">THANK YOU! ANY QUESTIONS?</h2>
+      <p class="slide-subtitle">Logic gates got the brain... now check out the robotic groove!</p>
+
+      <div class="dance-slide-grid">
+        <!-- 3D Dancing Robot Stage -->
+        <div class="dance-stage-card">
+          <div class="speech-bubble" id="speech-bubble">
+            "Error 404: Chill not found! Initiating Boogie Protocol!"
+          </div>
+          <div id="dance-3d-canvas"></div>
+        </div>
+
+        <!-- Dance Controls -->
+        <div class="dance-controls">
+          <div class="glass-card">
+            <h4 style="font-family: 'Orbitron'; color: var(--magenta); font-size: 0.95rem; margin-bottom: 8px;">
+              ROBOT DANCE CONTROL CENTER
+            </h4>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
+              Trigger real-time 3D algorithmic dance routines & beat synth:
+            </p>
+
+            <div class="dance-btn-grid">
+              <button class="dance-action-btn active" id="btn-dance-robot" onclick="setDanceMode('robot')">
+                🤖 THE ROBOT
+              </button>
+              <button class="dance-action-btn" id="btn-dance-disco" onclick="setDanceMode('disco')">
+                🪩 DISCO FEVER
+              </button>
+              <button class="dance-action-btn" id="btn-dance-floss" onclick="setDanceMode('floss')">
+                ⚡ FLOSS & SWAG
+              </button>
+              <button class="dance-action-btn" id="btn-dance-spin" onclick="setDanceMode('spin')">
+                🤸 BREAKDANCE
+              </button>
+            </div>
+
+            <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+              <button class="dance-action-btn" onclick="triggerConfetti()" style="background: rgba(255, 0, 127, 0.2); border-color: var(--magenta);">
+                🎉 POP CONFETTI CANNON!
+              </button>
+
+              <button class="music-btn" id="music-btn" onclick="toggleAudioBeat()">
+                <span id="music-icon">🎵</span> <span id="music-text">PLAY DISCO SYNTH BEAT</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="prevSlide()" title="Previous Slide (Left Arrow)">◀</button>
+    <div class="slide-pills" id="slide-pills"></div>
+    <button class="nav-btn" onclick="nextSlide()" title="Next Slide (Right Arrow or Space)">▶</button>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen (F)">⛶ FULLSCREEN</button>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* ================= SLIDE DECK CONTROLLER ================= */
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const pillsContainer = document.getElementById('slide-pills');
+
+    // Create Navigation Pills
+    slides.forEach((_, idx) => {
+      const pill = document.createElement('div');
+      pill.classList.add('slide-pill');
+      if (idx === 0) pill.classList.add('active');
+      pill.addEventListener('click', () => goToSlide(idx));
+      pillsContainer.appendChild(pill);
+    });
+
+    const pills = document.querySelectorAll('.slide-pill');
+
+    function goToSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      pills[currentSlide].classList.remove('active');
+      currentSlide = (n + totalSlides) % totalSlides;
+      slides[currentSlide].classList.add('active');
+      pills[currentSlide].classList.add('active');
+
+      if (currentSlide === 6) {
+        triggerConfetti();
+      }
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+      } else if (e.key === 'Home') {
+        goToSlide(0);
+      } else if (e.key === 'End') {
+        goToSlide(totalSlides - 1);
+      }
+    });
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    /* ================= SLIDE 3: INTERACTIVE LOGIC GATES ================= */
+    let sensorA = 0;
+    let sensorB = 0;
+
+    function toggleSensor(which) {
+      if (which === 'A') {
+        sensorA = sensorA === 0 ? 1 : 0;
+        document.getElementById('val-sensor-a').textContent = sensorA;
+        document.getElementById('btn-sensor-a').classList.toggle('active', sensorA === 1);
+      } else {
+        sensorB = sensorB === 0 ? 1 : 0;
+        document.getElementById('val-sensor-b').textContent = sensorB;
+        document.getElementById('btn-sensor-b').classList.toggle('active', sensorB === 1);
+      }
+      updateGates();
+    }
+
+    function updateGates() {
+      const andOut = sensorA & sensorB;
+      const orOut = sensorA | sensorB;
+      const notOut = sensorA === 0 ? 1 : 0;
+      const xorOut = sensorA ^ sensorB;
+
+      document.getElementById('gate-and-out').textContent = andOut;
+      document.getElementById('gate-or-out').textContent = orOut;
+      document.getElementById('gate-not-out').textContent = notOut;
+      document.getElementById('gate-xor-out').textContent = xorOut;
+
+      // Update active truth table row
+      ['row-0-0', 'row-0-1', 'row-1-0', 'row-1-1'].forEach(id => {
+        document.getElementById(id).classList.remove('active-row');
+      });
+      const activeRowId = `row-${sensorA}-${sensorB}`;
+      const rowElem = document.getElementById(activeRowId);
+      if (rowElem) rowElem.classList.add('active-row');
+    }
+
+    /* ================= BACKGROUND 3D PARTICLES ================= */
+    const bgCanvas = document.getElementById('bg-canvas');
+    const bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+
+    const bgScene = new THREE.Scene();
+    const bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    bgCamera.position.z = 40;
+
+    const particleCount = 200;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 80;
+    }
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const material = new THREE.PointsMaterial({
+      color: 0x00f0ff,
+      size: 0.65,
+      transparent: true,
+      opacity: 0.4
+    });
+    const particleSystem = new THREE.Points(geometry, material);
+    bgScene.add(particleSystem);
+
+    function animateBg() {
+      requestAnimationFrame(animateBg);
+      particleSystem.rotation.y += 0.001;
+      particleSystem.rotation.x += 0.0006;
+      bgRenderer.render(bgScene, bgCamera);
+    }
+    animateBg();
+
+    window.addEventListener('resize', () => {
+      bgRenderer.setSize(window.innerWidth, window.innerHeight);
+      bgCamera.aspect = window.innerWidth / window.innerHeight;
+      bgCamera.updateProjectionMatrix();
+    });
+
+    /* ================= SLIDE 7: 3D DANCING ROBOT ENGINE ================= */
+    const danceContainer = document.getElementById('dance-3d-canvas');
+    const danceScene = new THREE.Scene();
+    const danceCamera = new THREE.PerspectiveCamera(45, danceContainer.clientWidth / danceContainer.clientHeight, 0.1, 100);
+    danceCamera.position.set(0, 1.8, 6.2);
+
+    const danceRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    danceRenderer.setSize(danceContainer.clientWidth, danceContainer.clientHeight);
+    danceRenderer.shadowMap.enabled = true;
+    danceContainer.appendChild(danceRenderer.domElement);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    danceScene.add(ambientLight);
+
+    const discoLight1 = new THREE.PointLight(0x00f0ff, 2.5, 20);
+    discoLight1.position.set(-3, 4, 3);
+    danceScene.add(discoLight1);
+
+    const discoLight2 = new THREE.PointLight(0xff007f, 2.5, 20);
+    discoLight2.position.set(3, 4, 3);
+    danceScene.add(discoLight2);
+
+    // Robot Hierarchical Model
+    const robotRoot = new THREE.Group();
+    danceScene.add(robotRoot);
+
+    const shinyMaterial = new THREE.MeshStandardMaterial({
+      color: 0x2dd4bf,
+      metalness: 0.8,
+      roughness: 0.2
+    });
+    const darkMetal = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.9,
+      roughness: 0.3
+    });
+    const neonEyesMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+    const heartEyeMat = new THREE.MeshBasicMaterial({ color: 0xff007f });
+
+    // Torso / Boombox Body
+    const torsoGeo = new THREE.BoxGeometry(1.2, 1.4, 0.8);
+    const torso = new THREE.Mesh(torsoGeo, shinyMaterial);
+    torso.position.y = 1.6;
+    robotRoot.add(torso);
+
+    // Speaker grille on chest
+    const grilleGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.1, 16);
+    grilleGeo.rotateX(Math.PI / 2);
+    const grille = new THREE.Mesh(grilleGeo, darkMetal);
+    grille.position.set(0, 0, 0.42);
+    torso.add(grille);
+
+    // Head
+    const headPivot = new THREE.Group();
+    headPivot.position.set(0, 0.95, 0);
+    torso.add(headPivot);
+
+    const headGeo = new THREE.BoxGeometry(0.85, 0.7, 0.75);
+    const head = new THREE.Mesh(headGeo, shinyMaterial);
+    head.position.y = 0.35;
+    headPivot.add(head);
+
+    // Eyes
+    const eyeGeo = new THREE.BoxGeometry(0.18, 0.12, 0.1);
+    const eyeLeft = new THREE.Mesh(eyeGeo, neonEyesMat);
+    eyeLeft.position.set(-0.22, 0.08, 0.4);
+    head.add(eyeLeft);
+
+    const eyeRight = new THREE.Mesh(eyeGeo, neonEyesMat);
+    eyeRight.position.set(0.22, 0.08, 0.4);
+    head.add(eyeRight);
+
+    // Antennas
+    const antGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.3);
+    const antTipGeo = new THREE.SphereGeometry(0.08, 12, 12);
+    const antLeft = new THREE.Mesh(antGeo, darkMetal);
+    antLeft.position.set(-0.3, 0.45, 0);
+    head.add(antLeft);
+    const antTipL = new THREE.Mesh(antTipGeo, heartEyeMat);
+    antTipL.position.y = 0.18;
+    antLeft.add(antTipL);
+
+    const antRight = new THREE.Mesh(antGeo, darkMetal);
+    antRight.position.set(0.3, 0.45, 0);
+    head.add(antRight);
+    const antTipR = new THREE.Mesh(antTipGeo, heartEyeMat);
+    antTipR.position.y = 0.18;
+    antRight.add(antTipR);
+
+    // Arms
+    const shoulderGeo = new THREE.SphereGeometry(0.15, 12, 12);
+    const armGeo = new THREE.BoxGeometry(0.2, 0.9, 0.2);
+
+    // Left Arm Pivot
+    const leftArmPivot = new THREE.Group();
+    leftArmPivot.position.set(-0.75, 0.5, 0);
+    torso.add(leftArmPivot);
+    const leftArm = new THREE.Mesh(armGeo, darkMetal);
+    leftArm.position.y = -0.45;
+    leftArmPivot.add(leftArm);
+
+    // Right Arm Pivot
+    const rightArmPivot = new THREE.Group();
+    rightArmPivot.position.set(0.75, 0.5, 0);
+    torso.add(rightArmPivot);
+    const rightArm = new THREE.Mesh(armGeo, darkMetal);
+    rightArm.position.y = -0.45;
+    rightArmPivot.add(rightArm);
+
+    // Legs
+    const legGeo = new THREE.BoxGeometry(0.28, 0.95, 0.28);
+    
+    const leftLegPivot = new THREE.Group();
+    leftLegPivot.position.set(-0.35, -0.7, 0);
+    torso.add(leftLegPivot);
+    const leftLeg = new THREE.Mesh(legGeo, darkMetal);
+    leftLeg.position.y = -0.45;
+    leftLegPivot.add(leftLeg);
+
+    const rightLegPivot = new THREE.Group();
+    rightLegPivot.position.set(0.35, -0.7, 0);
+    torso.add(rightLegPivot);
+    const rightLeg = new THREE.Mesh(legGeo, darkMetal);
+    rightLeg.position.y = -0.45;
+    rightLegPivot.add(rightLeg);
+
+    // Disco Ball
+    const discoBall = new THREE.Mesh(
+      new THREE.SphereGeometry(0.4, 16, 16),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 1, roughness: 0.1, wireframe: true })
+    );
+    discoBall.position.set(0, 3.2, 0);
+    danceScene.add(discoBall);
+
+    // Dance Mode State
+    let danceMode = 'robot';
+    let danceTime = 0;
+
+    const funnyQuotes = [
+      "Error 404: Chill not found! Initiating Boogie Protocol!",
+      "My CPU is running at 100°C from these sick moves!",
+      "I sense 0 obstacles on the dance floor!",
+      "Karnaugh maps taught me logic... but YouTube taught me dance!",
+      "Bip-bop! Humans said 'dance like nobody is watching'!",
+      "Output Y = 1: MAXIMUM VIBES DETECTED!"
+    ];
+
+    function setDanceMode(mode) {
+      danceMode = mode;
+      document.querySelectorAll('.dance-action-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-dance-${mode}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      // Random funny quote
+      const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
+      const bubble = document.getElementById('speech-bubble');
+      bubble.style.opacity = 0;
+      setTimeout(() => {
+        bubble.textContent = `"${quote}"`;
+        bubble.style.opacity = 1;
+      }, 150);
+    }
+
+    function animateDance() {
+      requestAnimationFrame(animateDance);
+      danceTime += 0.05;
+
+      discoBall.rotation.y += 0.02;
+      discoLight1.position.x = Math.sin(danceTime * 2) * 3;
+      discoLight2.position.z = Math.cos(danceTime * 2) * 3;
+
+      if (danceMode === 'robot') {
+        // Staccato 90-degree robotic dance
+        const step = Math.floor(danceTime * 3) % 4;
+        torso.position.y = 1.6 + (step % 2 === 0 ? 0.08 : 0);
+        headPivot.rotation.y = (step === 1 ? 0.4 : step === 3 ? -0.4 : 0);
+        leftArmPivot.rotation.z = (step === 0 ? 1.4 : -0.2);
+        rightArmPivot.rotation.z = (step === 2 ? -1.4 : 0.2);
+        leftArmPivot.rotation.x = (step === 1 ? 1.2 : 0);
+        rightArmPivot.rotation.x = (step === 3 ? 1.2 : 0);
+        robotRoot.rotation.y = Math.sin(danceTime * 0.5) * 0.2;
+      } 
+      else if (danceMode === 'disco') {
+        // Travolta disco point & hip sway
+        torso.position.y = 1.6 + Math.abs(Math.sin(danceTime * 4)) * 0.2;
+        torso.rotation.z = Math.sin(danceTime * 4) * 0.15;
+        rightArmPivot.rotation.z = -1.6 + Math.sin(danceTime * 4) * 0.6;
+        rightArmPivot.rotation.x = -0.5 + Math.cos(danceTime * 4) * 0.4;
+        leftArmPivot.rotation.z = 0.5;
+        headPivot.rotation.y = -0.4;
+        leftLegPivot.rotation.x = Math.sin(danceTime * 4) * 0.3;
+        rightLegPivot.rotation.x = -Math.sin(danceTime * 4) * 0.3;
+        robotRoot.rotation.y = Math.sin(danceTime * 2) * 0.3;
+      } 
+      else if (danceMode === 'floss') {
+        // Floss dance: arms swing opposite to hips
+        const swing = Math.sin(danceTime * 7);
+        torso.rotation.z = -swing * 0.25;
+        torso.position.x = swing * 0.2;
+        leftArmPivot.rotation.z = swing * 0.8;
+        rightArmPivot.rotation.z = swing * 0.8;
+        headPivot.rotation.y = -swing * 0.3;
+        leftLegPivot.rotation.z = swing * 0.15;
+        rightLegPivot.rotation.z = swing * 0.15;
+      } 
+      else if (danceMode === 'spin') {
+        // Breakdance 360 spin & crazy flips
+        robotRoot.rotation.y += 0.08;
+        torso.position.y = 1.5 + Math.sin(danceTime * 6) * 0.3;
+        leftArmPivot.rotation.x = Math.sin(danceTime * 6) * 2;
+        rightArmPivot.rotation.x = -Math.sin(danceTime * 6) * 2;
+        leftLegPivot.rotation.x = Math.cos(danceTime * 6) * 1.2;
+        rightLegPivot.rotation.x = -Math.cos(danceTime * 6) * 1.2;
+        headPivot.rotation.x = Math.sin(danceTime * 4) * 0.4;
+      }
+
+      danceRenderer.render(danceScene, danceCamera);
+    }
+    animateDance();
+
+    /* ================= CONFETTI CANNON SYSTEM ================= */
+    const confCanvas = document.getElementById('confetti-canvas');
+    const confCtx = confCanvas.getContext('2d');
+    confCanvas.width = window.innerWidth;
+    confCanvas.height = window.innerHeight;
+
+    let confettiParticles = [];
+
+    function triggerConfetti() {
+      for (let i = 0; i < 90; i++) {
+        confettiParticles.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 300,
+          y: window.innerHeight * 0.7,
+          vx: (Math.random() - 0.5) * 16,
+          vy: -Math.random() * 16 - 6,
+          size: Math.random() * 8 + 4,
+          color: ['#00f0ff', '#ff007f', '#10b981', '#f59e0b', '#a855f7'][Math.floor(Math.random() * 5)],
+          rot: Math.random() * Math.PI,
+          vrot: (Math.random() - 0.5) * 0.2
+        });
+      }
+    }
+
+    function renderConfetti() {
+      confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.4; // gravity
+        p.rot += p.vrot;
+
+        confCtx.save();
+        confCtx.translate(p.x, p.y);
+        confCtx.rotate(p.rot);
+        confCtx.fillStyle = p.color;
+        confCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        confCtx.restore();
+
+        if (p.y > window.innerHeight) confettiParticles.splice(i, 1);
+      }
+      requestAnimationFrame(renderConfetti);
+    }
+    renderConfetti();
+
+    /* ================= PROCEDURAL DISCO SYNTH BEAT ================= */
+    let audioCtx = null;
+    let isPlayingAudio = false;
+    let beatInterval = null;
+
+    function toggleAudioBeat() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      if (isPlayingAudio) {
+        clearInterval(beatInterval);
+        isPlayingAudio = false;
+        document.getElementById('music-text').textContent = "PLAY DISCO SYNTH BEAT";
+        document.getElementById('music-icon').textContent = "🎵";
+      } else {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isPlayingAudio = true;
+        document.getElementById('music-text').textContent = "PAUSE GROOVY BEAT";
+        document.getElementById('music-icon').textContent = "⏸️";
+
+        let step = 0;
+        beatInterval = setInterval(() => {
+          playBeatStep(step);
+          step = (step + 1) % 8;
+        }, 220);
+      }
+    }
+
+    function playTone(freq, type, duration, gainVal) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+      gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playBeatStep(s) {
+      // Kick on 0, 4
+      if (s === 0 || s === 4) {
+        playTone(90, 'sine', 0.25, 0.5);
+      }
+      // Snare on 2, 6
+      if (s === 2 || s === 6) {
+        playTone(280, 'triangle', 0.15, 0.35);
+      }
+      // Funky bassline notes
+      const notes = [110, 130, 146, 164, 110, 146, 174, 196];
+      playTone(notes[s], 'sawtooth', 0.18, 0.12);
+
+      // Random robotic bleep
+      if (s === 3 || s === 7) {
+        playTone(600 + Math.random() * 400, 'square', 0.08, 0.08);
+      }
+    }
+  </script>
+</body>
+</html>
