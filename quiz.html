@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Robotics Assessment Quiz // ROBOTIX ACADEMY</title>
-  <meta name="description" content="Test your engineering comprehension of robotics kinematics, sensors, PWM signals, and control theory with instant feedback and score." />
+  <title>Assessment Quiz & Skill Certification // ROBOTIX ACADEMY</title>
+  <meta name="description" content="16-question comprehensive robotics exam covering kinematics, digital electronics, PID control, LiDAR sensors, and ROS 2 software with topic-wise scoring." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -19,7 +20,10 @@
   <header class="navbar-fixed">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -29,15 +33,36 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-pill">Home</a>
         <a href="components.html" class="nav-pill">Anatomy</a>
-        <a href="types.html" class="nav-pill">Robot Types</a>
-        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="types.html" class="nav-pill">Types</a>
         <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="programming.html" class="nav-pill">Programming</a>
         <a href="applications.html" class="nav-pill">Applications</a>
         <a href="quiz.html" class="nav-pill active">Quiz</a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <a href="index.html" class="nav-cta font-orbitron hidden sm:inline-flex">&larr; BACK HOME</a>
+      <div class="header-actions">
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <div class="user-progress-badge hidden sm:inline-flex" id="global-progress-badge" title="Course progress">
+          <span>PROGRESS</span>
+          <div class="user-progress-bar-mini">
+            <div class="user-progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span id="progress-text-val">0%</span>
+        </div>
+
         <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -54,10 +79,12 @@
         <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
         <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
         <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
-        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
-        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
-        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
-        <a href="quiz.html" class="mobile-link active">07 // Assessment Quiz</a>
+        <a href="electronics.html" class="mobile-link">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link active">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link">09 // Sources & Credits</a>
       </div>
     </div>
   </header>
@@ -65,10 +92,10 @@
   <main class="main-wrapper">
     <div class="container-narrow">
       <div class="page-header">
-        <div class="page-badge font-mono">CHAPTER 06 // EVALUATION</div>
-        <h1 class="page-title font-orbitron">Robotics Engineering Quiz</h1>
+        <div class="page-badge font-mono">CHAPTER 08 // CERTIFICATION ASSESSMENT</div>
+        <h1 class="page-title font-orbitron">Robotics Engineering Comprehensive Exam</h1>
         <p class="page-subtitle">
-          Demonstrate your understanding of kinematics, electrical actuators, ultrasonic sensing, and communication protocols.
+          Test your mastery across 5 core engineering domains: Kinematics & D-H Parameters, Digital Electronics & H-Bridges, Control Theory & PID, Sensors & Perception, and Autonomous Navigation & ROS 2.
         </p>
       </div>
 
@@ -76,25 +103,28 @@
       <div class="quiz-box">
         <!-- Progress Bar -->
         <div class="w-full h-2 bg-amber-100 rounded-full overflow-hidden mb-6">
-          <div id="quiz-progress-bar" class="h-full bg-amber-600 transition-all duration-300" style="width: 20%;"></div>
+          <div id="quiz-progress-bar" class="h-full bg-amber-600 transition-all duration-300" style="width: 6%;"></div>
         </div>
 
         <div class="flex justify-between items-center text-xs font-mono text-muted mb-4">
-          <span id="quiz-progress-text">QUESTION 01 OF 05</span>
-          <span>PASSING SCORE: 60%</span>
+          <div class="flex items-center gap-2">
+            <span id="quiz-progress-text">QUESTION 01 OF 16</span>
+            <span id="quiz-topic-badge" class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold text-[10px]">KINEMATICS</span>
+          </div>
+          <span>PASSING BENCHMARK: 70%</span>
         </div>
 
         <!-- Question Card -->
         <div id="quiz-card-wrap">
           <h3 id="quiz-q-text" class="font-orbitron text-xl text-heading mb-6 leading-snug">
-            Loading question...
+            Loading exam questions...
           </h3>
 
           <div id="quiz-options-list" class="space-y-3">
             <!-- Dynamic Options -->
           </div>
 
-          <!-- Explanation Box -->
+          <!-- Live Explanation Box -->
           <div id="quiz-expl-box" class="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 hidden">
             <!-- Dynamic Explanation -->
           </div>
@@ -106,37 +136,80 @@
           </div>
         </div>
 
-        <!-- Results Card (Hidden by default) -->
-        <div id="quiz-results-wrap" class="text-center py-8 hidden">
-          <div class="text-5xl mb-4">&#127942;</div>
-          <h3 class="font-orbitron text-2xl text-heading">Assessment Completed!</h3>
-          <p class="text-sm text-muted mt-1">Here is your certified evaluation score:</p>
+        <!-- Results Screen (Hidden initially) -->
+        <div id="quiz-results-wrap" class="text-center py-6 hidden">
+          <div class="text-5xl mb-3" id="quiz-award-icon">🏆</div>
+          <h3 class="font-orbitron text-2xl text-heading" id="quiz-results-title">Assessment Completed!</h3>
+          <p class="text-xs text-muted mt-1">Here is your verified performance breakdown:</p>
 
-          <div id="quiz-final-score-val" class="font-orbitron text-6xl text-amber font-extrabold my-6">
-            5 / 5
+          <div id="quiz-final-score-val" class="font-orbitron text-5xl text-amber font-extrabold my-4">
+            16 / 16 (100%)
           </div>
 
-          <p class="text-sm text-body max-w-md mx-auto mb-8">
-            Excellent mastery of kinematics trigonometry, PWM motor control principles, sensor physics, and real-time robotics communications.
-          </p>
+          <!-- Topic-wise Score Breakdown -->
+          <div class="max-w-md mx-auto my-6 text-left">
+            <span class="font-mono text-xs font-bold text-heading block mb-2">DOMAIN PERFORMANCE BREAKDOWN:</span>
+            <div class="quiz-topic-bar" id="quiz-topic-breakdown">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
 
-          <div class="flex justify-center gap-4">
-            <button id="quiz-retake-btn" class="btn-secondary-cream font-orbitron text-sm">
-              <span>Retake Quiz</span>
+          <div class="flex flex-wrap justify-center gap-4 mt-6">
+            <button id="quiz-review-btn" class="btn-secondary-cream font-orbitron text-xs">
+              <span>Review Detailed Answers</span>
             </button>
-            <a href="index.html" class="btn-primary-cream font-orbitron text-sm">
-              <span>Return Home</span>
+            <button id="quiz-retake-btn" class="btn-primary-cream font-orbitron text-xs">
+              <span>Retake Randomized Exam</span>
+            </button>
+            <a href="credits.html" class="btn-secondary-cream font-orbitron text-xs">
+              <span>View Academic References &rarr;</span>
             </a>
           </div>
+
+          <!-- Detailed Answer Review Container (Toggled on button click) -->
+          <div id="quiz-review-section" class="mt-10 pt-8 border-t border-stone-200 hidden">
+            <h4 class="font-orbitron text-lg text-heading mb-4 text-left">Detailed Question-by-Question Review</h4>
+            <div id="quiz-review-list" class="space-y-4">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Navigation to Previous & Next Chapters -->
+      <div class="chapter-nav-bar">
+        <a href="applications.html" class="chapter-btn-prev">
+          <span>&larr; Chapter 07: Real-World Applications</span>
+        </a>
+        <a href="credits.html" class="chapter-btn-next">
+          <span>Chapter 09: Sources & Academic Credits &rarr;</span>
+        </a>
       </div>
     </div>
   </main>
 
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
   <footer class="main-footer">
     <div class="footer-inner">
       <div class="flex items-center gap-3">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
         <div>
           <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
           <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
@@ -146,9 +219,12 @@
         <a href="index.html" class="footer-link">Home</a>
         <a href="components.html" class="footer-link">Anatomy</a>
         <a href="types.html" class="footer-link">Types</a>
-        <a href="simulators.html" class="footer-link">Simulators</a>
         <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
         <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
       </nav>
     </div>
   </footer>

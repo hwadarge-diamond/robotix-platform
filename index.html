@@ -3,10 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ROBOTIX ACADEMY // Intelligent Robotics Engineering</title>
-  <meta name="description" content="A clean, intuitive educational portal for engineering students to learn autonomous robotics, kinematics, sensors, and cybernetics." />
+  <title>ROBOTIX Academy // Interactive Robotics Engineering</title>
+  <meta name="description" content="Master robotics engineering with interactive 3D kinematic models, PID control simulators, digital electronics laboratories, and ROS 2 architectures." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
 
-  <!-- Google Fonts: Orbitron, Inter, Fira Code -->
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ROBOTIX Academy // Interactive Robotics Engineering" />
+  <meta property="og:description" content="Master robotics engineering with interactive 3D kinematic models, PID control simulators, digital electronics laboratories, and ROS 2 architectures." />
+  <meta property="og:image" content="assets/images/robotic_arm.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -16,30 +24,58 @@
 </head>
 <body>
 
-  <!-- Navigation Bar with Meaningful Brand Logo -->
+  <!-- Navigation Bar -->
   <header class="navbar-fixed">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Click for Home">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Brand Logo" class="brand-logo-img" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
         </div>
       </a>
 
-      <!-- Desktop Nav Links -->
+      <!-- Desktop Navigation Links -->
       <nav class="nav-links">
         <a href="index.html" class="nav-pill active">Home</a>
         <a href="components.html" class="nav-pill">Anatomy</a>
-        <a href="types.html" class="nav-pill">Robot Types</a>
-        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="types.html" class="nav-pill">Types</a>
         <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="programming.html" class="nav-pill">Programming</a>
         <a href="applications.html" class="nav-pill">Applications</a>
         <a href="quiz.html" class="nav-pill">Quiz</a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <a href="simulators.html" class="nav-cta font-orbitron hidden sm:inline-flex">OPEN LAB &rarr;</a>
+      <!-- Utility Actions -->
+      <div class="header-actions">
+        <!-- Quick Search (Ctrl+K) -->
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <!-- Progress Badge -->
+        <div class="user-progress-badge hidden sm:inline-flex" id="global-progress-badge" title="Course progress">
+          <span>PROGRESS</span>
+          <div class="user-progress-bar-mini">
+            <div class="user-progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span id="progress-text-val">0%</span>
+        </div>
+
         <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -56,10 +92,12 @@
         <a href="index.html" class="mobile-link active">01 // Home & Foundations</a>
         <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
         <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
-        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
-        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
-        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
-        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+        <a href="electronics.html" class="mobile-link">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link">09 // Sources & Credits</a>
       </div>
     </div>
   </header>
@@ -71,29 +109,29 @@
       <section class="hero-layout">
         <div class="hero-text-content">
           <div class="page-badge font-mono">
-            <span>AUTONOMOUS CYBERNETICS // v5.2</span>
+            <span>AUTONOMOUS CYBERNETICS // v6.0</span>
           </div>
           <h1 class="hero-main-title font-orbitron">
             Master the Science of Intelligent Robotics
           </h1>
           <p class="hero-main-desc font-inter">
-            A clear, intuitive journey through robot kinematics, mechanical anatomy, closed-loop sensors, and modern cybernetics — crafted specifically for engineering students.
+            A comprehensive, interactive journey through kinematics, closed-loop PID control, digital electronics, embedded microcontrollers, and modern ROS 2 systems &mdash; engineered for robotics students.
           </p>
           <div class="hero-actions">
             <a href="components.html" class="btn-primary-cream font-orbitron">
-              <span>Start With Anatomy</span>
+              <span>Start Learning Pathway</span>
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </a>
-            <a href="electronics.html" class="btn-secondary-cream font-orbitron">
-              <span>Digital Electronics Lab</span>
+            <a href="simulators.html" class="btn-secondary-cream font-orbitron">
+              <span>Open Simulators Lab</span>
             </a>
           </div>
         </div>
 
-        <!-- 3D Ceramic Manipulator Canvas with Interactive Controls -->
+        <!-- 3D Manipulator Canvas with Interactive Controls -->
         <div class="hero-3d-wrap">
           <span class="canvas-badge font-mono">3D ARTICULATED ROBOT ARM</span>
           <canvas id="hero-3d-canvas"></canvas>
@@ -116,70 +154,142 @@
         </div>
       </section>
 
-      <!-- ================= THE MEANING OF THE ROBOT LOGO (THE NEXUS EMBLEM) ================= -->
-      <section class="meaning-card">
-        <div class="flex items-center gap-8">
-          <div class="meaning-symbol-wrap">
-            <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Emblem" />
+      <!-- ================= SUGGESTED LEARNING PATHWAY ================= -->
+      <section class="mt-14 mb-16">
+        <div class="text-center mb-8">
+          <div class="page-badge font-mono">CURRICULUM FLOW</div>
+          <h2 class="page-title font-orbitron text-3xl">Recommended Engineering Pathway</h2>
+          <p class="page-subtitle">Follow this step-by-step curriculum to build deep intuition from mechanics to autonomy.</p>
+        </div>
+
+        <div class="pathway-grid">
+          <!-- Step 1: Anatomy -->
+          <a href="components.html" class="pathway-step-card" data-chapter="components">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 01</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Robot Anatomy</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              Sensors, actuators, structural linkages, power regulation, and end-effectors in 3D CAD.
+            </p>
+          </a>
+
+          <!-- Step 2: Types -->
+          <a href="types.html" class="pathway-step-card" data-chapter="types">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 02</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Taxonomies</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              Industrial arms, mobile AMRs, bipedal humanoids, surgical systems, and aerial drones.
+            </p>
+          </a>
+
+          <!-- Step 3: Electronics -->
+          <a href="electronics.html" class="pathway-step-card" data-chapter="electronics">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 03</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Digital Electronics</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              H-Bridge MOSFET drivers, ADC quantization, optical quadrature decoding, and CAN/SPI bus timing.
+            </p>
+          </a>
+
+          <!-- Step 4: Simulators -->
+          <a href="simulators.html" class="pathway-step-card" data-chapter="simulators">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 04</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Physics & Simulators</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              Tunable PID controller, 3-joint D-H kinematics with workspace clouds, and A* path planning.
+            </p>
+          </a>
+
+          <!-- Step 5: Programming -->
+          <a href="programming.html" class="pathway-step-card" data-chapter="programming">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 05</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Programming & ROS</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              Arduino C++ encoder ISRs, Python discrete PID controllers, and ROS 2 Humble nodes.
+            </p>
+          </a>
+
+          <!-- Step 6: Applications -->
+          <a href="applications.html" class="pathway-step-card" data-chapter="applications">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 06</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Applications</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              EV gigafactories, laparoscopic microsurgery, and radiation-hardened planetary rovers.
+            </p>
+          </a>
+
+          <!-- Step 7: Quiz -->
+          <a href="quiz.html" class="pathway-step-card" data-chapter="quiz">
+            <span class="font-mono text-xs font-bold text-amber mb-2">STEP 07</span>
+            <h3 class="font-orbitron text-base text-heading mb-1">Certification Quiz</h3>
+            <p class="text-xs text-muted leading-relaxed">
+              16-question exam with topic-by-topic analytics and detailed incorrect answer reviews.
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <!-- ================= SENSE - PLAN - ACT PARADIGM ================= -->
+      <section class="cream-card mb-16">
+        <div class="text-center mb-8">
+          <div class="page-badge font-mono">FIRST PRINCIPLES</div>
+          <h2 class="font-orbitron text-2xl text-heading">The Cybernetic Feedback Loop</h2>
+          <p class="text-xs text-muted max-w-lg mx-auto mt-1">Every autonomous robot operates through this continuous three-phase loop:</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div class="p-6 rounded-xl bg-amber-50/50 border border-amber-100">
+            <div class="w-10 h-10 rounded-full bg-amber-500 text-white font-orbitron font-bold flex items-center justify-center mx-auto mb-3">1</div>
+            <h3 class="font-orbitron text-lg text-heading">SENSE</h3>
+            <p class="text-xs text-muted mt-2 leading-relaxed">
+              <span class="tooltip-term" data-term="LiDAR">LiDAR</span>, stereo vision, and optical encoders convert physical phenomena into digital voltages.
+            </p>
           </div>
 
-          <div class="flex-1">
-            <div class="page-badge font-mono">BRAND PHILOSOPHY</div>
-            <h2 class="font-orbitron text-2xl text-heading mb-2">The Nexus Emblem &mdash; The Meaning of the Robot Logo</h2>
-            <p class="text-sm text-body leading-relaxed mb-6">
-              Our emblem was geometrically engineered to embody the universal principles of autonomous robotics and cybernetics. Every ring and circuit trace carries a specific mathematical and philosophical meaning:
+          <div class="p-6 rounded-xl bg-sky-50/50 border border-sky-100">
+            <div class="w-10 h-10 rounded-full bg-sky-600 text-white font-orbitron font-bold flex items-center justify-center mx-auto mb-3">2</div>
+            <h3 class="font-orbitron text-lg text-heading">PLAN</h3>
+            <p class="text-xs text-muted mt-2 leading-relaxed">
+              Embedded microcontrollers evaluate trajectory kinematics, <span class="tooltip-term" data-term="PID">PID</span> error, and <span class="tooltip-term" data-term="SLAM">SLAM</span> maps.
             </p>
+          </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-inter">
-              <div class="symbol-pillar-item">
-                <div class="font-orbitron font-bold text-amber mb-1">01. The Tri-Ring Nexus</div>
-                <p class="text-muted leading-relaxed">
-                  The three interlocking golden rings represent the unbroken <strong>Sense &mdash; Plan &mdash; Act</strong> feedback loop, and the convergence of Mechanical, Electrical, and Software engineering.
-                </p>
-              </div>
-
-              <div class="symbol-pillar-item">
-                <div class="font-orbitron font-bold text-amber mb-1">02. The Optical Hex-Core</div>
-                <p class="text-muted leading-relaxed">
-                  The central pupil represents machine perception &mdash; LiDAR, stereo vision, and optical encoders &mdash; transforming raw environmental light into computational spatial intelligence.
-                </p>
-              </div>
-
-              <div class="symbol-pillar-item">
-                <div class="font-orbitron font-bold text-amber mb-1">03. The Circuit Traces</div>
-                <p class="text-muted leading-relaxed">
-                  The delicate branching traces symbolize digital electronic logic gates, microsecond PWM pulse signals, and the deterministic nervous system bridging code to physical force.
-                </p>
-              </div>
-            </div>
+          <div class="p-6 rounded-xl bg-emerald-50/50 border border-emerald-100">
+            <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-orbitron font-bold flex items-center justify-center mx-auto mb-3">3</div>
+            <h3 class="font-orbitron text-lg text-heading">ACT</h3>
+            <p class="text-xs text-muted mt-2 leading-relaxed">
+              <span class="tooltip-term" data-term="PWM">PWM</span> signals modulate power MOSFET H-bridges to energize joint servomotors.
+            </p>
           </div>
         </div>
       </section>
 
       <!-- ================= FUTURISTIC ROBOT GALLERY ================= -->
-      <section class="mt-16">
-        <div class="text-center mb-10">
+      <section class="mb-16">
+        <div class="text-center mb-8">
           <div class="page-badge font-mono">FUTURISTIC EMBODIMENT</div>
           <h2 class="page-title font-orbitron text-3xl">Next-Generation Robotics Architectures</h2>
-          <p class="page-subtitle">Real-world embodiments engineered for extreme dexterity, autonomous spatial reasoning, and sub-millimeter precision.</p>
+          <p class="page-subtitle">Industrial and research configurations demonstrating high-dexterity manipulation and autonomous navigation.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Card 1: Humanoid -->
           <div class="robot-image-card">
             <div class="robot-img-box">
-              <img src="assets/images/humanoid.jpg" alt="Futuristic Bipedal Humanoid Robot" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/humanoid.webp" type="image/webp">
+                <img src="assets/images/humanoid.jpg" alt="Futuristic Bipedal Humanoid Robot" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">BIOMIMETIC</span>
-              <span class="robot-hud-tag font-mono">54-DOF</span>
+              <span class="robot-hud-tag font-mono">28–50+ DOF</span>
             </div>
             <div class="robot-card-content">
-              <h3 class="font-orbitron text-lg text-heading mb-1">General-Purpose Humanoid</h3>
+              <h3 class="font-orbitron text-base text-heading mb-1">General-Purpose Humanoid</h3>
               <p class="text-xs text-muted leading-relaxed mb-4">
-                Bipedal dynamic equilibrium with whole-body Model Predictive Control and Vision-Language-Action neural policies.
+                Bipedal dynamic equilibrium using Zero Moment Point (<span class="tooltip-term" data-term="ZMP">ZMP</span>) balance and whole-body model predictive control.
               </p>
               <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
                 <span>BALANCE: ZMP ACTIVE</span>
-                <span>SPEED: 1.8 M/S</span>
+                <span>SPEED: ~1.8 M/S</span>
               </div>
             </div>
           </div>
@@ -187,18 +297,21 @@
           <!-- Card 2: 6-Axis Arm -->
           <div class="robot-image-card">
             <div class="robot-img-box">
-              <img src="assets/images/robotic_arm.jpg" alt="6-Axis Precision Articulated Robotic Arm" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/robotic_arm.webp" type="image/webp">
+                <img src="assets/images/robotic_arm.jpg" alt="6-Axis Precision Articulated Robotic Arm" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">MANIPULATION</span>
               <span class="robot-hud-tag font-mono">&plusmn;0.01mm</span>
             </div>
             <div class="robot-card-content">
-              <h3 class="font-orbitron text-lg text-heading mb-1">Articulated Manipulator</h3>
+              <h3 class="font-orbitron text-base text-heading mb-1">Articulated Manipulator</h3>
               <p class="text-xs text-muted leading-relaxed mb-4">
                 Harmonic drive reducers and field-oriented motor control executing high-speed micro-fabrication and welding.
               </p>
               <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
                 <span>DOF: 6-AXIS SERIAL</span>
-                <span>PAYLOAD: 12 KG</span>
+                <span>PAYLOAD: ~12 KG</span>
               </div>
             </div>
           </div>
@@ -206,18 +319,21 @@
           <!-- Card 3: Autonomous Mobile AMR -->
           <div class="robot-image-card">
             <div class="robot-img-box">
-              <img src="assets/images/mobile_amr.jpg" alt="Autonomous Mobile Robot with LiDAR" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/mobile_amr.webp" type="image/webp">
+                <img src="assets/images/mobile_amr.jpg" alt="Autonomous Mobile Robot with LiDAR" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">NAVIGATION</span>
               <span class="robot-hud-tag font-mono">3D LIDAR</span>
             </div>
             <div class="robot-card-content">
-              <h3 class="font-orbitron text-lg text-heading mb-1">Autonomous Mobile AMR</h3>
+              <h3 class="font-orbitron text-base text-heading mb-1">Autonomous Mobile AMR</h3>
               <p class="text-xs text-muted leading-relaxed mb-4">
                 Solid-state spinning LiDAR and Mecanum omnidirectional traction for dynamic facility navigation without fixed rails.
               </p>
               <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
                 <span>SLAM: REAL-TIME</span>
-                <span>PAYLOAD: 1500 KG</span>
+                <span>PAYLOAD: UP TO 1500 KG</span>
               </div>
             </div>
           </div>
@@ -225,177 +341,114 @@
           <!-- Card 4: Surgical Robot -->
           <div class="robot-image-card">
             <div class="robot-img-box">
-              <img src="assets/images/surgical_robot.jpg" alt="Robotic Surgical Teleoperation System" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/surgical_robot.webp" type="image/webp">
+                <img src="assets/images/surgical_robot.jpg" alt="Robotic Surgical Teleoperation System" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">HEALTHCARE</span>
               <span class="robot-hud-tag font-mono">SUB-MM</span>
             </div>
             <div class="robot-card-content">
-              <h3 class="font-orbitron text-lg text-heading mb-1">Surgical Teleoperator</h3>
+              <h3 class="font-orbitron text-base text-heading mb-1">Surgical Teleoperator</h3>
               <p class="text-xs text-muted leading-relaxed mb-4">
-                Tremor-filtered multi-arm laparoscopic intervention with 7-DOF wrist articulation and 3D stereoscopic 4K imaging.
+                Multi-arm laparoscopic teleoperation with active human hand tremor attenuation (>90%) and 5:1 scaled wrist motion.
               </p>
               <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
-                <span>TREMOR: 100% CANCELED</span>
-                <span>SCALE: 5:1</span>
+                <span>TREMOR: ATTENUATED</span>
+                <span>SCALE: 5:1 RATIO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-muted text-center mt-3">
+          * Figures and specifications are representative industrial benchmarks for educational illustration.
+        </div>
+      </section>
+
+      <!-- ================= ABOUT ROBOTIX & THE MEANING OF THE LOGO ================= -->
+      <section class="meaning-card mb-12" id="about-section">
+        <div class="flex items-center gap-8">
+          <div class="meaning-symbol-wrap">
+            <picture>
+              <source srcset="assets/images/logo.webp" type="image/webp">
+              <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Emblem" />
+            </picture>
+          </div>
+
+          <div class="flex-1">
+            <div class="page-badge font-mono">PHILOSOPHY & BRANDING</div>
+            <h2 class="font-orbitron text-2xl text-heading mb-2">The Nexus Emblem &mdash; The Meaning of the Robot Logo</h2>
+            <p class="text-xs text-body leading-relaxed mb-4">
+              The ROBOTIX Nexus emblem was engineered to symbolize the convergence of mechanical design, digital electronics, and software autonomy:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-inter">
+              <div class="symbol-pillar-item">
+                <div class="font-orbitron font-bold text-amber mb-1">01. The Tri-Ring Nexus</div>
+                <p class="text-muted leading-relaxed">
+                  The interlocking rings represent the unbroken <strong>Sense &mdash; Plan &mdash; Act</strong> feedback loop bridging Mechanical, Electrical, and Computer Engineering.
+                </p>
+              </div>
+
+              <div class="symbol-pillar-item">
+                <div class="font-orbitron font-bold text-amber mb-1">02. The Optical Hex-Core</div>
+                <p class="text-muted leading-relaxed">
+                  The central pupil represents machine vision &mdash; LiDAR optics, camera arrays, and optical encoders translating photons into spatial understanding.
+                </p>
+              </div>
+
+              <div class="symbol-pillar-item">
+                <div class="font-orbitron font-bold text-amber mb-1">03. The Circuit Traces</div>
+                <p class="text-muted leading-relaxed">
+                  The delicate branching traces symbolize digital electronic logic, microsecond PWM switching, and the synthetic nervous system.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ================= DIRECTORY: DEDICATED CHAPTER CARDS ================= -->
-      <section class="mt-16">
-        <div class="text-center mb-10">
-          <div class="page-badge font-mono">ACADEMIC CURRICULUM</div>
-          <h2 class="page-title font-orbitron text-3xl">Explore by Subject</h2>
-          <p class="page-subtitle">Each chapter is organized independently for a clean, convenient learning experience.</p>
-        </div>
-
-        <div class="modules-grid">
-          <a href="components.html" class="module-card">
-            <div class="module-icon">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-                <rect x="9" y="9" width="6" height="6"></rect>
-                <line x1="9" y1="1" x2="9" y2="4"></line>
-                <line x1="15" y1="1" x2="15" y2="4"></line>
-              </svg>
-            </div>
-            <h3 class="module-title font-orbitron">01. Robot Anatomy</h3>
-            <p class="module-desc">
-              Inspect the five core subsystems with an interactive 3D robot model: Sensors, Actuators, Controller, Power, and End Effectors.
-            </p>
-            <div class="module-footer font-orbitron">
-              <span>EXPLORE ANATOMY</span>
-              <span>&rarr;</span>
-            </div>
-          </a>
-
-          <a href="types.html" class="module-card">
-            <div class="module-icon">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2v20M2 12h20"></path>
-              </svg>
-            </div>
-            <h3 class="module-title font-orbitron">02. Robot Types</h3>
-            <p class="module-desc">
-              Deep dive into industrial 6-DOF arms, autonomous mobile AMRs, bipedal humanoids, surgical robots, aerial drones, and swarms.
-            </p>
-            <div class="module-footer font-orbitron">
-              <span>VIEW TAXONOMY</span>
-              <span>&rarr;</span>
-            </div>
-          </a>
-
-          <a href="simulators.html" class="module-card">
-            <div class="module-icon">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-            </div>
-            <h3 class="module-title font-orbitron">03. Simulators Lab</h3>
-            <p class="module-desc">
-              Hands-on interactive lab: ultrasonic echo wave simulation, DC motor encoder feedback, servo PWM angle slider, and 2-joint kinematics.
-            </p>
-            <div class="module-footer font-orbitron">
-              <span>RUN SIMULATIONS</span>
-              <span>&rarr;</span>
-            </div>
-          </a>
-
-          <a href="electronics.html" class="module-card">
-            <div class="module-icon">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-              </svg>
-            </div>
-            <h3 class="module-title font-orbitron">04. Digital Electronics Lab</h3>
-            <p class="module-desc">
-              H-Bridge MOSFET drivers, ADC quantization, logic gates, PWM timers, quadrature decoding, and bus protocols (CAN, SPI, I2C).
-            </p>
-            <div class="module-footer font-orbitron">
-              <span>TEST CIRCUITS</span>
-              <span>&rarr;</span>
-            </div>
-          </a>
-
-          <a href="applications.html" class="module-card">
-            <div class="module-icon">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </div>
-            <h3 class="module-title font-orbitron">05. Applications</h3>
-            <p class="module-desc">
-              Learn how robotics transforms Gigafactory production, sub-millimeter surgeries, Mars planetary exploration, and AI embodiment.
-            </p>
-            <div class="module-footer font-orbitron">
-              <span>VIEW HORIZONS</span>
-              <span>&rarr;</span>
-            </div>
-          </a>
-
-          <a href="quiz.html" class="module-card">
-            <div class="module-icon">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 11l3 3L22 4"></path>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-              </svg>
-            </div>
-            <h3 class="module-title font-orbitron">06. Assessment Quiz</h3>
-            <p class="module-desc">
-              Challenge yourself with 5 engineering questions covering kinematics, sensors, PWM, and communications. Get instant feedback and scorecard!
-            </p>
-            <div class="module-footer font-orbitron">
-              <span>TAKE QUIZ</span>
-              <span>&rarr;</span>
-            </div>
-          </a>
-        </div>
-      </section>
-
-      <!-- ================= SENSE-PLAN-ACT FLOW ================= -->
-      <section class="mt-16 cream-card">
-        <div class="text-center mb-8">
-          <div class="page-badge font-mono">CORE PRINCIPLE</div>
-          <h2 class="font-orbitron text-2xl text-heading">The Sense &mdash; Plan &mdash; Act Paradigm</h2>
-          <p class="text-muted text-sm mt-1 max-w-xl mx-auto">
-            All intelligent robots operate on this continuous cybernetic feedback loop.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-          <div class="p-6 rounded-xl bg-amber-50/50 border border-amber-100">
-            <div class="w-10 h-10 rounded-full bg-amber-600 text-white font-orbitron font-bold flex items-center justify-center mx-auto mb-3">1</div>
-            <h3 class="font-orbitron text-lg text-heading">SENSE</h3>
-            <p class="text-sm text-muted mt-2">Cameras, LiDAR, IMUs, and encoders perceive distances, orientation, and obstacles.</p>
-          </div>
-          <div class="p-6 rounded-xl bg-sky-50/50 border border-sky-100">
-            <div class="w-10 h-10 rounded-full bg-sky-600 text-white font-orbitron font-bold flex items-center justify-center mx-auto mb-3">2</div>
-            <h3 class="font-orbitron text-lg text-heading">PLAN</h3>
-            <p class="text-sm text-muted mt-2">The controller computes collision-free trajectories and solves Inverse Kinematics.</p>
-          </div>
-          <div class="p-6 rounded-xl bg-emerald-50/50 border border-emerald-100">
-            <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-orbitron font-bold flex items-center justify-center mx-auto mb-3">3</div>
-            <h3 class="font-orbitron text-lg text-heading">ACT</h3>
-            <p class="text-sm text-muted mt-2">PWM signals modulate current to servomotors and drivers to move the linkages.</p>
-          </div>
-        </div>
-      </section>
+      <!-- Navigation to Next Chapter -->
+      <div class="chapter-nav-bar">
+        <div></div>
+        <a href="components.html" class="chapter-btn-next">
+          <span>Begin Chapter 01: Robot Anatomy &rarr;</span>
+        </a>
+      </div>
 
     </div>
   </main>
+
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Floating Tooltip Bubble -->
+  <div class="glossary-tooltip-bubble" id="glossary-tooltip-bubble"></div>
 
   <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-inner">
       <div class="flex items-center gap-3">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
         <div>
           <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
-          <p class="text-xs text-muted">Dedicated to clear, accessible robotics engineering education.</p>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
         </div>
       </div>
 
@@ -403,14 +456,13 @@
         <a href="index.html" class="footer-link">Home</a>
         <a href="components.html" class="footer-link">Anatomy</a>
         <a href="types.html" class="footer-link">Types</a>
-        <a href="simulators.html" class="footer-link">Simulators</a>
         <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
         <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
       </nav>
-
-      <div class="font-mono text-xs text-muted">
-        &copy; 2026 ROBOTIX. Clean & Convenient Open Educational Resource.
-      </div>
     </div>
   </footer>
 

@@ -6,6 +6,14 @@
   <title>Real-World Applications // ROBOTIX ACADEMY</title>
   <meta name="description" content="Discover how robotics is revolutionizing manufacturing, healthcare, space exploration, agriculture, and artificial intelligence." />
 
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Real-World Robotics Applications // ROBOTIX ACADEMY" />
+  <meta property="og:description" content="Discover how robotics transforms manufacturing gigafactories, laparoscopic microsurgery, and deep-space Mars rovers." />
+  <meta property="og:image" content="assets/images/surgical_robot.webp" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -18,7 +26,10 @@
   <header class="navbar-fixed">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -28,15 +39,36 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-pill">Home</a>
         <a href="components.html" class="nav-pill">Anatomy</a>
-        <a href="types.html" class="nav-pill">Robot Types</a>
-        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="types.html" class="nav-pill">Types</a>
         <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="programming.html" class="nav-pill">Programming</a>
         <a href="applications.html" class="nav-pill active">Applications</a>
         <a href="quiz.html" class="nav-pill">Quiz</a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <a href="quiz.html" class="nav-cta font-orbitron hidden sm:inline-flex">TEST SKILLS &rarr;</a>
+      <div class="header-actions">
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <div class="user-progress-badge hidden sm:inline-flex" id="global-progress-badge" title="Course progress">
+          <span>PROGRESS</span>
+          <div class="user-progress-bar-mini">
+            <div class="user-progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span id="progress-text-val">0%</span>
+        </div>
+
         <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -53,10 +85,12 @@
         <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
         <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
         <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
-        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
-        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
-        <a href="applications.html" class="mobile-link active">06 // Real-World Applications</a>
-        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+        <a href="electronics.html" class="mobile-link">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link active">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link">09 // Sources & Credits</a>
       </div>
     </div>
   </header>
@@ -64,10 +98,10 @@
   <main class="main-wrapper">
     <div class="container-narrow">
       <div class="page-header">
-        <div class="page-badge font-mono">CHAPTER 05 // REAL-WORLD HORIZONS</div>
+        <div class="page-badge font-mono">CHAPTER 07 // REAL-WORLD HORIZONS</div>
         <h1 class="page-title font-orbitron">Transformative Applications</h1>
         <p class="page-subtitle">
-          How modern robotics is scaling from micron-level surgical precision inside human veins to autonomous extraterrestrial rovers exploring Mars.
+          How modern robotics scales from sub-millimeter surgical tremor filtering in microsurgery to autonomous extraterrestrial rovers exploring Mars.
         </p>
       </div>
 
@@ -76,7 +110,10 @@
         <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
             <div class="robot-img-box">
-              <img src="assets/images/robotic_arm.jpg" alt="Automated Gigafactory 6-Axis Arm" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/robotic_arm.webp" type="image/webp">
+                <img src="assets/images/robotic_arm.jpg" alt="Automated Gigafactory 6-Axis Arm" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">AUTOMOTIVE</span>
               <span class="robot-hud-tag font-mono">42s CYCLE</span>
             </div>
@@ -84,12 +121,12 @@
               <div class="page-badge font-mono mb-2">AEROSPACE & AUTOMOTIVE</div>
               <h3 class="font-orbitron text-xl text-heading mb-2">Automated Gigafactories</h3>
               <p class="text-sm text-body leading-relaxed mb-4">
-                Thousands of synchronized 6-DOF industrial arms work in tandem with automated guided vehicles to assemble electric vehicles, weld structural frames, and produce lithium cells with 99.8% continuous uptime.
+                Synchronized 6-DOF industrial arms work in tandem with autonomous mobile robots to assemble electric vehicles, weld structural battery trays, and produce lithium cells with 99.8% continuous uptime.
               </p>
               <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
                 <div class="p-3 bg-amber-50/60 rounded-lg">
                   <span class="text-muted block text-[10px]">CYCLE TIME</span>
-                  <span class="font-bold text-heading mt-1 block">42 SEC</span>
+                  <span class="font-bold text-heading mt-1 block">42 SEC*</span>
                 </div>
                 <div class="p-3 bg-amber-50/60 rounded-lg">
                   <span class="text-muted block text-[10px]">REPEATABILITY</span>
@@ -108,7 +145,10 @@
         <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
             <div class="robot-img-box">
-              <img src="assets/images/surgical_robot.jpg" alt="Micro-Surgical Teleoperation" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/surgical_robot.webp" type="image/webp">
+                <img src="assets/images/surgical_robot.jpg" alt="Micro-Surgical Teleoperation" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">MICROSURGERY</span>
               <span class="robot-hud-tag font-mono">5:1 SCALE</span>
             </div>
@@ -116,12 +156,12 @@
               <div class="page-badge font-mono mb-2">BIO-ENGINEERING</div>
               <h3 class="font-orbitron text-xl text-heading mb-2">Micro-Surgical Teleoperation</h3>
               <p class="text-sm text-body leading-relaxed mb-4">
-                Robotic teleoperation consoles eliminate natural human hand tremors and scale fine movements (5:1 ratio), enabling surgeons to suture delicate nerve fibers and perform minimally invasive keyhole operations.
+                Robotic teleoperation consoles actively filter involuntary physiological hand tremors and scale fine movements (5:1 ratio), enabling surgeons to suture delicate nerve fibers and perform minimally invasive keyhole interventions.
               </p>
               <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
                 <div class="p-3 bg-sky-50/60 rounded-lg">
                   <span class="text-muted block text-[10px]">TREMOR FILTER</span>
-                  <span class="font-bold text-heading mt-1 block">100%</span>
+                  <span class="font-bold text-heading mt-1 block">&gt;90% DAMPED</span>
                 </div>
                 <div class="p-3 bg-sky-50/60 rounded-lg">
                   <span class="text-muted block text-[10px]">MOTION SCALE</span>
@@ -140,7 +180,10 @@
         <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
             <div class="robot-img-box">
-              <img src="assets/images/mobile_amr.jpg" alt="Planetary Mobile Rover" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/mobile_amr.webp" type="image/webp">
+                <img src="assets/images/mobile_amr.jpg" alt="Planetary Mobile Rover" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">DEEP SPACE</span>
               <span class="robot-hud-tag font-mono">AUTONAV</span>
             </div>
@@ -148,7 +191,7 @@
               <div class="page-badge font-mono mb-2">SPACE EXPLORATION</div>
               <h3 class="font-orbitron text-xl text-heading mb-2">Planetary Rovers (Mars)</h3>
               <p class="text-sm text-body leading-relaxed mb-4">
-                Robots operating in deep space must withstand harsh radiation, extreme temperatures (-130°C to +30°C), and 20-minute radio communication latency through on-board autonomous visual hazard avoidance.
+                Robots operating in deep space withstand extreme thermal swings (-130°C to +30°C), ionizing cosmic radiation, and 20-minute radio communication latency through on-board stereo visual hazard avoidance.
               </p>
               <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
                 <div class="p-3 bg-amber-50/60 rounded-lg">
@@ -172,7 +215,10 @@
         <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
             <div class="robot-img-box">
-              <img src="assets/images/humanoid.jpg" alt="Humanoid General-Purpose Worker" loading="lazy" />
+              <picture>
+                <source srcset="assets/images/humanoid.webp" type="image/webp">
+                <img src="assets/images/humanoid.jpg" alt="Humanoid General-Purpose Worker" loading="lazy" />
+              </picture>
               <span class="robot-img-overlay font-mono">BIOMIMICRY</span>
               <span class="robot-hud-tag font-mono">VLA CORE</span>
             </div>
@@ -180,20 +226,20 @@
               <div class="page-badge font-mono mb-2">GENERAL PURPOSE</div>
               <h3 class="font-orbitron text-xl text-heading mb-2">Next-Gen Humanoid Logistics</h3>
               <p class="text-sm text-body leading-relaxed mb-4">
-                Bipedal humanoids integrate multimodal Vision-Language-Action (VLA) models and tactile array fingertips to transport totes, operate elevators, and seamlessly collaborate alongside human staff without facility redesign.
+                Bipedal humanoids integrate multimodal Vision-Language-Action (VLA) models and tactile array fingertips to transport totes, operate elevators, and collaborate alongside human staff without facility redesign.
               </p>
               <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
                 <div class="p-3 bg-amber-50/60 rounded-lg">
                   <span class="text-muted block text-[10px]">PAYLOAD</span>
-                  <span class="font-bold text-heading mt-1 block">25 KG</span>
+                  <span class="font-bold text-heading mt-1 block">20 KG*</span>
                 </div>
                 <div class="p-3 bg-amber-50/60 rounded-lg">
                   <span class="text-muted block text-[10px]">RUNTIME</span>
-                  <span class="font-bold text-heading mt-1 block">8 HOURS</span>
+                  <span class="font-bold text-heading mt-1 block">6-8 HOURS</span>
                 </div>
                 <div class="p-3 bg-amber-50/60 rounded-lg">
-                  <span class="text-muted block text-[10px]">ZERO FACILITY</span>
-                  <span class="font-bold text-heading mt-1 block">CHANGES</span>
+                  <span class="text-muted block text-[10px]">FACILITY</span>
+                  <span class="font-bold text-heading mt-1 block">ZERO MODS</span>
                 </div>
               </div>
             </div>
@@ -201,20 +247,48 @@
         </div>
       </div>
 
-      <!-- Forward to Quiz -->
-      <div class="mt-14 text-center">
-        <a href="quiz.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
-          <span>Ready for the Assessment Quiz?</span>
-          <span>&rarr;</span>
+      <div class="text-[11px] font-mono text-muted text-center mt-6">
+        * Specifications are typical industrial engineering benchmarks for academic curriculum illustration.
+      </div>
+
+      <!-- Chapter Navigation Bar -->
+      <div class="chapter-nav-bar">
+        <a href="programming.html" class="chapter-btn-prev">
+          <span>&larr; Chapter 06: Programming & ROS 2</span>
+        </a>
+        <a href="quiz.html" class="chapter-btn-next">
+          <span>Chapter 08: Certification Quiz &rarr;</span>
         </a>
       </div>
     </div>
   </main>
 
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Floating Tooltip Bubble -->
+  <div class="glossary-tooltip-bubble" id="glossary-tooltip-bubble"></div>
+
+  <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-inner">
       <div class="flex items-center gap-3">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
         <div>
           <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
           <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
@@ -224,9 +298,12 @@
         <a href="index.html" class="footer-link">Home</a>
         <a href="components.html" class="footer-link">Anatomy</a>
         <a href="types.html" class="footer-link">Types</a>
-        <a href="simulators.html" class="footer-link">Simulators</a>
         <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
         <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
       </nav>
     </div>
   </footer>

@@ -3,21 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Simulators & Kinematics // ROBOTIX ACADEMY</title>
-  <meta name="description" content="Hands-on interactive engineering simulators: ultrasonic echo waves, DC motor optical encoder, PWM servo horn, and 2-joint planar kinematics arm." />
+  <title>Simulators: PID, Kinematics & Path Planning // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Interactive robotics simulators: PID control response scope, 3-joint kinematics with DH parameters and workspace, A* path planning grid, ultrasonic sonar, and encoders." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Robotics Simulators: PID, 3-Joint Kinematics & Path Planning" />
+  <meta property="og:description" content="Simulate closed-loop PID control, solve 3-link D-H inverse kinematics with workspace envelopes, and run A* path planning on an interactive obstacle grid." />
+  <meta property="og:image" content="assets/images/robotic_arm.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Navigation Bar -->
   <header class="navbar-fixed">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -27,15 +39,39 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-pill">Home</a>
         <a href="components.html" class="nav-pill">Anatomy</a>
-        <a href="types.html" class="nav-pill">Robot Types</a>
-        <a href="simulators.html" class="nav-pill active">Simulators</a>
+        <a href="types.html" class="nav-pill">Types</a>
         <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="simulators.html" class="nav-pill active">Simulators</a>
+        <a href="programming.html" class="nav-pill">Programming</a>
         <a href="applications.html" class="nav-pill">Applications</a>
         <a href="quiz.html" class="nav-pill">Quiz</a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <a href="quiz.html" class="nav-cta font-orbitron hidden sm:inline-flex">TEST SKILLS &rarr;</a>
+      <div class="header-actions">
+        <!-- Search Palette Trigger -->
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <!-- Progress Badge -->
+        <div class="user-progress-badge hidden sm:inline-flex" id="global-progress-badge" title="Course progress">
+          <span>PROGRESS</span>
+          <div class="user-progress-bar-mini">
+            <div class="user-progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span id="progress-text-val">0%</span>
+        </div>
+
         <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -52,10 +88,12 @@
         <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
         <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
         <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
-        <a href="simulators.html" class="mobile-link active">04 // Interactive Simulators</a>
-        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
-        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
-        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+        <a href="electronics.html" class="mobile-link">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link active">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link">09 // Sources & Credits</a>
       </div>
     </div>
   </header>
@@ -63,18 +101,248 @@
   <main class="main-wrapper">
     <div class="container-narrow">
       <div class="page-header">
-        <div class="page-badge font-mono">CHAPTER 03 // HANDS-ON LAB</div>
-        <h1 class="page-title font-orbitron">Hardware & Kinematics Simulators</h1>
+        <div class="page-badge font-mono">CHAPTER 05 // INTERACTIVE SIMULATION LAB</div>
+        <h1 class="page-title font-orbitron">Robotics Physics, Kinematics & Control</h1>
         <p class="page-subtitle">
-          Experience real-time interactive physics models: acoustic distance sensing, optical motor encoders, PWM servo actuation, and 2-joint forward/inverse kinematics.
+          Real-time interactive engineering laboratories: closed-loop PID step response, 3-joint D-H kinematics with reachable workspace envelope, grid path planning with A*, ultrasonic rangefinding, and quadrature encoders.
         </p>
       </div>
 
-      <!-- 3 Sensor & Actuator Simulators Grid -->
+      <!-- ================= SECTION 1: PID CLOSED-LOOP CONTROLLER (STANDOUT FEATURE) ================= -->
+      <section class="cream-card mb-12" id="sim-pid-section">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <div>
+            <div class="page-badge font-mono">CONTROL THEORY</div>
+            <h2 class="font-orbitron text-2xl text-heading">1. Closed-Loop PID Controller Simulator</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              Tune Proportional ($K_p$), Integral ($K_i$), and Derivative ($K_d$) feedback gains to stabilize the joint actuator: $u(t) = K_p e(t) + K_i \int e(t)\,dt + K_d \frac{de(t)}{dt}$.
+            </p>
+          </div>
+
+          <!-- Presets -->
+          <div class="pid-preset-bar">
+            <button class="pid-preset-btn" data-pid="under">Underdamped</button>
+            <button class="pid-preset-btn active" data-pid="ideal">Critically Damped (Ideal)</button>
+            <button class="pid-preset-btn" data-pid="over">Overdamped</button>
+            <button class="pid-preset-btn" data-pid="windup">Integral Windup</button>
+          </div>
+        </div>
+
+        <div class="pid-layout">
+          <!-- Response Scope Canvas -->
+          <div>
+            <div class="pid-scope-box">
+              <canvas id="pid-scope-canvas"></canvas>
+            </div>
+            
+            <!-- Transient Metrics Pill Bar -->
+            <div class="pid-metrics-grid">
+              <div class="pid-metric-pill">
+                <span class="text-[10px] text-muted block">RISE TIME ($t_r$)</span>
+                <span id="pid-metric-rise" class="font-bold text-amber text-xs">0.34 s</span>
+              </div>
+              <div class="pid-metric-pill">
+                <span class="text-[10px] text-muted block">PEAK OVERSHOOT ($M_p$)</span>
+                <span id="pid-metric-overshoot" class="font-bold text-sky-700 text-xs">4.2 %</span>
+              </div>
+              <div class="pid-metric-pill">
+                <span class="text-[10px] text-muted block">SETTLING TIME ($t_s$)</span>
+                <span id="pid-metric-settling" class="font-bold text-emerald-700 text-xs">0.82 s</span>
+              </div>
+              <div class="pid-metric-pill">
+                <span class="text-[10px] text-muted block">STEADY ERROR ($e_{ss}$)</span>
+                <span id="pid-metric-ess" class="font-bold text-heading text-xs">0.00 %</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls & Sliders -->
+          <div class="space-y-4">
+            <!-- Setpoint -->
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>SETPOINT TARGET $r(t)$:</span>
+                <span id="pid-sp-val" class="font-bold text-amber">75.0</span>
+              </div>
+              <input type="range" id="pid-sp-slider" min="10" max="100" value="75" class="cream-slider" aria-label="PID Setpoint Target" />
+            </div>
+
+            <!-- Kp -->
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>PROPORTIONAL GAIN ($K_p$):</span>
+                <span id="pid-kp-val" class="font-bold text-heading">3.20</span>
+              </div>
+              <input type="range" id="pid-kp-slider" min="0" max="100" value="32" class="cream-slider" aria-label="Proportional Gain Kp" />
+              <p class="text-[10px] text-muted mt-1">Drives corrective force proportional to immediate position error.</p>
+            </div>
+
+            <!-- Ki -->
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>INTEGRAL GAIN ($K_i$):</span>
+                <span id="pid-ki-val" class="font-bold text-heading">1.10</span>
+              </div>
+              <input type="range" id="pid-ki-slider" min="0" max="50" value="11" class="cream-slider" aria-label="Integral Gain Ki" />
+              <p class="text-[10px] text-muted mt-1">Accumulates past steady-state errors to overcome gravity/friction offset.</p>
+            </div>
+
+            <!-- Kd -->
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>DERIVATIVE GAIN ($K_d$):</span>
+                <span id="pid-kd-val" class="font-bold text-heading">0.65</span>
+              </div>
+              <input type="range" id="pid-kd-slider" min="0" max="30" value="13" class="cream-slider" aria-label="Derivative Gain Kd" />
+              <p class="text-[10px] text-muted mt-1">Anticipates future error trajectory to damp resonant oscillations.</p>
+            </div>
+
+            <!-- Disturbance Button -->
+            <div class="pt-2 flex gap-3">
+              <button id="pid-disturbance-btn" class="flex-1 py-2 px-3 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg font-mono text-xs font-bold transition-all">
+                ⚡ Inject External Disturbance Impulse
+              </button>
+              <button id="pid-reset-btn" class="py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg font-mono text-xs font-bold transition-all">
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 2: 3-JOINT KINEMATICS, D-H PARAMETERS & WORKSPACE ================= -->
+      <section class="cream-card mb-12" id="sim-kinematics-section">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <div>
+            <div class="page-badge font-mono">KINEMATICS & WORKSPACE</div>
+            <h2 class="font-orbitron text-2xl text-heading">2. 3-Joint Planar Manipulator & D-H Parameters</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              Solve Forward Kinematics (FK) and numerical Inverse Kinematics (IK). Inspect the reachable workspace boundary ($\Omega$) and Denavit-Hartenberg parameter table.
+            </p>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="kin-toggle-workspace" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg font-mono text-xs font-bold transition-all">
+              Workspace Envelope: ON
+            </button>
+            <button id="kin-reset-arm" class="px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg font-mono text-xs font-bold transition-all">
+              Home Pose
+            </button>
+          </div>
+        </div>
+
+        <div class="kin-layout">
+          <!-- 3-Link Arm Interactive Canvas -->
+          <div class="kin-canvas-wrap">
+            <canvas id="kinematics-interactive-canvas"></canvas>
+            <div class="text-[11px] font-mono text-muted text-center mt-2">
+              💡 <em>Click or drag anywhere in the canvas to command the Inverse Kinematics (IK) end-effector target!</em>
+            </div>
+          </div>
+
+          <!-- Controls & D-H Table -->
+          <div class="flex flex-col justify-between">
+            <div>
+              <div class="mb-3">
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span>JOINT 1 (&theta;<sub>1</sub> Base):</span>
+                  <span id="kin-t1-val" class="font-bold text-amber">40°</span>
+                </div>
+                <input type="range" id="kin-t1-slider" min="-180" max="180" value="40" class="cream-slider" aria-label="Joint 1 Theta 1" />
+              </div>
+
+              <div class="mb-3">
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span>JOINT 2 (&theta;<sub>2</sub> Shoulder):</span>
+                  <span id="kin-t2-val" class="font-bold text-sky-700">50°</span>
+                </div>
+                <input type="range" id="kin-t2-slider" min="-150" max="150" value="50" class="cream-slider" aria-label="Joint 2 Theta 2" />
+              </div>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span>JOINT 3 (&theta;<sub>3</sub> Wrist):</span>
+                  <span id="kin-t3-val" class="font-bold text-emerald-700">-30°</span>
+                </div>
+                <input type="range" id="kin-t3-slider" min="-150" max="150" value="-30" class="cream-slider" aria-label="Joint 3 Theta 3" />
+              </div>
+
+              <!-- Denavit-Hartenberg (D-H) Parameter Table -->
+              <div class="dh-table-wrap">
+                <span class="font-mono text-[11px] font-bold text-heading block mb-1">DENAVIT-HARTENBERG (D-H) PARAMETERS:</span>
+                <table class="dh-table">
+                  <thead>
+                    <tr><th>Link $i$</th><th>$a_i$ (Length)</th><th>$\alpha_i$ (Twist)</th><th>$d_i$ (Offset)</th><th>$\theta_i$ (Angle)</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1 (Base)</td><td>110 mm</td><td>0°</td><td>0</td><td id="dh-t1-cell">40°</td></tr>
+                    <tr><td>2 (Upper)</td><td>90 mm</td><td>0°</td><td>0</td><td id="dh-t2-cell">50°</td></tr>
+                    <tr><td>3 (Wrist)</td><td>60 mm</td><td>0°</td><td>0</td><td id="dh-t3-cell">-30°</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-200 font-mono text-xs flex justify-between items-center">
+              <div>
+                <span class="text-muted block text-[10px]">END-EFFECTOR POSITION:</span>
+                <span id="kin-coords-val" class="font-bold text-sm text-amber">(X: 168.4, Y: 135.2 mm)</span>
+              </div>
+              <div class="text-right">
+                <span class="text-muted block text-[10px]">MAX REACH $R_{\text{max}}$:</span>
+                <span class="font-bold text-xs text-heading">260.0 mm</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 3: AUTONOMOUS PATH PLANNING (A* & DIJKSTRA) ================= -->
+      <section class="cream-card mb-12" id="sim-path-section">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <div>
+            <div class="page-badge font-mono">AUTONOMOUS NAVIGATION</div>
+            <h2 class="font-orbitron text-2xl text-heading">3. Grid Path Planning (A* & Dijkstra)</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              Click and drag on the grid to paint obstacle walls. Move Start ($S$) and Goal ($G$) nodes, then execute the graph search to observe wavefront expansion and optimal shortest trajectory.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono text-muted">ALGORITHM:</span>
+            <select id="planner-algo-select" class="px-3 py-1.5 bg-white border border-stone-300 rounded-lg font-mono text-xs font-bold text-heading">
+              <option value="astar">A* (Euclidean Distance Heuristic)</option>
+              <option value="dijkstra">Dijkstra (Uniform Cost)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="planner-layout">
+          <div class="planner-canvas-box">
+            <canvas id="planner-grid-canvas"></canvas>
+          </div>
+
+          <div class="planner-controls-bar">
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="planner-run-btn" class="planner-tool-btn primary">▶ RUN SEARCH</button>
+              <button id="planner-maze-btn" class="planner-tool-btn">GENERATE MAZE</button>
+              <button id="planner-clear-btn" class="planner-tool-btn">CLEAR WALLS</button>
+            </div>
+
+            <div class="flex items-center gap-4 text-xs font-mono">
+              <div>EXPLORED NODES: <span id="planner-nodes-val" class="font-bold text-amber">0</span></div>
+              <div>PATH LENGTH: <span id="planner-length-val" class="font-bold text-emerald-600">0 steps</span></div>
+              <div>TIME: <span id="planner-time-val" class="font-bold text-heading">0.0 ms</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SENSORS & ACTUATORS LABS ================= -->
       <div class="simulators-grid">
-        <!-- 1. Ultrasonic Sonar -->
+        <!-- Ultrasonic Sonar -->
         <div class="sim-card">
-          <span class="font-mono text-xs text-amber font-bold">LAB 01 // ACOUSTIC ECHO</span>
+          <span class="font-mono text-xs text-amber font-bold">LAB 04 // ACOUSTIC ECHO</span>
           <h3 class="font-orbitron text-lg text-heading mt-1">Ultrasonic Rangefinder (HC-SR04)</h3>
           <p class="text-xs text-muted mt-1 leading-relaxed">
             Emits 40 kHz pulses. Measures round-trip flight duration to calculate obstacle distance: $d = \frac{v \cdot \Delta t}{2}$ ($v = 343\text{ m/s}$).
@@ -89,7 +357,7 @@
               <span>OBSTACLE DISTANCE:</span>
               <span id="sim-sonar-dist" class="text-amber font-bold">120 cm</span>
             </div>
-            <input type="range" id="sim-sonar-slider" min="15" max="300" value="120" class="cream-slider" />
+            <input type="range" id="sim-sonar-slider" min="15" max="300" value="120" class="cream-slider" aria-label="Ultrasonic Distance Slider" />
           </div>
 
           <div class="sim-meta-box font-mono">
@@ -98,9 +366,9 @@
           </div>
         </div>
 
-        <!-- 2. DC Motor & Encoder -->
+        <!-- DC Motor & Optical Encoder -->
         <div class="sim-card">
-          <span class="font-mono text-xs text-amber font-bold">LAB 02 // ROTATION & TICKS</span>
+          <span class="font-mono text-xs text-amber font-bold">LAB 05 // ROTATION & TICKS</span>
           <h3 class="font-orbitron text-lg text-heading mt-1">DC Motor & Optical Encoder</h3>
           <p class="text-xs text-muted mt-1 leading-relaxed">
             A slotted wheel interrupts a phototransistor beam to generate digital pulses, allowing the controller to calculate angular velocity and position.
@@ -115,7 +383,7 @@
               <span>TARGET VELOCITY:</span>
               <span id="sim-motor-rpm" class="text-amber font-bold">1500 RPM</span>
             </div>
-            <input type="range" id="sim-motor-slider" min="0" max="3000" step="50" value="1500" class="cream-slider" />
+            <input type="range" id="sim-motor-slider" min="0" max="3000" step="50" value="1500" class="cream-slider" aria-label="Motor RPM Velocity" />
           </div>
 
           <div class="flex items-center justify-between mt-3 font-mono text-xs">
@@ -126,9 +394,9 @@
           </div>
         </div>
 
-        <!-- 3. Servo Motor Horn -->
+        <!-- PWM Servo Motor -->
         <div class="sim-card">
-          <span class="font-mono text-xs text-amber font-bold">LAB 03 // POSITION SERVO</span>
+          <span class="font-mono text-xs text-amber font-bold">LAB 06 // POSITION SERVO</span>
           <h3 class="font-orbitron text-lg text-heading mt-1">PWM Servo Motor Position</h3>
           <p class="text-xs text-muted mt-1 leading-relaxed">
             Hobby servos position their output shaft proportionally to pulse width: 1.0 ms (0°), 1.5 ms (90° neutral), and 2.0 ms (180° max) at 50 Hz.
@@ -143,7 +411,7 @@
               <span>SERVO ANGLE:</span>
               <span id="sim-servo-angle" class="text-amber font-bold">90°</span>
             </div>
-            <input type="range" id="sim-servo-slider" min="0" max="180" value="90" class="cream-slider" />
+            <input type="range" id="sim-servo-slider" min="0" max="180" value="90" class="cream-slider" aria-label="Servo Angle Slider" />
           </div>
 
           <div class="sim-meta-box font-mono">
@@ -153,72 +421,44 @@
         </div>
       </div>
 
-      <!-- 4. Interactive Kinematics Viewport -->
-      <section class="mt-16 cream-card">
-        <div class="text-center mb-6">
-          <div class="page-badge font-mono">LAB 04 // MANIPULATOR KINEMATICS</div>
-          <h2 class="font-orbitron text-2xl text-heading">2-Link Planar Kinematics Arm</h2>
-          <p class="text-sm text-muted mt-1 max-w-xl mx-auto">
-            Drag the red end-effector on the canvas to solve <strong>Inverse Kinematics (IK)</strong> via the Law of Cosines, or adjust joint sliders for <strong>Forward Kinematics</strong>.
-          </p>
-        </div>
-
-        <div class="kin-layout">
-          <div class="kin-canvas-wrap">
-            <canvas id="kinematics-interactive-canvas"></canvas>
-          </div>
-
-          <div class="flex flex-col justify-between p-2">
-            <div>
-              <h4 class="font-orbitron text-base text-heading mb-4">Joint Angles Control</h4>
-
-              <div class="mb-4">
-                <div class="flex justify-between text-xs font-mono mb-1">
-                  <span>SHOULDER (&theta;<sub>1</sub>):</span>
-                  <span id="kin-t1-val" class="font-bold text-amber">45°</span>
-                </div>
-                <input type="range" id="kin-t1-slider" min="0" max="180" value="45" class="cream-slider" />
-              </div>
-
-              <div class="mb-6">
-                <div class="flex justify-between text-xs font-mono mb-1">
-                  <span>ELBOW (&theta;<sub>2</sub>):</span>
-                  <span id="kin-t2-val" class="font-bold text-sky-700">45°</span>
-                </div>
-                <input type="range" id="kin-t2-slider" min="-150" max="150" value="45" class="cream-slider" />
-              </div>
-
-              <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200">
-                <span class="font-mono text-xs text-amber font-bold block mb-2">FORWARD KINEMATICS FORMULAS:</span>
-                <div class="font-mono text-xs text-slate-800 space-y-1">
-                  <div>x = L<sub>1</sub> &middot; cos(&theta;<sub>1</sub>) + L<sub>2</sub> &middot; cos(&theta;<sub>1</sub> + &theta;<sub>2</sub>)</div>
-                  <div>y = L<sub>1</sub> &middot; sin(&theta;<sub>1</sub>) + L<sub>2</sub> &middot; sin(&theta;<sub>1</sub> + &theta;<sub>2</sub>)</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-6 pt-4 border-t border-slate-200 font-mono text-xs flex justify-between items-center">
-              <span>END-EFFECTOR (X, Y):</span>
-              <span id="kin-coords-val" class="font-bold text-base text-amber">(150, 150)</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Navigation to Next Page -->
-      <div class="mt-14 text-center">
-        <a href="electronics.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
-          <span>Next Chapter: Digital Electronics & PWM</span>
-          <span>&rarr;</span>
+      <!-- Navigation to Previous & Next Chapters -->
+      <div class="chapter-nav-bar">
+        <a href="electronics.html" class="chapter-btn-prev">
+          <span>&larr; Chapter 04: Digital Electronics</span>
+        </a>
+        <a href="programming.html" class="chapter-btn-next">
+          <span>Chapter 06: Robotics Programming & ROS 2 &rarr;</span>
         </a>
       </div>
     </div>
   </main>
 
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Floating Tooltip Bubble -->
+  <div class="glossary-tooltip-bubble" id="glossary-tooltip-bubble"></div>
+
+  <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-inner">
       <div class="flex items-center gap-3">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
         <div>
           <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
           <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
@@ -228,9 +468,12 @@
         <a href="index.html" class="footer-link">Home</a>
         <a href="components.html" class="footer-link">Anatomy</a>
         <a href="types.html" class="footer-link">Types</a>
-        <a href="simulators.html" class="footer-link">Simulators</a>
         <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
         <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
       </nav>
     </div>
   </footer>

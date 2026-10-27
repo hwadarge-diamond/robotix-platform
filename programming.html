@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robotics Programming & ROS 2 // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Production-ready robotics code snippets: Arduino C++ motor encoders, Python discrete PID controllers, ROS 2 Humble Twist publishers, and URDF kinematics models." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Robotics Programming & ROS 2 Architecture" />
+  <meta property="og:description" content="Explore production code for embedded microcontrollers, Python kinematics, ROS 2 node architecture, and the complete technical robotics glossary." />
+  <meta property="og:image" content="assets/images/robotic_arm.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill">Anatomy</a>
+        <a href="types.html" class="nav-pill">Types</a>
+        <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="programming.html" class="nav-pill active">Programming</a>
+        <a href="applications.html" class="nav-pill">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Search Trigger -->
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <!-- Progress Badge -->
+        <div class="user-progress-badge hidden sm:inline-flex" id="global-progress-badge" title="Course progress">
+          <span>PROGRESS</span>
+          <div class="user-progress-bar-mini">
+            <div class="user-progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span id="progress-text-val">0%</span>
+        </div>
+
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
+        <a href="electronics.html" class="mobile-link">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link active">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link">09 // Sources & Credits</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">CHAPTER 06 // SOFTWARE & ROS 2 ARCHITECTURE</div>
+        <h1 class="page-title font-orbitron">Robotics Programming Laboratory</h1>
+        <p class="page-subtitle">
+          From microsecond embedded hardware interrupts to high-level distributed ROS 2 node graphs. Copy verified, production-style code templates for motors, kinematics, and telemetry.
+        </p>
+      </div>
+
+      <!-- ================= CODE SECTION 1: ARDUINO C++ ENCODER ISR & PWM ================= -->
+      <section class="cream-card mb-10">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="page-badge font-mono">EMBEDDED C++ // ARDUINO / STM32</div>
+            <h2 class="font-orbitron text-xl text-heading mt-1">1. Optical Quadrature Encoder Interrupt Service Routine (ISR)</h2>
+          </div>
+          <span class="font-mono text-xs text-amber font-bold">HARDWARE TIMER & INTERRUPTS</span>
+        </div>
+        <p class="text-xs text-muted mb-4 leading-relaxed">
+          Polling an encoder in the main <code class="font-mono text-amber">loop()</code> drops pulses at high motor RPM. This template utilizes pin change interrupts (<code class="font-mono text-amber">attachInterrupt</code>) on Channel A to decode directional Gray code at hardware speed.
+        </p>
+
+        <div class="code-box-wrap">
+          <div class="code-box-header">
+            <span>encoder_motor_control.ino (C++)</span>
+            <button class="code-copy-btn" data-target="code-arduino">Copy Code</button>
+          </div>
+          <pre id="code-arduino"><code>// ROBOTIX Embedded Motor Driver & Quadrature Encoder ISR
+#define PIN_ENCODER_A 2   // Hardware Interrupt Pin INT0
+#define PIN_ENCODER_B 3   // Direction verification pin
+#define PIN_PWM_MOTOR 9   // Timer1 16-bit PWM output
+#define PIN_DIR_1     7   // H-Bridge Direction Input 1
+#define PIN_DIR_2     8   // H-Bridge Direction Input 2
+
+volatile long encoderTicks = 0; // Volatile for safe ISR memory access
+unsigned long lastTime = 0;
+double currentRPM = 0.0;
+const int TICKS_PER_REV = 1024; // 1024 CPR Optical Disc
+
+void IRAM_ATTR onEncoderPulseA() {
+  // Read Channel B to determine rotation direction
+  bool dir = digitalRead(PIN_ENCODER_B);
+  if (dir == HIGH) {
+    encoderTicks++;
+  } else {
+    encoderTicks--;
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(PIN_ENCODER_A, INPUT_PULLUP);
+  pinMode(PIN_ENCODER_B, INPUT_PULLUP);
+  pinMode(PIN_PWM_MOTOR, OUTPUT);
+  pinMode(PIN_DIR_1, OUTPUT);
+  pinMode(PIN_DIR_2, OUTPUT);
+
+  // Attach interrupt on Rising Edge of Channel A
+  attachInterrupt(digitalPinToInterrupt(PIN_ENCODER_A), onEncoderPulseA, RISING);
+
+  // Configure Motor forward at 65% PWM duty cycle
+  digitalWrite(PIN_DIR_1, HIGH);
+  digitalWrite(PIN_DIR_2, LOW);
+  analogWrite(PIN_PWM_MOTOR, 166); // 166/255 = 65% PWM
+}
+
+void loop() {
+  unsigned long now = millis();
+  if (now - lastTime >= 100) { // 10 Hz telemetry loop
+    noInterrupts(); // Atomic read to prevent race conditions
+    long ticks = encoderTicks;
+    interrupts();
+
+    currentRPM = ((double)(ticks) / TICKS_PER_REV) * 600.0;
+    Serial.print("Encoder Ticks: "); Serial.print(ticks);
+    Serial.print(" | Actuator Velocity: "); Serial.print(currentRPM); Serial.println(" RPM");
+    lastTime = now;
+  }
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- ================= CODE SECTION 2: PYTHON DISCRETE PID CONTROLLER ================= -->
+      <section class="cream-card mb-10">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="page-badge font-mono">CONTROL ALGORITHMS // PYTHON</div>
+            <h2 class="font-orbitron text-xl text-heading mt-1">2. Discrete PID Controller with Anti-Windup Clamping</h2>
+          </div>
+          <span class="font-mono text-xs text-sky-700 font-bold">DISCRETE TIME DOMAIN</span>
+        </div>
+        <p class="text-xs text-muted mb-4 leading-relaxed">
+          Standard textbook PID controllers suffer from integrator windup when motor actuators saturate at max voltage ($\pm 12\,\text{V}$). This robust implementation includes integrator clamping and low-pass filtered derivative action.
+        </p>
+
+        <div class="code-box-wrap">
+          <div class="code-box-header">
+            <span>discrete_pid.py (Python 3)</span>
+            <button class="code-copy-btn" data-target="code-python">Copy Code</button>
+          </div>
+          <pre id="code-python"><code>import time
+import math
+
+class DiscretePID:
+    """Industrial Discrete-Time PID Controller with Anti-Windup Protection."""
+    def __init__(self, kp: float, ki: float, kd: float, sample_time: float = 0.01,
+                 out_min: float = -12.0, out_max: float = 12.0):
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.dt = sample_time
+        self.out_min = out_min
+        self.out_max = out_max
+
+        self.integral = 0.0
+        self.prev_error = 0.0
+        self.prev_measurement = 0.0
+
+    def compute(self, setpoint: float, measurement: float) -> float:
+        error = setpoint - measurement
+        
+        # 1. Proportional Term
+        p_term = self.kp * error
+
+        # 2. Integral Term with Anti-Windup Clamping
+        self.integral += error * self.dt
+        i_term = self.ki * self.integral
+
+        # 3. Derivative Term on Measurement (eliminates setpoint step kicks)
+        d_error = (measurement - self.prev_measurement) / self.dt
+        d_term = -self.kd * d_error
+
+        # Raw control effort before actuator saturation
+        output_raw = p_term + i_term + d_term
+
+        # Actuator Saturation Clamping (e.g. ±12V H-bridge PWM limit)
+        output_clamped = max(self.out_min, min(output_raw, self.out_max))
+
+        # Anti-Windup Clamping: revert integration if saturated in same direction
+        if (output_raw != output_clamped) and ((error * output_raw) > 0):
+            self.integral -= error * self.dt # Prevent runaway windup
+
+        self.prev_error = error
+        self.prev_measurement = measurement
+        return output_clamped
+
+# Example Execution Simulation
+if __name__ == '__main__':
+    pid = DiscretePID(kp=2.5, ki=0.8, kd=0.15, sample_time=0.01)
+    target_pos = 90.0 # Target joint angle in degrees
+    current_pos = 0.0
+
+    print("Time(s) | Target(°) | Current(°) | Motor Output(V)")
+    for step in range(50):
+        voltage = pid.compute(setpoint=target_pos, measurement=current_pos)
+        current_pos += voltage * 0.18 # Simple first-order plant response
+        print(f"{step*0.01:6.2f} | {target_pos:9.1f} | {current_pos:10.2f} | {voltage:12.2f} V")
+</code></pre>
+        </div>
+      </section>
+
+      <!-- ================= CODE SECTION 3: ROS 2 HUMBLE ROBOT NODE ================= -->
+      <section class="cream-card mb-10">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="page-badge font-mono">DISTRIBUTED ROBOTICS // ROS 2</div>
+            <h2 class="font-orbitron text-xl text-heading mt-1">3. ROS 2 Mobile Robot Velocity Publisher & LaserScan Safety</h2>
+          </div>
+          <span class="font-mono text-xs text-emerald-700 font-bold">RCLPY // ROS 2 HUMBLE</span>
+        </div>
+        <p class="text-xs text-muted mb-4 leading-relaxed">
+          Autonomous mobile platforms (AMRs) run asynchronous ROS 2 nodes. This node subscribes to 2D LiDAR ranges (<code class="font-mono text-amber">/scan</code>) and publishes velocity commands (<code class="font-mono text-amber">geometry_msgs/Twist</code>) to <code class="font-mono text-amber">/cmd_vel</code> with active collision braking.
+        </p>
+
+        <div class="code-box-wrap">
+          <div class="code-box-header">
+            <span>autonomous_driver_node.py (ROS 2 Python)</span>
+            <button class="code-copy-btn" data-target="code-ros">Copy Code</button>
+          </div>
+          <pre id="code-ros"><code>#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import LaserScan
+
+class AutonomousAMRDriver(Node):
+    """ROS 2 Node for AMR navigation and laser-based reactive collision avoidance."""
+    def __init__(self):
+        super().__init__('amr_autonomous_driver')
+        
+        # Publisher to robot differential motor base
+        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        
+        # Subscriber to 360-degree LiDAR scanner
+        self.scan_sub = self.create_subscription(
+            LaserScan, '/scan', self.scan_callback, 10
+        )
+        
+        # 20 Hz control loop timer
+        self.timer = self.create_timer(0.05, self.control_loop)
+        
+        self.min_forward_distance = 10.0 # meters
+        self.emergency_stop_threshold = 0.45 # meters
+
+    def scan_callback(self, msg: LaserScan):
+        # Inspect front 30-degree cone (center ± 15 rays)
+        center_idx = len(msg.ranges) // 2
+        front_slice = msg.ranges[center_idx - 15 : center_idx + 15]
+        
+        # Filter valid non-zero finite ranges
+        valid_ranges = [r for r in front_slice if msg.range_min < r < msg.range_max]
+        if valid_ranges:
+            self.min_forward_distance = min(valid_ranges)
+
+    def control_loop(self):
+        cmd = Twist()
+        if self.min_forward_distance < self.emergency_stop_threshold:
+            # Obstacle detected in hazard safety zone: rotate in-place
+            cmd.linear.x = 0.0
+            cmd.angular.z = 0.75 # rad/s counter-clockwise
+            self.get_logger().warn(f'OBSTACLE at {self.min_forward_distance:.2f}m! Initiating evasive turn.')
+        else:
+            # Clear trajectory: cruise forward
+            cmd.linear.x = 0.40 # 0.4 m/s cruise speed
+            cmd.angular.z = 0.0
+            
+        self.cmd_vel_pub.publish(cmd)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AutonomousAMRDriver()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('Shutting down AMR autonomous driver.')
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+        </div>
+      </section>
+
+      <!-- ================= CODE SECTION 4: URDF ROBOT MODEL ================= -->
+      <section class="cream-card mb-12">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="page-badge font-mono">KINEMATIC MODELING // URDF</div>
+            <h2 class="font-orbitron text-xl text-heading mt-1">4. URDF XML Robot Kinematics & Joint Tree</h2>
+          </div>
+          <span class="font-mono text-xs text-amber font-bold">XML ROBOT DESCRIPTION</span>
+        </div>
+        <p class="text-xs text-muted mb-4 leading-relaxed">
+          The Unified Robot Description Format (URDF) defines the mechanical linkage tree, joint limits, inertial moments, and 3D visual geometry used by RViz, Gazebo, and MoveIt 2 motion planners.
+        </p>
+
+        <div class="code-box-wrap">
+          <div class="code-box-header">
+            <span>articulated_arm.urdf (XML)</span>
+            <button class="code-copy-btn" data-target="code-urdf">Copy Code</button>
+          </div>
+          <pre id="code-urdf"><code>&lt;?xml version="1.0"?&gt;
+&lt;robot name="robotix_3dof_arm"&gt;
+  &lt;!-- Base Link --&gt;
+  &lt;link name="base_link"&gt;
+    &lt;visual&gt;
+      &lt;geometry&gt;
+        &lt;cylinder length="0.08" radius="0.12"/&gt;
+      &lt;/geometry&gt;
+      &lt;material name="cream_slate"&gt;
+        &lt;color rgba="0.12 0.12 0.14 1.0"/&gt;
+      &lt;/material&gt;
+    &lt;/visual&gt;
+  &lt;/link&gt;
+
+  &lt;!-- Shoulder Revolute Joint 1 --&gt;
+  &lt;joint name="joint_1_base_yaw" type="revolute"&gt;
+    &lt;parent link="base_link"/&gt;
+    &lt;child link="shoulder_link"/&gt;
+    &lt;origin xyz="0 0 0.08" rpy="0 0 0"/&gt;
+    &lt;axis xyz="0 0 1"/&gt;
+    &lt;limit lower="-3.1415" upper="3.1415" effort="45.0" velocity="2.5"/&gt;
+  &lt;/joint&gt;
+
+  &lt;!-- Shoulder Link --&gt;
+  &lt;link name="shoulder_link"&gt;
+    &lt;visual&gt;
+      &lt;origin xyz="0 0 0.10" rpy="0 0 0"/&gt;
+      &lt;geometry&gt;
+        &lt;box size="0.06 0.06 0.20"/&gt;
+      &lt;/geometry&gt;
+      &lt;material name="amber_accent"&gt;
+        &lt;color rgba="0.76 0.47 0.01 1.0"/&gt;
+      &lt;/material&gt;
+    &lt;/visual&gt;
+  &lt;/link&gt;
+
+  &lt;!-- Elbow Pitch Joint 2 --&gt;
+  &lt;joint name="joint_2_elbow_pitch" type="revolute"&gt;
+    &lt;parent link="shoulder_link"/&gt;
+    &lt;child link="forearm_link"/&gt;
+    &lt;origin xyz="0 0 0.20" rpy="0 0 0"/&gt;
+    &lt;axis xyz="0 1 0"/&gt;
+    &lt;limit lower="-2.09" upper="2.09" effort="30.0" velocity="3.0"/&gt;
+  &lt;/joint&gt;
+
+  &lt;!-- Forearm Link --&gt;
+  &lt;link name="forearm_link"&gt;
+    &lt;visual&gt;
+      &lt;origin xyz="0 0 0.09" rpy="0 0 0"/&gt;
+      &lt;geometry&gt;
+        &lt;cylinder length="0.18" radius="0.03"/&gt;
+      &lt;/geometry&gt;
+    &lt;/visual&gt;
+  &lt;/link&gt;
+&lt;/robot&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 5: INTERACTIVE ROBOTICS GLOSSARY ================= -->
+      <section class="cream-card mb-12" id="glossary-section">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <div class="page-badge font-mono">TECHNICAL REFERENCE</div>
+            <h2 class="font-orbitron text-2xl text-heading">5. Engineering Glossary of Terms</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              Hover over any dotted term across the site or browse the definitions below for fast revision.
+            </p>
+          </div>
+
+          <!-- Glossary Search -->
+          <input type="text" id="glossary-filter-input" placeholder="Filter terms (e.g., ZMP, SLAM)..." class="px-3 py-2 bg-white border border-stone-300 rounded-lg font-mono text-xs text-heading w-64" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="glossary-card-grid">
+          <!-- Item: DOF -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="dof degrees of freedom">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">DOF</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Degrees of Freedom</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              The number of independent kinematic coordinates required to uniquely locate and orient all robot links in 3D operational space (up to 6 DOF: 3 translation + 3 rotation).
+            </p>
+          </div>
+
+          <!-- Item: ZMP -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="zmp zero moment point bipedal humanoid">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">ZMP</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Zero Moment Point</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              The ground contact point where the net horizontal tipping moments generated by gravity and inertial acceleration equal zero, ensuring bipedal humanoid dynamic balance.
+            </p>
+          </div>
+
+          <!-- Item: SLAM -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="slam localization mapping lidar amr">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">SLAM</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Simultaneous Localization & Mapping</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              The computational problem of constructing an unknown environmental map while concurrently estimating the robot pose within that map using LiDAR and wheel odometry.
+            </p>
+          </div>
+
+          <!-- Item: D-H -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="dh denavit hartenberg kinematics matrix">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">D-H CONVENTION</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Denavit-Hartenberg Parameters</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              Standard 4-parameter convention ($a_i, \alpha_i, d_i, \theta_i$) attached to joint coordinate frames to compute homogeneous transformation matrices ($^{i-1}T_i$).
+            </p>
+          </div>
+
+          <!-- Item: PID -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="pid proportional integral derivative control feedback">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">PID</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Proportional-Integral-Derivative</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              Universal feedback control loop computing output commands based on present error ($P$), past accumulated error ($I$), and projected rate of change ($D$).
+            </p>
+          </div>
+
+          <!-- Item: PWM -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="pwm pulse width modulation motor h-bridge">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">PWM</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Pulse Width Modulation</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              Technique to control effective average DC voltage delivered to motor windings by rapidly switching high-power MOSFETs between ON and OFF states with variable duty cycles.
+            </p>
+          </div>
+
+          <!-- Item: IMU -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="imu inertial measurement unit gyro accelerometer">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">IMU</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Inertial Measurement Unit</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              Sensor array combining 3-axis MEMS gyroscopes and 3-axis accelerometers to measure specific angular velocity and linear acceleration for dead-reckoning attitude estimation.
+            </p>
+          </div>
+
+          <!-- Item: CAN -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="can controller area network differential bus">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">CAN BUS</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Controller Area Network</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              High-reliability, noise-immune differential two-wire serial bus standard (CAN_H, CAN_L) widely used for real-time motor drive communications in automotive and industrial robots.
+            </p>
+          </div>
+
+          <!-- Item: Singularities -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 glossary-entry" data-term="singularity jacobian determinant workspace">
+            <span class="font-mono text-xs text-amber font-bold block mb-1">SINGULARITY</span>
+            <h4 class="font-orbitron text-sm text-heading mb-1">Kinematic Singularity</h4>
+            <p class="text-xs text-muted leading-relaxed">
+              A configuration where the manipulator Jacobian matrix loses rank ($\det(J) = 0$), causing the loss of one or more degrees of freedom and requiring infinite joint velocities.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation to Previous & Next Chapters -->
+      <div class="chapter-nav-bar">
+        <a href="simulators.html" class="chapter-btn-prev">
+          <span>&larr; Chapter 05: Interactive Simulators</span>
+        </a>
+        <a href="applications.html" class="chapter-btn-next">
+          <span>Chapter 07: Real-World Applications &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Floating Tooltip Bubble -->
+  <div class="glossary-tooltip-bubble" id="glossary-tooltip-bubble"></div>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div class="flex items-center gap-3">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
+        <div>
+          <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+        </div>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

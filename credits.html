@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sources, References & Academic Credits // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Academic references, standard citations (ISO 13849, IEEE, ROS 2), textbooks, and technical asset credits for ROBOTIX Academy." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill">Anatomy</a>
+        <a href="types.html" class="nav-pill">Types</a>
+        <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="programming.html" class="nav-pill">Programming</a>
+        <a href="applications.html" class="nav-pill">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
+        <a href="electronics.html" class="mobile-link">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link active">09 // Sources & Credits</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">ACADEMIC RIGOR & ATTRIBUTIONS</div>
+        <h1 class="page-title font-orbitron">Sources, Literature & Technical Credits</h1>
+        <p class="page-subtitle">
+          All mathematical models, kinematics derivations, safety standards, and software architectures adhere to verified IEEE, ISO, and university textbook sources.
+        </p>
+      </div>
+
+      <!-- Disclaimer Alert -->
+      <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 mb-10 flex items-start gap-3 text-xs text-body leading-relaxed">
+        <span class="text-amber text-lg font-bold">ℹ️</span>
+        <div>
+          <strong class="text-heading block mb-0.5">Educational Benchmark Disclaimer:</strong>
+          All mechanical dimensions, payload capacities, degrees of freedom (DOF), and cycle times quoted across this platform represent typical industrial engineering benchmarks for college curriculum education. Individual production robot models vary based on manufacturer gearboxes and tooling.
+        </div>
+      </div>
+
+      <div class="space-y-8">
+        <!-- 1. Textbooks -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">FOUNDATIONAL LITERATURE</div>
+          <h2 class="font-orbitron text-xl text-heading mb-4">Core Academic Textbooks</h2>
+          <div class="space-y-4 text-xs font-mono">
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <span class="font-bold text-amber block mb-0.5">Craig, John J. (2018)</span>
+              <span class="text-heading"><em>Introduction to Robotics: Mechanics and Control</em> (4th Edition).</span>
+              <span class="text-muted block mt-1">Pearson Education. Used for Denavit-Hartenberg (D-H) kinematics parameters and coordinate transformation matrices.</span>
+            </div>
+
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <span class="font-bold text-amber block mb-0.5">Spong, Mark W., Hutchinson, Seth, & Vidyasagar, M. (2020)</span>
+              <span class="text-heading"><em>Robot Modeling and Control</em> (2nd Edition).</span>
+              <span class="text-muted block mt-1">John Wiley & Sons. Reference for Euler-Lagrange equations, Jacobian singular analysis, and inverse kinematics algorithms.</span>
+            </div>
+
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <span class="font-bold text-amber block mb-0.5">Siciliano, Bruno, & Khatib, Oussama (Eds.) (2016)</span>
+              <span class="text-heading"><em>Springer Handbook of Robotics</em> (2nd Edition).</span>
+              <span class="text-muted block mt-1">Springer-Verlag Berlin Heidelberg. Reference for surgical teleoperation haptics and Zero Moment Point (ZMP) bipedal gait balance.</span>
+            </div>
+
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <span class="font-bold text-amber block mb-0.5">Thrun, Sebastian, Burgard, Wolfram, & Fox, Dieter (2005)</span>
+              <span class="text-heading"><em>Probabilistic Robotics</em>.</span>
+              <span class="text-muted block mt-1">The MIT Press. Foundational literature for LiDAR SLAM, Extended Kalman Filters (EKF), and grid path planning heuristics.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Standards -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">INDUSTRIAL PROTOCOLS & SAFETY</div>
+          <h2 class="font-orbitron text-xl text-heading mb-4">International Engineering Standards</h2>
+          <ul class="text-xs text-body space-y-3 leading-relaxed">
+            <li>
+              <strong>ISO 13849-1 / IEC 62061 (Functional Safety):</strong> Principles for Category 4 / Performance Level e (PLe) safety-related parts of control systems, light curtains, and emergency stop dual-channel interlocks.
+            </li>
+            <li>
+              <strong>ISO 10218-1 / ISO 10218-2:</strong> Safety requirements for industrial robots, robotic devices, and integrated work cells.
+            </li>
+            <li>
+              <strong>ISO 11898-1:2015 (Road Vehicles — CAN):</strong> Controller Area Network (CAN 2.0B) data link layer and physical signaling protocol specifications.
+            </li>
+            <li>
+              <strong>ROS 2 Architecture & Repositories:</strong> Open Robotics ROS 2 Humble Hawksbill core communications specifications (<code class="font-mono text-amber">rclpy</code>, <code class="font-mono text-amber">geometry_msgs</code>, <code class="font-mono text-amber">sensor_msgs</code>).
+            </li>
+          </ul>
+        </div>
+
+        <!-- 3. Open Source Assets -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">OPEN ASSETS & LIBRARIES</div>
+          <h2 class="font-orbitron text-xl text-heading mb-4">Open Source Web Technologies</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <strong class="text-heading block mb-1">Three.js WebGL Library</strong>
+              <span class="text-muted">MIT License, created by Ricardo Cabello (Mr.doob). Used for real-time hardware-accelerated 3D kinematic arm rendering.</span>
+            </div>
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <strong class="text-heading block mb-1">Typography (Google Fonts)</strong>
+              <span class="text-muted">Orbitron, Inter, and Fira Code are licensed under the SIL Open Font License (OFL 1.1).</span>
+            </div>
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <strong class="text-heading block mb-1">Canvas-Confetti</strong>
+              <span class="text-muted">ISC License, created by Kiril Vatev. Used for interactive assessment quiz celebration animations.</span>
+            </div>
+            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+              <strong class="text-heading block mb-1">Educational Renders</strong>
+              <span class="text-muted">Photorealistic synthetic benchmark illustrations generated specifically for non-commercial robotics engineering education.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation to Next Page -->
+      <div class="chapter-nav-bar">
+        <a href="quiz.html" class="chapter-btn-prev">
+          <span>&larr; Chapter 08: Assessment Quiz</span>
+        </a>
+        <a href="index.html" class="chapter-btn-next">
+          <span>Return to Homepage Base &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div class="flex items-center gap-3">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
+        <div>
+          <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+        </div>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

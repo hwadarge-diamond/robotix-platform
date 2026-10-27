@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 // Coordinate Out of Workspace // ROBOTIX ACADEMY</title>
+  <meta name="description" content="The requested trajectory or kinematic coordinate was not found in the workspace." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
+        </picture>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="nav-cta font-orbitron">&larr; RETURN TO BASE</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper flex-1 flex items-center justify-center py-20">
+    <div class="container-narrow text-center">
+      <div class="page-badge font-mono mb-4 text-red-600 border-red-300 bg-red-50">KINEMATIC SINGULARITY // 404</div>
+      <h1 class="page-title font-orbitron text-5xl mb-4">Trajectory Not Found</h1>
+      <p class="page-subtitle max-w-lg mx-auto mb-8">
+        The commanded coordinate falls outside the physical robot workspace envelope ($\Omega$). Check your trajectory parameters or return to one of our core modules below.
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto mb-10 text-left font-mono text-xs">
+        <a href="index.html" class="p-4 bg-white border border-stone-200 rounded-xl hover:border-amber-400 transition-all">
+          <span class="text-amber font-bold block mb-1">01 // HOME</span>
+          <span class="text-stone-600">Foundations</span>
+        </a>
+        <a href="electronics.html" class="p-4 bg-white border border-stone-200 rounded-xl hover:border-amber-400 transition-all">
+          <span class="text-amber font-bold block mb-1">04 // CIRCUITS</span>
+          <span class="text-stone-600">H-Bridge & ADC</span>
+        </a>
+        <a href="simulators.html" class="p-4 bg-white border border-stone-200 rounded-xl hover:border-amber-400 transition-all">
+          <span class="text-amber font-bold block mb-1">05 // SIM LAB</span>
+          <span class="text-stone-600">PID & Kinematics</span>
+        </a>
+        <a href="quiz.html" class="p-4 bg-white border border-stone-200 rounded-xl hover:border-amber-400 transition-all">
+          <span class="text-amber font-bold block mb-1">08 // QUIZ</span>
+          <span class="text-stone-600">Test Skills</span>
+        </a>
+      </div>
+
+      <a href="index.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
+        <span>&larr; Re-home Robot Manipulator</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div class="flex items-center gap-3">
+        <img src="assets/images/logo.webp" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <div>
+          <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+        </div>
+      </div>
+      <div class="font-mono text-xs text-muted">
+        Error Status: HTTP 404 Out-Of-Workspace
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

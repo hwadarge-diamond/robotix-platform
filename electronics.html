@@ -6,6 +6,14 @@
   <title>Digital Electronics in Robotics // ROBOTIX ACADEMY</title>
   <meta name="description" content="Master digital electronics in robotics: logic gate safety interlocks, H-Bridge MOSFET drivers, ADC quantization, PWM timers, quadrature decoding, and bus protocols." />
 
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Digital Electronics in Robotics // ROBOTIX ACADEMY" />
+  <meta property="og:description" content="Master H-Bridge MOSFET motor drivers, ADC quantization, optical quadrature encoders, CAN bus analysis, and Category 4 safety interlocks." />
+  <meta property="og:image" content="assets/images/robotic_arm.webp" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -18,7 +26,10 @@
   <header class="navbar-fixed">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Brand Logo" class="brand-logo-img" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Brand Logo" class="brand-logo-img" />
+        </picture>
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -28,15 +39,36 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-pill">Home</a>
         <a href="components.html" class="nav-pill">Anatomy</a>
-        <a href="types.html" class="nav-pill">Robot Types</a>
-        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="types.html" class="nav-pill">Types</a>
         <a href="electronics.html" class="nav-pill active">Electronics</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="programming.html" class="nav-pill">Programming</a>
         <a href="applications.html" class="nav-pill">Applications</a>
         <a href="quiz.html" class="nav-pill">Quiz</a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <a href="quiz.html" class="nav-cta font-orbitron hidden sm:inline-flex">TEST SKILLS &rarr;</a>
+      <div class="header-actions">
+        <button class="cmd-open-btn font-mono" id="cmd-palette-btn" title="Quick Search (Ctrl+K)">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="hidden md:inline">Ctrl+K</span>
+        </button>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle dark mode">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark hidden">🌙</span>
+        </button>
+
+        <div class="user-progress-badge hidden sm:inline-flex" id="global-progress-badge" title="Course progress">
+          <span>PROGRESS</span>
+          <div class="user-progress-bar-mini">
+            <div class="user-progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span id="progress-text-val">0%</span>
+        </div>
+
         <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -53,10 +85,12 @@
         <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
         <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
         <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
-        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
-        <a href="electronics.html" class="mobile-link active">05 // Digital Electronics</a>
-        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
-        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+        <a href="electronics.html" class="mobile-link active">04 // Digital Electronics</a>
+        <a href="simulators.html" class="mobile-link">05 // Interactive Simulators</a>
+        <a href="programming.html" class="mobile-link">06 // Code & ROS 2</a>
+        <a href="applications.html" class="mobile-link">07 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">08 // Assessment Quiz</a>
+        <a href="credits.html" class="mobile-link">09 // Sources & Credits</a>
       </div>
     </div>
   </header>
@@ -345,21 +379,44 @@
         </div>
       </section>
 
-      <!-- Navigation to Next Page -->
-      <div class="mt-14 text-center">
-        <a href="applications.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
-          <span>Next Chapter: Real-World Applications</span>
-          <span>&rarr;</span>
+      <!-- Chapter Navigation Bar -->
+      <div class="chapter-nav-bar">
+        <a href="types.html" class="chapter-btn-prev">
+          <span>&larr; Chapter 03: Robot Taxonomies</span>
+        </a>
+        <a href="simulators.html" class="chapter-btn-next">
+          <span>Chapter 05: Simulators, PID & Kinematics &rarr;</span>
         </a>
       </div>
     </div>
   </main>
 
+  <!-- Command Palette Modal -->
+  <div class="cmd-palette-backdrop" id="cmd-palette-modal">
+    <div class="cmd-palette-modal">
+      <div class="cmd-palette-header">
+        <svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmd-search-input" class="cmd-palette-input" placeholder="Type a chapter, equation, term, or simulator..." autocomplete="off" />
+        <span class="font-mono text-xs text-stone-400">ESC to close</span>
+      </div>
+      <div class="cmd-palette-results" id="cmd-search-results"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Floating Tooltip Bubble -->
+  <div class="glossary-tooltip-bubble" id="glossary-tooltip-bubble"></div>
+
   <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-inner">
       <div class="flex items-center gap-3">
-        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        </picture>
         <div>
           <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
           <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
@@ -369,9 +426,12 @@
         <a href="index.html" class="footer-link">Home</a>
         <a href="components.html" class="footer-link">Anatomy</a>
         <a href="types.html" class="footer-link">Types</a>
-        <a href="simulators.html" class="footer-link">Simulators</a>
         <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="programming.html" class="footer-link">Programming</a>
+        <a href="applications.html" class="footer-link">Applications</a>
         <a href="quiz.html" class="footer-link">Quiz</a>
+        <a href="credits.html" class="footer-link">Credits</a>
       </nav>
     </div>
   </footer>

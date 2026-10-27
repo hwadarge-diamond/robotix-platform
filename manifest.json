@@ -1,0 +1,22 @@
+{
+  "name": "ROBOTIX Academy - Interactive Robotics Platform",
+  "short_name": "ROBOTIX",
+  "description": "Interactive educational platform for robotics engineering, kinematics, digital electronics, control systems, and ROS.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#c27803",
+  "icons": [
+    {
+      "src": "assets/images/favicon.svg",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
