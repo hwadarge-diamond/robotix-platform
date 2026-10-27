@@ -17,12 +17,8 @@
   <!-- Navigation Bar -->
   <header class="navbar-fixed">
     <div class="nav-container">
-      <a href="index.html" class="nav-brand">
-        <div class="brand-hex">
-          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -78,80 +74,108 @@
       <!-- Grid of Classifications -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
         <!-- 1. Industrial Arms -->
-        <div class="cream-card flex flex-col justify-between">
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
-            <div class="page-badge font-mono mb-3">MANIPULATION</div>
-            <h3 class="font-orbitron text-xl text-heading mb-2">Industrial Manipulators</h3>
-            <p class="text-sm text-body leading-relaxed mb-4">
-              Fixed-base articulated, SCARA, and Delta robots engineered for high-speed repeatability (&plusmn;0.01 mm) in automated manufacturing.
-            </p>
-            <ul class="text-xs text-muted space-y-2 mb-6">
-              <li><strong>Kinematics:</strong> Denavit-Hartenberg (D-H) parameter models.</li>
-              <li><strong>DOF:</strong> 4 to 7 serial or parallel rotary joints.</li>
-              <li><strong>Key Tasks:</strong> Spot welding, painting, pick-and-place, CNC feeding.</li>
-            </ul>
+            <div class="robot-img-box">
+              <img src="assets/images/robotic_arm.jpg" alt="6-Axis Precision Industrial Articulated Robot Arm" loading="lazy" />
+              <span class="robot-img-overlay font-mono">MANIPULATION</span>
+              <span class="robot-hud-tag font-mono">&plusmn;0.01mm</span>
+            </div>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">MANIPULATION</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Industrial Manipulators</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Fixed-base articulated, SCARA, and Delta robots engineered for high-speed repeatability (&plusmn;0.01 mm) in automated manufacturing.
+              </p>
+              <ul class="text-xs text-muted space-y-2 mb-6">
+                <li><strong>Kinematics:</strong> Denavit-Hartenberg (D-H) parameter models.</li>
+                <li><strong>DOF:</strong> 4 to 7 serial or parallel rotary joints.</li>
+                <li><strong>Key Tasks:</strong> Spot welding, painting, pick-and-place, CNC feeding.</li>
+              </ul>
+            </div>
           </div>
-          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+          <div class="px-6 py-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
             <span>FANUC, KUKA, ABB</span>
             <span>0.01mm TOLERANCE</span>
           </div>
         </div>
 
         <!-- 2. Mobile AMRs -->
-        <div class="cream-card flex flex-col justify-between">
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
-            <div class="page-badge font-mono mb-3">NAVIGATION</div>
-            <h3 class="font-orbitron text-xl text-heading mb-2">Autonomous Mobile (AMRs)</h3>
-            <p class="text-sm text-body leading-relaxed mb-4">
-              Wheeled and tracked platforms using 2D/3D LiDAR Simultaneous Localization and Mapping (SLAM) for warehouse and factory transport.
-            </p>
-            <ul class="text-xs text-muted space-y-2 mb-6">
-              <li><strong>Steering:</strong> Differential drive or Mecanum omnidirectional.</li>
-              <li><strong>Planning:</strong> A* global path + Dynamic Window local avoidance.</li>
-              <li><strong>Safety:</strong> PL-d rated optical safety laser zones.</li>
-            </ul>
+            <div class="robot-img-box">
+              <img src="assets/images/mobile_amr.jpg" alt="Autonomous Mobile Robot with LiDAR" loading="lazy" />
+              <span class="robot-img-overlay font-mono">NAVIGATION</span>
+              <span class="robot-hud-tag font-mono">3D LIDAR</span>
+            </div>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">NAVIGATION</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Autonomous Mobile (AMRs)</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Wheeled and tracked platforms using 2D/3D LiDAR Simultaneous Localization and Mapping (SLAM) for warehouse and factory transport.
+              </p>
+              <ul class="text-xs text-muted space-y-2 mb-6">
+                <li><strong>Steering:</strong> Differential drive or Mecanum omnidirectional.</li>
+                <li><strong>Planning:</strong> A* global path + Dynamic Window local avoidance.</li>
+                <li><strong>Safety:</strong> PL-d rated optical safety laser zones.</li>
+              </ul>
+            </div>
           </div>
-          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+          <div class="px-6 py-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
             <span>AMAZON KIVA, MIR</span>
             <span>UP TO 1500 KG</span>
           </div>
         </div>
 
         <!-- 3. Humanoids -->
-        <div class="cream-card flex flex-col justify-between">
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
-            <div class="page-badge font-mono mb-3">BIOMIMICRY</div>
-            <h3 class="font-orbitron text-xl text-heading mb-2">Humanoid Robotics</h3>
-            <p class="text-sm text-body leading-relaxed mb-4">
-              Anthropomorphic bipedal morphology configured to navigate human spaces, climb stairs, open doors, and operate human tools.
-            </p>
-            <ul class="text-xs text-muted space-y-2 mb-6">
-              <li><strong>Locomotion:</strong> Zero Moment Point (ZMP) & Model Predictive Control.</li>
-              <li><strong>Hands:</strong> Dexterous tendon-driven 5-finger tactile arrays.</li>
-              <li><strong>AI Core:</strong> Vision-Language-Action (VLA) foundation models.</li>
-            </ul>
+            <div class="robot-img-box">
+              <img src="assets/images/humanoid.jpg" alt="Futuristic Humanoid Robot" loading="lazy" />
+              <span class="robot-img-overlay font-mono">BIOMIMICRY</span>
+              <span class="robot-hud-tag font-mono">28-54+ DOF</span>
+            </div>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">BIOMIMICRY</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Humanoid Robotics</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Anthropomorphic bipedal morphology configured to navigate human spaces, climb stairs, open doors, and operate human tools.
+              </p>
+              <ul class="text-xs text-muted space-y-2 mb-6">
+                <li><strong>Locomotion:</strong> Zero Moment Point (ZMP) & Model Predictive Control.</li>
+                <li><strong>Hands:</strong> Dexterous tendon-driven 5-finger tactile arrays.</li>
+                <li><strong>AI Core:</strong> Vision-Language-Action (VLA) foundation models.</li>
+              </ul>
+            </div>
           </div>
-          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+          <div class="px-6 py-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
             <span>FIGURE 01, ATLAS</span>
             <span>28-54+ DOF</span>
           </div>
         </div>
 
         <!-- 4. Surgical Robots -->
-        <div class="cream-card flex flex-col justify-between">
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
           <div>
-            <div class="page-badge font-mono mb-3">HEALTHCARE</div>
-            <h3 class="font-orbitron text-xl text-heading mb-2">Surgical Tele-Robots</h3>
-            <p class="text-sm text-body leading-relaxed mb-4">
-              Master-slave teleoperation systems that eliminate human hand tremors and scale surgeon motion down 5:1 for laparoscopic procedures.
-            </p>
-            <ul class="text-xs text-muted space-y-2 mb-6">
-              <li><strong>Haptics:</strong> Bilateral impedance force feedback.</li>
-              <li><strong>Wrist:</strong> 7-DOF EndoWrist mimicking human hand rotation.</li>
-              <li><strong>Vision:</strong> Stereoscopic 3D 4K magnified real-time feed.</li>
-            </ul>
+            <div class="robot-img-box">
+              <img src="assets/images/surgical_robot.jpg" alt="Robotic Surgical Teleoperation System" loading="lazy" />
+              <span class="robot-img-overlay font-mono">HEALTHCARE</span>
+              <span class="robot-hud-tag font-mono">SUB-MM</span>
+            </div>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">HEALTHCARE</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Surgical Tele-Robots</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Master-slave teleoperation systems that eliminate human hand tremors and scale surgeon motion down 5:1 for laparoscopic procedures.
+              </p>
+              <ul class="text-xs text-muted space-y-2 mb-6">
+                <li><strong>Haptics:</strong> Bilateral impedance force feedback.</li>
+                <li><strong>Wrist:</strong> 7-DOF EndoWrist mimicking human hand rotation.</li>
+                <li><strong>Vision:</strong> Stereoscopic 3D 4K magnified real-time feed.</li>
+              </ul>
+            </div>
           </div>
-          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+          <div class="px-6 py-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
             <span>DA VINCI, MAKO</span>
             <span>SUB-MM ACCURACY</span>
           </div>
@@ -210,9 +234,12 @@
 
   <footer class="main-footer">
     <div class="footer-inner">
-      <div>
-        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
-        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      <div class="flex items-center gap-3">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <div>
+          <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+        </div>
       </div>
       <nav class="footer-nav">
         <a href="index.html" class="footer-link">Home</a>

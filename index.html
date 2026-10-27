@@ -6,28 +6,21 @@
   <title>ROBOTIX ACADEMY // Intelligent Robotics Engineering</title>
   <meta name="description" content="A clean, intuitive educational portal for engineering students to learn autonomous robotics, kinematics, sensors, and cybernetics." />
 
-  <!-- Google Fonts: Orbitron (Headings), Inter (Body), Fira Code (Telemetry & Math) -->
+  <!-- Google Fonts: Orbitron, Inter, Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Core Stylesheet (Cream Light Theme) -->
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-  <!-- Navigation Bar -->
+  <!-- Navigation Bar with Meaningful Brand Logo -->
   <header class="navbar-fixed">
     <div class="nav-container">
-      <a href="index.html" class="nav-brand">
-        <div class="brand-hex">
-          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Click for Home">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Brand Logo" class="brand-logo-img" />
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -74,11 +67,11 @@
   <main class="main-wrapper">
     <div class="container-narrow">
 
-      <!-- ================= HERO SECTION WITH 3D ROBOTIC STRUCTURE ================= -->
+      <!-- ================= HERO SECTION WITH INTERACTIVE 3D ROBOTIC STRUCTURE ================= -->
       <section class="hero-layout">
         <div class="hero-text-content">
           <div class="page-badge font-mono">
-            <span>AUTONOMOUS CYBERNETICS LAB</span>
+            <span>AUTONOMOUS CYBERNETICS // v5.2</span>
           </div>
           <h1 class="hero-main-title font-orbitron">
             Master the Science of Intelligent Robotics
@@ -94,30 +87,171 @@
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </a>
-            <a href="simulators.html" class="btn-secondary-cream font-orbitron">
-              <span>Try Simulators Lab</span>
+            <a href="electronics.html" class="btn-secondary-cream font-orbitron">
+              <span>Digital Electronics Lab</span>
             </a>
           </div>
         </div>
 
-        <!-- 3D Ceramic Manipulator Canvas -->
+        <!-- 3D Ceramic Manipulator Canvas with Interactive Controls -->
         <div class="hero-3d-wrap">
-          <span class="canvas-badge font-mono">3D ARTICULATED STRUCTURE</span>
+          <span class="canvas-badge font-mono">3D ARTICULATED ROBOT ARM</span>
           <canvas id="hero-3d-canvas"></canvas>
-          <span class="canvas-hint font-mono">Move mouse to inspect joint kinematics</span>
+
+          <!-- Interactive 3D Toolbar -->
+          <div class="hero-3d-toolbar font-mono">
+            <button id="hero-wireframe-btn" class="hero-tool-btn" title="Toggle Shaded / Wireframe View">
+              <span>MESH: SHADED</span>
+            </button>
+            <button id="hero-speed-btn" class="hero-tool-btn" title="Toggle Kinematics Speed">
+              <span>SPEED: 1X</span>
+            </button>
+            <button id="hero-claw-btn" class="hero-tool-btn" title="Trigger Gripper Claws">
+              <span>CLAW: GRIP</span>
+            </button>
+            <button id="hero-theme-btn" class="hero-tool-btn" title="Toggle Material Color">
+              <span>COLOR: GOLD</span>
+            </button>
+          </div>
         </div>
       </section>
 
-      <!-- ================= DIRECTORY: DEDICATED LEARNING MODULES ================= -->
+      <!-- ================= THE MEANING OF THE ROBOT LOGO (THE NEXUS EMBLEM) ================= -->
+      <section class="meaning-card">
+        <div class="flex items-center gap-8">
+          <div class="meaning-symbol-wrap">
+            <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Emblem" />
+          </div>
+
+          <div class="flex-1">
+            <div class="page-badge font-mono">BRAND PHILOSOPHY</div>
+            <h2 class="font-orbitron text-2xl text-heading mb-2">The Nexus Emblem &mdash; The Meaning of the Robot Logo</h2>
+            <p class="text-sm text-body leading-relaxed mb-6">
+              Our emblem was geometrically engineered to embody the universal principles of autonomous robotics and cybernetics. Every ring and circuit trace carries a specific mathematical and philosophical meaning:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-inter">
+              <div class="symbol-pillar-item">
+                <div class="font-orbitron font-bold text-amber mb-1">01. The Tri-Ring Nexus</div>
+                <p class="text-muted leading-relaxed">
+                  The three interlocking golden rings represent the unbroken <strong>Sense &mdash; Plan &mdash; Act</strong> feedback loop, and the convergence of Mechanical, Electrical, and Software engineering.
+                </p>
+              </div>
+
+              <div class="symbol-pillar-item">
+                <div class="font-orbitron font-bold text-amber mb-1">02. The Optical Hex-Core</div>
+                <p class="text-muted leading-relaxed">
+                  The central pupil represents machine perception &mdash; LiDAR, stereo vision, and optical encoders &mdash; transforming raw environmental light into computational spatial intelligence.
+                </p>
+              </div>
+
+              <div class="symbol-pillar-item">
+                <div class="font-orbitron font-bold text-amber mb-1">03. The Circuit Traces</div>
+                <p class="text-muted leading-relaxed">
+                  The delicate branching traces symbolize digital electronic logic gates, microsecond PWM pulse signals, and the deterministic nervous system bridging code to physical force.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FUTURISTIC ROBOT GALLERY ================= -->
       <section class="mt-16">
         <div class="text-center mb-10">
-          <div class="page-badge font-mono">CURRICULUM CHAPTERS</div>
+          <div class="page-badge font-mono">FUTURISTIC EMBODIMENT</div>
+          <h2 class="page-title font-orbitron text-3xl">Next-Generation Robotics Architectures</h2>
+          <p class="page-subtitle">Real-world embodiments engineered for extreme dexterity, autonomous spatial reasoning, and sub-millimeter precision.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Card 1: Humanoid -->
+          <div class="robot-image-card">
+            <div class="robot-img-box">
+              <img src="assets/images/humanoid.jpg" alt="Futuristic Bipedal Humanoid Robot" loading="lazy" />
+              <span class="robot-img-overlay font-mono">BIOMIMETIC</span>
+              <span class="robot-hud-tag font-mono">54-DOF</span>
+            </div>
+            <div class="robot-card-content">
+              <h3 class="font-orbitron text-lg text-heading mb-1">General-Purpose Humanoid</h3>
+              <p class="text-xs text-muted leading-relaxed mb-4">
+                Bipedal dynamic equilibrium with whole-body Model Predictive Control and Vision-Language-Action neural policies.
+              </p>
+              <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
+                <span>BALANCE: ZMP ACTIVE</span>
+                <span>SPEED: 1.8 M/S</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: 6-Axis Arm -->
+          <div class="robot-image-card">
+            <div class="robot-img-box">
+              <img src="assets/images/robotic_arm.jpg" alt="6-Axis Precision Articulated Robotic Arm" loading="lazy" />
+              <span class="robot-img-overlay font-mono">MANIPULATION</span>
+              <span class="robot-hud-tag font-mono">&plusmn;0.01mm</span>
+            </div>
+            <div class="robot-card-content">
+              <h3 class="font-orbitron text-lg text-heading mb-1">Articulated Manipulator</h3>
+              <p class="text-xs text-muted leading-relaxed mb-4">
+                Harmonic drive reducers and field-oriented motor control executing high-speed micro-fabrication and welding.
+              </p>
+              <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
+                <span>DOF: 6-AXIS SERIAL</span>
+                <span>PAYLOAD: 12 KG</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Autonomous Mobile AMR -->
+          <div class="robot-image-card">
+            <div class="robot-img-box">
+              <img src="assets/images/mobile_amr.jpg" alt="Autonomous Mobile Robot with LiDAR" loading="lazy" />
+              <span class="robot-img-overlay font-mono">NAVIGATION</span>
+              <span class="robot-hud-tag font-mono">3D LIDAR</span>
+            </div>
+            <div class="robot-card-content">
+              <h3 class="font-orbitron text-lg text-heading mb-1">Autonomous Mobile AMR</h3>
+              <p class="text-xs text-muted leading-relaxed mb-4">
+                Solid-state spinning LiDAR and Mecanum omnidirectional traction for dynamic facility navigation without fixed rails.
+              </p>
+              <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
+                <span>SLAM: REAL-TIME</span>
+                <span>PAYLOAD: 1500 KG</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Surgical Robot -->
+          <div class="robot-image-card">
+            <div class="robot-img-box">
+              <img src="assets/images/surgical_robot.jpg" alt="Robotic Surgical Teleoperation System" loading="lazy" />
+              <span class="robot-img-overlay font-mono">HEALTHCARE</span>
+              <span class="robot-hud-tag font-mono">SUB-MM</span>
+            </div>
+            <div class="robot-card-content">
+              <h3 class="font-orbitron text-lg text-heading mb-1">Surgical Teleoperator</h3>
+              <p class="text-xs text-muted leading-relaxed mb-4">
+                Tremor-filtered multi-arm laparoscopic intervention with 7-DOF wrist articulation and 3D stereoscopic 4K imaging.
+              </p>
+              <div class="mt-auto pt-3 border-t border-amber-100 flex justify-between font-mono text-[11px] text-amber">
+                <span>TREMOR: 100% CANCELED</span>
+                <span>SCALE: 5:1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= DIRECTORY: DEDICATED CHAPTER CARDS ================= -->
+      <section class="mt-16">
+        <div class="text-center mb-10">
+          <div class="page-badge font-mono">ACADEMIC CURRICULUM</div>
           <h2 class="page-title font-orbitron text-3xl">Explore by Subject</h2>
-          <p class="page-subtitle">Each module is structured independently so you can learn at your own pace without clutter.</p>
+          <p class="page-subtitle">Each chapter is organized independently for a clean, convenient learning experience.</p>
         </div>
 
         <div class="modules-grid">
-          <!-- Card 1 -->
           <a href="components.html" class="module-card">
             <div class="module-icon">
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -137,7 +271,6 @@
             </div>
           </a>
 
-          <!-- Card 2 -->
           <a href="types.html" class="module-card">
             <div class="module-icon">
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -155,7 +288,6 @@
             </div>
           </a>
 
-          <!-- Card 3 -->
           <a href="simulators.html" class="module-card">
             <div class="module-icon">
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -172,16 +304,15 @@
             </div>
           </a>
 
-          <!-- Card 4 -->
           <a href="electronics.html" class="module-card">
             <div class="module-icon">
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
               </svg>
             </div>
-            <h3 class="module-title font-orbitron">04. Digital Electronics</h3>
+            <h3 class="module-title font-orbitron">04. Digital Electronics Lab</h3>
             <p class="module-desc">
-              Test logic gates (AND, OR, NOT, NAND, NOR, XOR) with live switches, explore PWM duty cycles on an oscilloscope, and study bus protocols.
+              H-Bridge MOSFET drivers, ADC quantization, logic gates, PWM timers, quadrature decoding, and bus protocols (CAN, SPI, I2C).
             </p>
             <div class="module-footer font-orbitron">
               <span>TEST CIRCUITS</span>
@@ -189,7 +320,6 @@
             </div>
           </a>
 
-          <!-- Card 5 -->
           <a href="applications.html" class="module-card">
             <div class="module-icon">
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -207,7 +337,6 @@
             </div>
           </a>
 
-          <!-- Card 6 -->
           <a href="quiz.html" class="module-card">
             <div class="module-icon">
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -227,7 +356,7 @@
         </div>
       </section>
 
-      <!-- ================= THE THREE PILLARS & SENSE-PLAN-ACT ================= -->
+      <!-- ================= SENSE-PLAN-ACT FLOW ================= -->
       <section class="mt-16 cream-card">
         <div class="text-center mb-8">
           <div class="page-badge font-mono">CORE PRINCIPLE</div>
@@ -256,47 +385,6 @@
         </div>
       </section>
 
-      <!-- ================= HISTORICAL MILESTONES ================= -->
-      <section class="mt-16">
-        <div class="text-center mb-10">
-          <div class="page-badge font-mono">TIMELINE</div>
-          <h2 class="font-orbitron text-3xl text-heading">Milestones in Robotics</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="cream-card p-6">
-            <span class="font-orbitron text-amber font-bold text-lg">1920</span>
-            <h4 class="font-orbitron text-base text-heading mt-1">Origin of "Robot"</h4>
-            <p class="text-xs text-muted mt-2">Karel Čapek premiers <em>R.U.R.</em> in Prague, deriving "robot" from the Slavic <em>robota</em> (forced servitude).</p>
-          </div>
-          <div class="cream-card p-6">
-            <span class="font-orbitron text-amber font-bold text-lg">1954</span>
-            <h4 class="font-orbitron text-base text-heading mt-1">Unimate Industrial Arm</h4>
-            <p class="text-xs text-muted mt-2">George Devol and Joseph Engelberger patent Unimate, deployed on a GM diecasting line in 1961.</p>
-          </div>
-          <div class="cream-card p-6">
-            <span class="font-orbitron text-amber font-bold text-lg">1969</span>
-            <h4 class="font-orbitron text-base text-heading mt-1">The Stanford Arm</h4>
-            <p class="text-xs text-muted mt-2">Victor Scheinman invents the first computer-controlled 6-axis all-electric arm, establishing modern kinematics.</p>
-          </div>
-          <div class="cream-card p-6">
-            <span class="font-orbitron text-amber font-bold text-lg">1997</span>
-            <h4 class="font-orbitron text-base text-heading mt-1">Sojourner on Mars</h4>
-            <p class="text-xs text-muted mt-2">NASA deploys the first autonomous planetary rover on Mars with autonomous hazard avoidance.</p>
-          </div>
-          <div class="cream-card p-6">
-            <span class="font-orbitron text-amber font-bold text-lg">2000</span>
-            <h4 class="font-orbitron text-base text-heading mt-1">ASIMO & da Vinci Surgery</h4>
-            <p class="text-xs text-muted mt-2">Honda reveals dynamic bipedal balance, while Intuitive Surgical earns FDA approval for robotic surgery.</p>
-          </div>
-          <div class="cream-card p-6">
-            <span class="font-orbitron text-amber font-bold text-lg">2026+</span>
-            <h4 class="font-orbitron text-base text-heading mt-1">Physical AI & Humanoids</h4>
-            <p class="text-xs text-muted mt-2">Vision-Language-Action (VLA) foundation models give humanoids the ability to understand and manipulate everyday objects.</p>
-          </div>
-        </div>
-      </section>
-
     </div>
   </main>
 
@@ -304,11 +392,7 @@
   <footer class="main-footer">
     <div class="footer-inner">
       <div class="flex items-center gap-3">
-        <div class="brand-hex w-8 h-8">
-          <svg class="hex-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
         <div>
           <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
           <p class="text-xs text-muted">Dedicated to clear, accessible robotics engineering education.</p>
@@ -330,7 +414,6 @@
     </div>
   </footer>
 
-  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>

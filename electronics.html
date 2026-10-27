@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digital Electronics & PWM // ROBOTIX ACADEMY</title>
-  <meta name="description" content="Explore logic gates, truth tables, PWM duty cycles, microcontrollers, and communication buses used in robotics." />
+  <title>Digital Electronics in Robotics // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Master digital electronics in robotics: logic gate safety interlocks, H-Bridge MOSFET drivers, ADC quantization, PWM timers, quadrature decoding, and bus protocols." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,12 +17,8 @@
   <!-- Navigation Bar -->
   <header class="navbar-fixed">
     <div class="nav-container">
-      <a href="index.html" class="nav-brand">
-        <div class="brand-hex">
-          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Brand Logo" class="brand-logo-img" />
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -68,122 +64,283 @@
   <main class="main-wrapper">
     <div class="container-narrow">
       <div class="page-header">
-        <div class="page-badge font-mono">CHAPTER 04 // CIRCUITS & SIGNALS</div>
+        <div class="page-badge font-mono">CHAPTER 04 // CIRCUITS, SEMICONDUCTORS & SIGNALS</div>
         <h1 class="page-title font-orbitron">Digital Electronics in Robotics</h1>
         <p class="page-subtitle">
-          Logic gates, microcontrollers, and Pulse-Width Modulation (PWM) form the bridge between software commands and electro-mechanical motor actuation.
+          Digital electronics forms the nervous system of modern robots. Explore how logic gates, MOSFET H-bridges, ADCs, quadrature decoders, and serial buses translate code into physical power.
         </p>
       </div>
 
-      <div class="circuits-layout">
-        <!-- Interactive Logic Gate Tester -->
-        <div class="cream-card">
-          <div class="page-badge font-mono mb-2">CIRCUIT LAB 01 // LOGIC GATES</div>
-          <h3 class="font-orbitron text-xl text-heading mb-3">Interactive Logic Gate Tester</h3>
-          <p class="text-xs text-muted leading-relaxed mb-4">
-            Select a logic gate and toggle input switches to see real-time output states on the LED and highlighted truth table.
-          </p>
-
-          <!-- Gate Selection Tabs -->
-          <div class="gate-select-bar">
-            <button class="gate-tab-btn active" data-gate="AND">AND</button>
-            <button class="gate-tab-btn" data-gate="OR">OR</button>
-            <button class="gate-tab-btn" data-gate="NOT">NOT</button>
-            <button class="gate-tab-btn" data-gate="NAND">NAND</button>
-            <button class="gate-tab-btn" data-gate="NOR">NOR</button>
-            <button class="gate-tab-btn" data-gate="XOR">XOR</button>
+      <!-- ================= SECTION 1: H-BRIDGE MOSFET DRIVER & MOTOR DIRECTION ================= -->
+      <section class="cream-card mb-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <div class="page-badge font-mono">SEMICONDUCTOR ACTUATION</div>
+            <h2 class="font-orbitron text-2xl text-heading">1. H-Bridge Transistor Motor Driver</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              An H-Bridge uses 4 power MOSFET switches (Q1 to Q4) to reverse motor polarity and voltage without mechanical relays.
+            </p>
           </div>
 
-          <!-- Schematic Interactive Panel -->
-          <div class="p-6 rounded-xl bg-amber-50/50 border border-amber-200 mb-6 flex items-center justify-between">
-            <div class="flex flex-col gap-3">
-              <button id="gate-switch-a" class="toggle-switch-cream font-mono text-xs">INPUT A: 0</button>
-              <div id="gate-switch-b-wrap">
-                <button id="gate-switch-b" class="toggle-switch-cream font-mono text-xs">INPUT B: 0</button>
+          <!-- Mode Controls -->
+          <div class="flex flex-wrap gap-2">
+            <button class="hbridge-mode-btn active" data-hbridge="fwd">FORWARD (CW)</button>
+            <button class="hbridge-mode-btn" data-hbridge="rev">REVERSE (CCW)</button>
+            <button class="hbridge-mode-btn" data-hbridge="brake">DYNAMIC BRAKE</button>
+            <button class="hbridge-mode-btn" data-hbridge="coast">COAST (HIGH-Z)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <!-- Live Canvas Schematic -->
+          <div class="hbridge-schematic">
+            <canvas id="hbridge-canvas"></canvas>
+          </div>
+
+          <!-- Telemetry & State Description -->
+          <div class="space-y-4">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 text-xs">
+              <span class="font-mono text-amber font-bold block mb-1">TRANSISTOR STATES:</span>
+              <div class="grid grid-cols-2 gap-2 font-mono text-xs">
+                <div>Q1 (High-Side L): <span id="hb-q1-state" class="font-bold text-green">ON (CLOSED)</span></div>
+                <div>Q2 (Low-Side L): <span id="hb-q2-state" class="font-bold text-red">OFF (OPEN)</span></div>
+                <div>Q3 (High-Side R): <span id="hb-q3-state" class="font-bold text-red">OFF (OPEN)</span></div>
+                <div>Q4 (Low-Side R): <span id="hb-q4-state" class="font-bold text-green">ON (CLOSED)</span></div>
               </div>
             </div>
 
-            <div class="text-center">
-              <div class="font-orbitron text-2xl font-bold text-amber" id="gate-formula">Y = A · B</div>
+            <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 text-xs text-body leading-relaxed" id="hb-desc-text">
+              <strong>Forward Mode:</strong> High-side switch Q1 and low-side switch Q4 are closed. Current flows from V<sub>CC</sub> (12V) through the motor armature from Left to Right, spinning the motor clockwise.
             </div>
 
-            <div class="flex flex-col items-center">
-              <div id="gate-led" class="logic-led-cream"></div>
-              <span class="text-[10px] font-mono font-bold text-muted mt-2">OUTPUT LED</span>
+            <div class="text-[11px] font-mono text-muted flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+              <span><strong>Shoot-Through Prevention:</strong> Q1 & Q2 (or Q3 & Q4) must NEVER be closed simultaneously to avoid dead short circuits.</span>
             </div>
           </div>
+        </div>
+      </section>
 
-          <!-- Truth Table -->
+      <!-- ================= SECTION 2: ANALOG-TO-DIGITAL CONVERTER (ADC) ================= -->
+      <section class="cream-card mb-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
-            <div class="text-xs font-mono font-bold text-muted mb-2">DYNAMIC TRUTH TABLE:</div>
-            <table class="cream-table font-mono">
+            <div class="page-badge font-mono">SENSOR SAMPLING</div>
+            <h2 class="font-orbitron text-2xl text-heading">2. ADC Sampling & Quantization</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              Microcontrollers cannot read continuous analog voltages directly. Successive Approximation (SAR) ADCs quantize analog signals into discrete binary numbers.
+            </p>
+          </div>
+
+          <!-- Resolution Selector -->
+          <div class="flex gap-2">
+            <button class="adc-bit-btn" data-bits="4">4-BIT (16 LEVELS)</button>
+            <button class="adc-bit-btn active" data-bits="8">8-BIT (256 LEVELS)</button>
+            <button class="adc-bit-btn" data-bits="10">10-BIT (1024 LEVELS)</button>
+            <button class="adc-bit-btn" data-bits="12">12-BIT (4096 LEVELS)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="adc-scope-wrap">
+            <canvas id="adc-canvas"></canvas>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span>ANALOG INPUT SENSOR VOLTAGE (V<sub>IN</sub>):</span>
+                <span id="adc-volts-val" class="font-bold text-amber">1.65 V</span>
+              </div>
+              <input type="range" id="adc-voltage-slider" min="0" max="330" value="165" class="cream-slider" />
+              <div class="flex justify-between text-[10px] font-mono text-muted mt-1">
+                <span>0.00 V (GND)</span>
+                <span>V<sub>REF</sub> = 3.30 V</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-sky-50/70 border border-sky-200">
+              <span class="text-xs font-mono text-sky-800 font-bold block mb-1">MICROCONTROLLER REGISTER DATA:</span>
+              <div class="flex items-center justify-between flex-wrap gap-2 mt-2">
+                <div class="binary-register-box" id="adc-binary-reg">0b10000000</div>
+                <div class="font-mono text-xs text-heading">DECIMAL: <span id="adc-dec-val" class="font-bold">128</span></div>
+                <div class="font-mono text-xs text-heading">LSB STEP: <span id="adc-lsb-val" class="font-bold">12.89 mV</span></div>
+              </div>
+            </div>
+
+            <div class="text-xs text-muted leading-relaxed">
+              <strong>Quantization Formula:</strong> Digital Count = $\text{round}\left(\frac{V_{\text{IN}}}{V_{\text{REF}}} \cdot (2^N - 1)\right)$. Higher bit resolutions ($N=12$) decrease step size, providing sub-millivolt accuracy for analog distance sensors.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 3: QUADRATURE OPTICAL ENCODER DECODING ================= -->
+      <section class="cream-card mb-12">
+        <div class="mb-6">
+          <div class="page-badge font-mono">MOTION FEEDBACK</div>
+          <h2 class="font-orbitron text-2xl text-heading">3. Quadrature Optical Encoder & 2-Bit State Machine</h2>
+          <p class="text-xs text-muted mt-1 max-w-xl">
+            Two optical phototransistor channels (A and B) generate square waves offset by 90° electrical degrees (quadrature). This phase shift allows the microcontroller timer to determine rotational direction and count 4x pulses per physical cycle.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <!-- Quadrature Waveform Canvas -->
+          <div class="sim-canvas-box">
+            <canvas id="quadrature-canvas"></canvas>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-xs font-mono font-bold text-muted">2-BIT GRAY CODE STATE TRANSITIONS:</span>
+              <button id="quad-dir-toggle-btn" class="px-3 py-1 bg-amber-100 text-amber-900 rounded font-mono font-bold text-xs hover:bg-amber-200">
+                DIRECTION: CW (A LEADS B)
+              </button>
+            </div>
+
+            <!-- State Machine Circles -->
+            <div class="flex items-center justify-around py-4 bg-amber-50/40 rounded-xl border border-amber-200 mb-4">
+              <div class="quad-state-circle" id="qstate-00">
+                <span class="text-[10px] text-muted">S0</span>
+                <span>00</span>
+              </div>
+              <span class="text-amber font-bold">&rarr;</span>
+              <div class="quad-state-circle" id="qstate-01">
+                <span class="text-[10px] text-muted">S1</span>
+                <span>01</span>
+              </div>
+              <span class="text-amber font-bold">&rarr;</span>
+              <div class="quad-state-circle" id="qstate-11">
+                <span class="text-[10px] text-muted">S2</span>
+                <span>11</span>
+              </div>
+              <span class="text-amber font-bold">&rarr;</span>
+              <div class="quad-state-circle" id="qstate-10">
+                <span class="text-[10px] text-muted">S3</span>
+                <span>10</span>
+              </div>
+            </div>
+
+            <div class="text-xs text-body leading-relaxed space-y-1">
+              <div>&bull; <strong>Clockwise (CW):</strong> State advances 00 &rarr; 01 &rarr; 11 &rarr; 10 (Channel A rises before Channel B).</div>
+              <div>&bull; <strong>Counter-Clockwise (CCW):</strong> State reverses 10 &rarr; 11 &rarr; 01 &rarr; 00.</div>
+              <div>&bull; <strong>4X Multiplication:</strong> Every edge (both rising and falling of A and B) triggers a hardware counter interrupt, quadrupling resolution without changing the physical encoder disc.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 4: ROBOTICS DIGITAL BUS ANALYZER (CAN, SPI, I2C, UART) ================= -->
+      <section class="cream-card mb-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <div class="page-badge font-mono">COMMUNICATIONS</div>
+            <h2 class="font-orbitron text-2xl text-heading">4. Serial Bus Waveform Analyzer</h2>
+            <p class="text-xs text-muted mt-1 max-w-xl">
+              Inspect live synchronized digital oscilloscope timing signals for CAN Bus, SPI, I2C, and UART.
+            </p>
+          </div>
+
+          <div class="bus-selector-bar">
+            <button class="bus-tab-btn active" data-bus="can">CAN BUS</button>
+            <button class="bus-tab-btn" data-bus="spi">SPI (4-WIRE)</button>
+            <button class="bus-tab-btn" data-bus="i2c">I2C (2-WIRE)</button>
+            <button class="bus-tab-btn" data-bus="uart">UART (SERIAL)</button>
+          </div>
+        </div>
+
+        <div class="bus-canvas-box">
+          <canvas id="bus-scope-canvas"></canvas>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-stone-50 border border-stone-200 text-xs text-body" id="bus-info-panel">
+          <h4 class="font-orbitron font-bold text-heading text-sm mb-1" id="bus-title-text">CAN Bus (Controller Area Network)</h4>
+          <p class="text-muted leading-relaxed" id="bus-desc-text">
+            Differential two-wire bus (CAN_High and CAN_Low). When dominant (0), CAN_H rises to 3.5V and CAN_L drops to 1.5V (2.0V differential). When recessive (1), both stay at 2.5V (0V differential). Eliminates electromagnetic interference from motor windings.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 5: ROBOTIC SAFETY INTERLOCK LOGIC & E-STOP ================= -->
+      <section class="cream-card mb-12">
+        <div class="mb-6">
+          <div class="page-badge font-mono">FAIL-SAFE DESIGN</div>
+          <h2 class="font-orbitron text-2xl text-heading">5. Logic Gate Interlock & Emergency Stop Circuit</h2>
+          <p class="text-xs text-muted mt-1 max-w-xl">
+            Industrial safety standards (ISO 13849, IEC 62061) mandate hardware-level combinational logic interlocks so safety is never dependent solely on software code.
+          </p>
+        </div>
+
+        <div class="circuits-layout">
+          <!-- Logic Gate Tester -->
+          <div class="p-6 bg-stone-50 rounded-xl border border-stone-200">
+            <h3 class="font-orbitron text-base text-heading mb-3">General Logic Gate Tester</h3>
+            
+            <div class="gate-select-bar mb-4">
+              <button class="gate-tab-btn active" data-gate="AND">AND</button>
+              <button class="gate-tab-btn" data-gate="OR">OR</button>
+              <button class="gate-tab-btn" data-gate="NOT">NOT</button>
+              <button class="gate-tab-btn" data-gate="NAND">NAND</button>
+              <button class="gate-tab-btn" data-gate="NOR">NOR</button>
+              <button class="gate-tab-btn" data-gate="XOR">XOR</button>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white border border-amber-200 flex items-center justify-between mb-4">
+              <div class="flex flex-col gap-2">
+                <button id="gate-switch-a" class="toggle-switch-cream font-mono text-xs">INPUT A: 0</button>
+                <div id="gate-switch-b-wrap">
+                  <button id="gate-switch-b" class="toggle-switch-cream font-mono text-xs">INPUT B: 0</button>
+                </div>
+              </div>
+              <div class="text-center font-orbitron text-xl font-bold text-amber" id="gate-formula">Y = A · B</div>
+              <div class="flex flex-col items-center">
+                <div id="gate-led" class="logic-led-cream"></div>
+                <span class="text-[10px] font-mono text-muted mt-1">LED</span>
+              </div>
+            </div>
+
+            <table class="cream-table font-mono text-xs">
               <thead>
                 <tr><th>Input A</th><th>Input B</th><th>Output Y</th></tr>
               </thead>
-              <tbody id="gate-table-body">
-                <!-- Dynamically populated -->
-              </tbody>
+              <tbody id="gate-table-body"></tbody>
             </table>
           </div>
-        </div>
 
-        <!-- PWM Duty Cycle Simulator -->
-        <div class="cream-card">
-          <div class="page-badge font-mono mb-2">CIRCUIT LAB 02 // MODULATION</div>
-          <h3 class="font-orbitron text-xl text-heading mb-3">PWM Duty Cycle & Motor Voltage</h3>
-          <p class="text-xs text-muted leading-relaxed mb-4">
-            PWM delivers variable average power to motors by switching voltage at high frequencies. Average voltage is: $V_{\text{avg}} = V_{\text{bus}} \cdot D$.
-          </p>
+          <!-- Robotic E-Stop Dual-Channel Interlock Simulator -->
+          <div class="p-6 bg-stone-50 rounded-xl border border-stone-200 flex flex-col justify-between">
+            <div>
+              <h3 class="font-orbitron text-base text-heading mb-2">Dual-Channel E-Stop Safety Interlock</h3>
+              <p class="text-xs text-muted mb-4 leading-relaxed">
+                All safety sensors must be in a healthy state (HIGH) for the main motor contactor to energize. If a human trips the light curtain or hits the mushroom E-Stop, the hardware AND-gate drops power in microseconds.
+              </p>
 
-          <!-- Oscilloscope Viewport -->
-          <div class="sim-canvas-box">
-            <canvas id="pwm-scope-canvas"></canvas>
-          </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-stone-200">
+                  <span class="text-xs font-mono font-bold">1. E-STOP PUSHBUTTON (NC):</span>
+                  <button id="estop-btn" class="px-3 py-1 bg-green-100 text-green-800 rounded font-mono font-bold text-xs">HEALTHY (1)</button>
+                </div>
 
-          <div class="mt-4">
-            <div class="flex justify-between text-xs font-mono mb-1">
-              <span>DUTY CYCLE:</span>
-              <span id="pwm-duty-label" class="text-amber font-bold">50%</span>
+                <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-stone-200">
+                  <span class="text-xs font-mono font-bold">2. SAFETY LIGHT CURTAIN:</span>
+                  <button id="curtain-btn" class="px-3 py-1 bg-green-100 text-green-800 rounded font-mono font-bold text-xs">CLEAR (1)</button>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-stone-200">
+                  <span class="text-xs font-mono font-bold">3. DEADMAN ENABLER:</span>
+                  <button id="deadman-btn" class="px-3 py-1 bg-green-100 text-green-800 rounded font-mono font-bold text-xs">ENGAGED (1)</button>
+                </div>
+              </div>
             </div>
-            <input type="range" id="pwm-duty-slider" min="0" max="100" value="50" class="cream-slider" />
-          </div>
 
-          <div class="grid grid-cols-2 gap-4 mt-6">
-            <div class="p-4 bg-amber-50/50 border border-amber-200 rounded-xl text-center">
-              <span class="text-xs font-mono text-muted block">AVERAGE VOLTAGE</span>
-              <span id="pwm-volt-label" class="font-orbitron text-2xl font-bold text-heading mt-1 block">6.00 V</span>
-              <span class="text-[10px] text-muted">OF 12.0 V SUPPLY</span>
+            <div class="mt-6 p-4 rounded-xl bg-amber-50/80 border border-amber-300 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-mono text-muted block">ROBOT MOTOR CONTACTOR RELAY</span>
+                <span id="safety-relay-status" class="font-orbitron text-base font-bold text-green">ARMED // MOTORS ENABLED</span>
+              </div>
+              <div id="safety-relay-led" class="w-7 h-7 rounded-full bg-emerald-500 shadow-md"></div>
             </div>
-            <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-xl text-center">
-              <span class="text-xs font-mono text-muted block">APPLIED REGIME</span>
-              <span class="font-orbitron text-base font-bold text-sky-800 mt-2 block">HALF SPEED</span>
-              <span class="text-[10px] text-muted">BALANCED TORQUE</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Microcontroller & Protocol Guide -->
-      <section class="mt-16 cream-card">
-        <h3 class="font-orbitron text-2xl text-heading mb-2">Robotics Microcontrollers & Buses</h3>
-        <p class="text-sm text-muted mb-6">Comparison of common processors used in hobby and industrial robotic platforms.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-inter">
-          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
-            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">STM32 / ARM</h4>
-            <p class="text-muted">High-frequency deterministic RTOS execution. Perfect for flight controllers and motor FOC control.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
-            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">ESP32</h4>
-            <p class="text-muted">Dual-core with built-in Wi-Fi and Bluetooth. Ideal for IoT telemetry and wireless robot control.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
-            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">Raspberry Pi 5</h4>
-            <p class="text-muted">Full Linux Single Board Computer. Runs ROS 2, OpenCV computer vision, and LiDAR point clouds.</p>
-          </div>
-          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
-            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">NVIDIA Jetson</h4>
-            <p class="text-muted">CUDA-accelerated edge AI platform. Runs real-time deep neural networks and Isaac Sim policies.</p>
           </div>
         </div>
       </section>
@@ -198,11 +355,15 @@
     </div>
   </main>
 
+  <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-inner">
-      <div>
-        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
-        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      <div class="flex items-center gap-3">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <div>
+          <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+        </div>
       </div>
       <nav class="footer-nav">
         <a href="index.html" class="footer-link">Home</a>

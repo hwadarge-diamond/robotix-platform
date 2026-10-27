@@ -206,9 +206,59 @@ document.addEventListener('DOMContentLoaded', () => {
     fingerR.rotation.z = 0.12;
     wristGroup.add(fingerR);
 
-    // Smooth Cursor Tracking
+    // Smooth Cursor Tracking & Interactive Toolbar Controls
     let targetYaw = 0;
     let targetPitch = 0;
+    let speedMult = 1.0;
+    let isWireframe = false;
+    let isGripping = false;
+    let currentThemeIdx = 0;
+    const themePalettes = [
+      { name: 'GOLD', color: 0xc27803 },
+      { name: 'AZURE', color: 0x0284c7 },
+      { name: 'TITANIUM', color: 0x334155 }
+    ];
+
+    const wireframeBtn = document.getElementById('hero-wireframe-btn');
+    const speedBtn = document.getElementById('hero-speed-btn');
+    const clawBtn = document.getElementById('hero-claw-btn');
+    const themeBtn = document.getElementById('hero-theme-btn');
+
+    wireframeBtn?.addEventListener('click', () => {
+      isWireframe = !isWireframe;
+      ceramicWhiteMat.wireframe = isWireframe;
+      brushedTitaniumMat.wireframe = isWireframe;
+      champagneGoldMat.wireframe = isWireframe;
+      wireframeBtn.querySelector('span').textContent = isWireframe ? 'MESH: WIREFRAME' : 'MESH: SHADED';
+      wireframeBtn.classList.toggle('active', isWireframe);
+    });
+
+    speedBtn?.addEventListener('click', () => {
+      if (speedMult === 1.0) {
+        speedMult = 2.0;
+        speedBtn.querySelector('span').textContent = 'SPEED: 2X';
+      } else if (speedMult === 2.0) {
+        speedMult = 0.5;
+        speedBtn.querySelector('span').textContent = 'SPEED: 0.5X';
+      } else {
+        speedMult = 1.0;
+        speedBtn.querySelector('span').textContent = 'SPEED: 1X';
+      }
+    });
+
+    clawBtn?.addEventListener('click', () => {
+      isGripping = !isGripping;
+      clawBtn.querySelector('span').textContent = isGripping ? 'CLAW: RELEASE' : 'CLAW: GRIP';
+      clawBtn.classList.toggle('active', isGripping);
+    });
+
+    themeBtn?.addEventListener('click', () => {
+      currentThemeIdx = (currentThemeIdx + 1) % themePalettes.length;
+      const cur = themePalettes[currentThemeIdx];
+      champagneGoldMat.color.setHex(cur.color);
+      amberFillLight.color.setHex(cur.color);
+      themeBtn.querySelector('span').textContent = `COLOR: ${cur.name}`;
+    });
 
     window.addEventListener('mousemove', (e) => {
       const normX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -220,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let clock = new THREE.Clock();
     function animateHeroArm() {
       requestAnimationFrame(animateHeroArm);
-      const time = clock.getElapsedTime();
+      const time = clock.getElapsedTime() * speedMult;
 
       // Gentle organic idle breathing
       const breath = Math.sin(time * 1.4) * 0.06;
@@ -228,6 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
       lowerArmGroup.rotation.z += (-0.3 + targetPitch * 0.3 + breath - lowerArmGroup.rotation.z) * 0.05;
       elbowGroup.rotation.z += (0.65 - targetPitch * 0.2 - breath - elbowGroup.rotation.z) * 0.05;
       wristGroup.rotation.z += (-0.3 + breath - wristGroup.rotation.z) * 0.05;
+
+      // Claw grip interpolation
+      const targetFingerRot = isGripping ? 0.02 : 0.12;
+      fingerL.rotation.z += (-targetFingerRot - fingerL.rotation.z) * 0.1;
+      fingerR.rotation.z += (targetFingerRot - fingerR.rotation.z) * 0.1;
 
       renderer.render(scene, camera);
     }
@@ -945,6 +1000,549 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     drawPWM();
   }
+
+  /* ==========================================================================
+     05-B. H-BRIDGE TRANSISTOR MOTOR DRIVER SIMULATOR
+     ========================================================================== */
+  const hbCanvas = document.getElementById('hbridge-canvas');
+  const hbBtns = document.querySelectorAll('.hbridge-mode-btn');
+  const hbQ1 = document.getElementById('hb-q1-state');
+  const hbQ2 = document.getElementById('hb-q2-state');
+  const hbQ3 = document.getElementById('hb-q3-state');
+  const hbQ4 = document.getElementById('hb-q4-state');
+  const hbDesc = document.getElementById('hb-desc-text');
+
+  if (hbCanvas) {
+    const ctx = hbCanvas.getContext('2d');
+    hbCanvas.width = hbCanvas.clientWidth || 400;
+    hbCanvas.height = hbCanvas.clientHeight || 260;
+
+    let hbMode = 'fwd'; // fwd, rev, brake, coast
+    let currentAnimOffset = 0;
+
+    const hbStates = {
+      fwd: {
+        q1: true, q2: false, q3: false, q4: true,
+        desc: '<strong>Forward Mode:</strong> High-side switch Q1 and low-side switch Q4 are closed. Current flows from +12V through the motor armature from Left to Right, spinning the motor clockwise.'
+      },
+      rev: {
+        q1: false, q2: true, q3: true, q4: false,
+        desc: '<strong>Reverse Mode:</strong> High-side switch Q3 and low-side switch Q2 are closed. Current flows from +12V through the motor from Right to Left, reversing motor torque and rotation.'
+      },
+      brake: {
+        q1: false, q2: true, q3: false, q4: true,
+        desc: '<strong>Dynamic Braking:</strong> Low-side switches Q2 and Q4 are closed, shorting the motor terminals to Ground. The motor acts as a generator, dissipating kinetic energy as magnetic counter-torque.'
+      },
+      coast: {
+        q1: false, q2: false, q3: false, q4: false,
+        desc: '<strong>Coast Mode (High-Z):</strong> All four MOSFET switches are open. No current flows, allowing the motor rotor to freewheel with zero electrical resistance.'
+      }
+    };
+
+    function updateHBridgeUI() {
+      const s = hbStates[hbMode];
+      if (hbQ1) { hbQ1.textContent = s.q1 ? 'ON (CLOSED)' : 'OFF (OPEN)'; hbQ1.className = s.q1 ? 'font-bold text-green' : 'font-bold text-red'; }
+      if (hbQ2) { hbQ2.textContent = s.q2 ? 'ON (CLOSED)' : 'OFF (OPEN)'; hbQ2.className = s.q2 ? 'font-bold text-green' : 'font-bold text-red'; }
+      if (hbQ3) { hbQ3.textContent = s.q3 ? 'ON (CLOSED)' : 'OFF (OPEN)'; hbQ3.className = s.q3 ? 'font-bold text-green' : 'font-bold text-red'; }
+      if (hbQ4) { hbQ4.textContent = s.q4 ? 'ON (CLOSED)' : 'OFF (OPEN)'; hbQ4.className = s.q4 ? 'font-bold text-green' : 'font-bold text-red'; }
+      if (hbDesc) hbDesc.innerHTML = s.desc;
+    }
+
+    hbBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        hbBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        hbMode = btn.getAttribute('data-hbridge');
+        updateHBridgeUI();
+      });
+    });
+
+    function drawHBridge() {
+      ctx.clearRect(0, 0, hbCanvas.width, hbCanvas.height);
+      const w = hbCanvas.width;
+      const h = hbCanvas.height;
+      const midX = w / 2;
+      const midY = h / 2;
+
+      // Draw Power Rails
+      ctx.strokeStyle = '#c27803';
+      ctx.lineWidth = 3;
+      // Top Rail +12V
+      ctx.beginPath();
+      ctx.moveTo(40, 25);
+      ctx.lineTo(w - 40, 25);
+      ctx.stroke();
+
+      ctx.fillStyle = '#c27803';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('+12V VCC', 40, 18);
+
+      // Bottom Rail GND
+      ctx.strokeStyle = '#18181b';
+      ctx.beginPath();
+      ctx.moveTo(40, h - 25);
+      ctx.lineTo(w - 40, h - 25);
+      ctx.stroke();
+      ctx.fillStyle = '#18181b';
+      ctx.fillText('GND (0V)', 40, h - 12);
+
+      // Branch Lines
+      const leftX = midX - 90;
+      const rightX = midX + 90;
+
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      // Left leg
+      ctx.moveTo(leftX, 25); ctx.lineTo(leftX, h - 25);
+      // Right leg
+      ctx.moveTo(rightX, 25); ctx.lineTo(rightX, h - 25);
+      // Motor Bridge Crossbar
+      ctx.moveTo(leftX, midY); ctx.lineTo(rightX, midY);
+      ctx.stroke();
+
+      // Draw Central Motor Symbol
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#18181b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(midX, midY, 26, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#c27803';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('M', midX, midY + 6);
+      ctx.textAlign = 'start';
+
+      // Draw 4 Transistor Switches (Q1, Q2, Q3, Q4)
+      const st = hbStates[hbMode];
+      function drawMOSFET(x, y, label, isOn) {
+        ctx.fillStyle = isOn ? '#10b981' : '#ef4444';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x, y + 3);
+        ctx.textAlign = 'start';
+      }
+
+      drawMOSFET(leftX, 65, 'Q1', st.q1);
+      drawMOSFET(leftX, h - 65, 'Q2', st.q2);
+      drawMOSFET(rightX, 65, 'Q3', st.q3);
+      drawMOSFET(rightX, h - 65, 'Q4', st.q4);
+
+      // Current Flow Animation Dots
+      currentAnimOffset = (currentAnimOffset + 2) % 30;
+      ctx.fillStyle = '#0284c7';
+
+      if (hbMode === 'fwd') {
+        // Draw current from +12V -> Q1 -> Motor (L->R) -> Q4 -> GND
+        const dotX = leftX + (currentAnimOffset / 30) * (rightX - leftX);
+        ctx.beginPath();
+        ctx.arc(dotX, midY, 4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (hbMode === 'rev') {
+        // Current from +12V -> Q3 -> Motor (R->L) -> Q2 -> GND
+        const dotX = rightX - (currentAnimOffset / 30) * (rightX - leftX);
+        ctx.beginPath();
+        ctx.arc(dotX, midY, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(drawHBridge);
+    }
+    drawHBridge();
+  }
+
+  /* ==========================================================================
+     05-C. ADC QUANTIZATION & BIT RESOLUTION SIMULATOR
+     ========================================================================== */
+  const adcCanvas = document.getElementById('adc-canvas');
+  const adcSlider = document.getElementById('adc-voltage-slider');
+  const adcBitBtns = document.querySelectorAll('.adc-bit-btn');
+  const adcVoltsVal = document.getElementById('adc-volts-val');
+  const adcBinaryReg = document.getElementById('adc-binary-reg');
+  const adcDecVal = document.getElementById('adc-dec-val');
+  const adcLSBVal = document.getElementById('adc-lsb-val');
+
+  if (adcCanvas) {
+    const ctx = adcCanvas.getContext('2d');
+    adcCanvas.width = adcCanvas.clientWidth || 380;
+    adcCanvas.height = adcCanvas.clientHeight || 220;
+
+    let adcBits = 8;
+    let inputVoltage = 1.65; // V
+    const vRef = 3.30;
+
+    function updateADC() {
+      const maxCounts = Math.pow(2, adcBits) - 1;
+      const digitalCount = Math.min(maxCounts, Math.max(0, Math.round((inputVoltage / vRef) * maxCounts)));
+      const lsbMv = (vRef / maxCounts) * 1000;
+
+      if (adcVoltsVal) adcVoltsVal.textContent = `${inputVoltage.toFixed(2)} V`;
+      if (adcDecVal) adcDecVal.textContent = digitalCount;
+      if (adcLSBVal) adcLSBVal.textContent = `${lsbMv.toFixed(2)} mV`;
+
+      const binStr = digitalCount.toString(2).padStart(adcBits, '0');
+      if (adcBinaryReg) adcBinaryReg.textContent = `0b${binStr}`;
+    }
+
+    adcSlider?.addEventListener('input', (e) => {
+      inputVoltage = parseInt(e.target.value, 10) / 100.0;
+      updateADC();
+    });
+
+    adcBitBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        adcBitBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        adcBits = parseInt(btn.getAttribute('data-bits'), 10);
+        updateADC();
+      });
+    });
+
+    function drawADC() {
+      ctx.clearRect(0, 0, adcCanvas.width, adcCanvas.height);
+      const w = adcCanvas.width;
+      const h = adcCanvas.height;
+      const pad = 35;
+
+      // Draw Grid Axes
+      ctx.strokeStyle = '#e2d8ca';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad);
+      ctx.lineTo(w - pad, h - pad);
+      ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#71717a';
+      ctx.font = '10px monospace';
+      ctx.fillText('3.3V', 5, pad + 10);
+      ctx.fillText('0.0V', 5, h - pad);
+      ctx.fillText('Time (t)', w - 45, h - pad + 15);
+
+      // Draw Continuous Analog Sine Wave
+      ctx.strokeStyle = 'rgba(2, 132, 199, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x = pad; x <= w - pad; x++) {
+        const norm = (x - pad) / (w - 2 * pad);
+        const yVal = Math.sin(norm * Math.PI * 2) * 0.4 + 0.5; // 0 to 1
+        const canvasY = (h - pad) - yVal * (h - 2 * pad);
+        if (x === pad) ctx.moveTo(x, canvasY);
+        else ctx.lineTo(x, canvasY);
+      }
+      ctx.stroke();
+
+      // Draw Quantized Staircase Steps
+      const levels = Math.min(32, Math.pow(2, adcBits)); // cap visual steps
+      ctx.strokeStyle = '#c27803';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x = pad; x <= w - pad; x += 6) {
+        const norm = (x - pad) / (w - 2 * pad);
+        const yVal = Math.sin(norm * Math.PI * 2) * 0.4 + 0.5;
+        const qVal = Math.round(yVal * (levels - 1)) / (levels - 1);
+        const canvasY = (h - pad) - qVal * (h - 2 * pad);
+        if (x === pad) ctx.moveTo(x, canvasY);
+        else ctx.lineTo(x, canvasY);
+      }
+      ctx.stroke();
+
+      // Highlight Current Voltage Input Line
+      const curY = (h - pad) - (inputVoltage / vRef) * (h - 2 * pad);
+      ctx.strokeStyle = '#ef4444';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(pad, curY);
+      ctx.lineTo(w - pad, curY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      requestAnimationFrame(drawADC);
+    }
+    drawADC();
+    updateADC();
+  }
+
+  /* ==========================================================================
+     05-D. QUADRATURE OPTICAL ENCODER 2-BIT STATE MACHINE
+     ========================================================================== */
+  const quadCanvas = document.getElementById('quadrature-canvas');
+  const quadDirBtn = document.getElementById('quad-dir-toggle-btn');
+  const qState00 = document.getElementById('qstate-00');
+  const qState01 = document.getElementById('qstate-01');
+  const qState11 = document.getElementById('qstate-11');
+  const qState10 = document.getElementById('qstate-10');
+
+  if (quadCanvas) {
+    const ctx = quadCanvas.getContext('2d');
+    quadCanvas.width = quadCanvas.clientWidth || 360;
+    quadCanvas.height = quadCanvas.clientHeight || 200;
+
+    let isCW = true;
+    let phaseOffset = 0;
+
+    quadDirBtn?.addEventListener('click', () => {
+      isCW = !isCW;
+      quadDirBtn.textContent = isCW ? 'DIRECTION: CW (A LEADS B)' : 'DIRECTION: CCW (B LEADS A)';
+    });
+
+    function drawQuadrature() {
+      ctx.clearRect(0, 0, quadCanvas.width, quadCanvas.height);
+      const w = quadCanvas.width;
+      const h = quadCanvas.height;
+      const period = 80;
+
+      phaseOffset += isCW ? 1.5 : -1.5;
+      if (phaseOffset > period * 10) phaseOffset = 0;
+
+      // Channel A (Top)
+      ctx.fillStyle = '#c27803';
+      ctx.font = 'bold 11px monospace';
+      ctx.fillText('CHANNEL A', 15, 35);
+
+      ctx.strokeStyle = '#c27803';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let x = 0; x < w; x++) {
+        const sample = Math.floor((x + phaseOffset) / (period / 2)) % 2;
+        const y = sample === 1 ? 45 : 85;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Channel B (Bottom, 90° Phase Shifted)
+      ctx.fillStyle = '#0284c7';
+      ctx.fillText('CHANNEL B (90° SHIFT)', 15, 125);
+
+      const shift = period / 4; // 90 degrees
+      ctx.strokeStyle = '#0284c7';
+      ctx.beginPath();
+      for (let x = 0; x < w; x++) {
+        const sample = Math.floor((x + phaseOffset + shift) / (period / 2)) % 2;
+        const y = sample === 1 ? 135 : 175;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Determine active state at sample center
+      const centerX = w / 2;
+      const curA = Math.floor((centerX + phaseOffset) / (period / 2)) % 2;
+      const curB = Math.floor((centerX + phaseOffset + shift) / (period / 2)) % 2;
+      const code = `${curA}${curB}`;
+
+      // Update State Machine Circles
+      [qState00, qState01, qState11, qState10].forEach(el => el?.classList.remove('active'));
+      if (code === '00') qState00?.classList.add('active');
+      else if (code === '01') qState01?.classList.add('active');
+      else if (code === '11') qState11?.classList.add('active');
+      else if (code === '10') qState10?.classList.add('active');
+
+      requestAnimationFrame(drawQuadrature);
+    }
+    drawQuadrature();
+  }
+
+  /* ==========================================================================
+     05-E. DIGITAL BUS WAVEFORM ANALYZER (CAN, SPI, I2C, UART)
+     ========================================================================== */
+  const busCanvas = document.getElementById('bus-scope-canvas');
+  const busBtns = document.querySelectorAll('.bus-tab-btn');
+  const busTitle = document.getElementById('bus-title-text');
+  const busDesc = document.getElementById('bus-desc-text');
+
+  if (busCanvas) {
+    const ctx = busCanvas.getContext('2d');
+    busCanvas.width = busCanvas.clientWidth || 400;
+    busCanvas.height = busCanvas.clientHeight || 240;
+
+    let activeBus = 'can';
+    let busOffset = 0;
+
+    const busInfo = {
+      can: {
+        title: 'CAN Bus (Controller Area Network)',
+        desc: 'Differential two-wire bus (CAN_High and CAN_Low). When dominant (0), CAN_H rises to 3.5V and CAN_L drops to 1.5V (2.0V differential). When recessive (1), both stay at 2.5V (0V differential). Eliminates electromagnetic interference from motor windings.'
+      },
+      spi: {
+        title: 'SPI (Serial Peripheral Interface - 4 Wire)',
+        desc: 'High-speed synchronous serial bus with Master Out Slave In (MOSI), Master In Slave Out (MISO), Serial Clock (SCK), and Chip Select (CS active-low). Operates up to 50+ MHz for streaming IMU and sensor data.'
+      },
+      i2c: {
+        title: 'I2C (Inter-Integrated Circuit - 2 Wire)',
+        desc: 'Open-drain synchronous bus using Serial Data (SDA) and Serial Clock (SCL) with pull-up resistors. Supports 7-bit hardware addressing, allowing up to 127 sensor modules to share just 2 microcontroller pins.'
+      },
+      uart: {
+        title: 'UART (Universal Asynchronous Receiver-Transmitter)',
+        desc: 'Point-to-point asynchronous packet protocol with configurable baud rates (e.g. 115200 bps). Each byte is framed by a Start Bit (LOW), 8 Data Bits (LSB first), optional Parity, and a Stop Bit (HIGH).'
+      }
+    };
+
+    busBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        busBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeBus = btn.getAttribute('data-bus');
+
+        const info = busInfo[activeBus];
+        if (info) {
+          if (busTitle) busTitle.textContent = info.title;
+          if (busDesc) busDesc.textContent = info.desc;
+        }
+      });
+    });
+
+    function drawBusScope() {
+      ctx.clearRect(0, 0, busCanvas.width, busCanvas.height);
+      const w = busCanvas.width;
+      const h = busCanvas.height;
+
+      busOffset = (busOffset + 2) % 160;
+
+      ctx.font = 'bold 10px monospace';
+
+      if (activeBus === 'can') {
+        // CAN_H & CAN_L
+        ctx.fillStyle = '#c27803'; ctx.fillText('CAN_HIGH (3.5V / 2.5V)', 15, 30);
+        ctx.fillStyle = '#0284c7'; ctx.fillText('CAN_LOW  (1.5V / 2.5V)', 15, 100);
+        ctx.fillStyle = '#10b981'; ctx.fillText('DIFFERENTIAL (CAN_H - CAN_L)', 15, 175);
+
+        // CAN_H line
+        ctx.strokeStyle = '#c27803'; ctx.lineWidth = 2; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 25) % 2;
+          const y = bit === 0 ? 45 : 60; // 3.5V dominant vs 2.5V recessive
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // CAN_L line (mirror)
+        ctx.strokeStyle = '#0284c7'; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 25) % 2;
+          const y = bit === 0 ? 135 : 120; // 1.5V dominant vs 2.5V recessive
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Differential
+        ctx.strokeStyle = '#10b981'; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 25) % 2;
+          const y = bit === 0 ? 195 : 220;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      } else if (activeBus === 'spi') {
+        // SCK & MOSI & CS
+        ctx.fillStyle = '#71717a'; ctx.fillText('CS (CHIP SELECT)', 15, 30);
+        ctx.fillStyle = '#c27803'; ctx.fillText('SCK (CLOCK 10 MHz)', 15, 95);
+        ctx.fillStyle = '#0284c7'; ctx.fillText('MOSI (SERIAL DATA)', 15, 165);
+
+        // CS active low
+        ctx.strokeStyle = '#71717a'; ctx.lineWidth = 2; ctx.beginPath();
+        ctx.moveTo(0, 50); ctx.lineTo(w, 50); ctx.stroke();
+
+        // Clock
+        ctx.strokeStyle = '#c27803'; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 10) % 2;
+          const y = bit === 1 ? 105 : 130;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // MOSI
+        ctx.strokeStyle = '#0284c7'; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 20) % 2;
+          const y = bit === 1 ? 175 : 205;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      } else {
+        // I2C or UART
+        ctx.fillStyle = '#c27803'; ctx.fillText(activeBus === 'i2c' ? 'SCL (CLOCK)' : 'TX DATA LINE', 15, 40);
+        ctx.fillStyle = '#0284c7'; ctx.fillText(activeBus === 'i2c' ? 'SDA (OPEN-DRAIN DATA)' : 'RX LINE', 15, 130);
+
+        ctx.strokeStyle = '#c27803'; ctx.lineWidth = 2; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 15) % 2;
+          const y = bit === 1 ? 55 : 85;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        ctx.strokeStyle = '#0284c7'; ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const bit = Math.floor((x + busOffset) / 25) % 2;
+          const y = bit === 1 ? 145 : 180;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(drawBusScope);
+    }
+    drawBusScope();
+  }
+
+  /* ==========================================================================
+     05-F. ROBOTIC E-STOP DUAL-CHANNEL SAFETY INTERLOCK
+     ========================================================================== */
+  const estopBtn = document.getElementById('estop-btn');
+  const curtainBtn = document.getElementById('curtain-btn');
+  const deadmanBtn = document.getElementById('deadman-btn');
+  const relayStatus = document.getElementById('safety-relay-status');
+  const relayLed = document.getElementById('safety-relay-led');
+
+  let sEstop = true;
+  let sCurtain = true;
+  let sDeadman = true;
+
+  function updateSafetyRelay() {
+    const isSafe = sEstop && sCurtain && sDeadman;
+    if (relayStatus) {
+      relayStatus.textContent = isSafe ? 'ARMED // MOTORS ENABLED' : 'TRIPPED // MOTORS CUT (SAFE)';
+      relayStatus.className = isSafe ? 'font-orbitron text-base font-bold text-green' : 'font-orbitron text-base font-bold text-red';
+    }
+    if (relayLed) {
+      relayLed.className = isSafe ? 'w-7 h-7 rounded-full bg-emerald-500 shadow-md' : 'w-7 h-7 rounded-full bg-red-500 shadow-md animate-pulse';
+    }
+  }
+
+  estopBtn?.addEventListener('click', () => {
+    sEstop = !sEstop;
+    estopBtn.textContent = sEstop ? 'HEALTHY (1)' : 'PRESSED (0)';
+    estopBtn.className = sEstop ? 'px-3 py-1 bg-green-100 text-green-800 rounded font-mono font-bold text-xs' : 'px-3 py-1 bg-red-100 text-red-800 rounded font-mono font-bold text-xs';
+    updateSafetyRelay();
+  });
+
+  curtainBtn?.addEventListener('click', () => {
+    sCurtain = !sCurtain;
+    curtainBtn.textContent = sCurtain ? 'CLEAR (1)' : 'BLOCKED (0)';
+    curtainBtn.className = sCurtain ? 'px-3 py-1 bg-green-100 text-green-800 rounded font-mono font-bold text-xs' : 'px-3 py-1 bg-red-100 text-red-800 rounded font-mono font-bold text-xs';
+    updateSafetyRelay();
+  });
+
+  deadmanBtn?.addEventListener('click', () => {
+    sDeadman = !sDeadman;
+    deadmanBtn.textContent = sDeadman ? 'ENGAGED (1)' : 'RELEASED (0)';
+    deadmanBtn.className = sDeadman ? 'px-3 py-1 bg-green-100 text-green-800 rounded font-mono font-bold text-xs' : 'px-3 py-1 bg-red-100 text-red-800 rounded font-mono font-bold text-xs';
+    updateSafetyRelay();
+  });
 
   /* ==========================================================================
      06. QUIZ MODULE (quiz.html)

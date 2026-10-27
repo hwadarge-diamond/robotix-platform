@@ -17,12 +17,8 @@
   <!-- Navigation Bar -->
   <header class="navbar-fixed">
     <div class="nav-container">
-      <a href="index.html" class="nav-brand">
-        <div class="brand-hex">
-          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
+      <a href="index.html" class="nav-brand" title="ROBOTIX Nexus Emblem - Return Home">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Nexus Logo" class="brand-logo-img">
         <div class="brand-text">
           <span class="brand-name font-orbitron">ROBOTIX</span>
           <span class="brand-sub font-mono">ACADEMY</span>
@@ -77,93 +73,129 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
         <!-- 1. Gigafactories -->
-        <div class="cream-card">
-          <div class="page-badge font-mono mb-2">AEROSPACE & AUTOMOTIVE</div>
-          <h3 class="font-orbitron text-xl text-heading mb-2">Automated Gigafactories</h3>
-          <p class="text-sm text-body leading-relaxed mb-4">
-            Thousands of synchronized 6-DOF industrial arms work in tandem with automated guided vehicles to assemble electric vehicles, weld structural frames, and produce lithium cells with 99.8% continuous uptime.
-          </p>
-          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
-            <div class="p-3 bg-amber-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">CYCLE TIME</span>
-              <span class="font-bold text-heading mt-1 block">42 SEC</span>
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="robot-img-box">
+              <img src="assets/images/robotic_arm.jpg" alt="Automated Gigafactory 6-Axis Arm" loading="lazy" />
+              <span class="robot-img-overlay font-mono">AUTOMOTIVE</span>
+              <span class="robot-hud-tag font-mono">42s CYCLE</span>
             </div>
-            <div class="p-3 bg-amber-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">REPEATABILITY</span>
-              <span class="font-bold text-heading mt-1 block">&plusmn;0.02 mm</span>
-            </div>
-            <div class="p-3 bg-amber-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">AVAILABILITY</span>
-              <span class="font-bold text-heading mt-1 block">99.8%</span>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">AEROSPACE & AUTOMOTIVE</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Automated Gigafactories</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Thousands of synchronized 6-DOF industrial arms work in tandem with automated guided vehicles to assemble electric vehicles, weld structural frames, and produce lithium cells with 99.8% continuous uptime.
+              </p>
+              <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">CYCLE TIME</span>
+                  <span class="font-bold text-heading mt-1 block">42 SEC</span>
+                </div>
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">REPEATABILITY</span>
+                  <span class="font-bold text-heading mt-1 block">&plusmn;0.02 mm</span>
+                </div>
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">AVAILABILITY</span>
+                  <span class="font-bold text-heading mt-1 block">99.8%</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- 2. Surgery -->
-        <div class="cream-card">
-          <div class="page-badge font-mono mb-2">BIO-ENGINEERING</div>
-          <h3 class="font-orbitron text-xl text-heading mb-2">Micro-Surgical Teleoperation</h3>
-          <p class="text-sm text-body leading-relaxed mb-4">
-            Robotic teleoperation consoles eliminate natural human hand tremors and scale fine movements (5:1 ratio), enabling surgeons to suture delicate nerve fibers and perform minimally invasive keyhole operations.
-          </p>
-          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
-            <div class="p-3 bg-sky-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">TREMOR FILTER</span>
-              <span class="font-bold text-heading mt-1 block">100%</span>
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="robot-img-box">
+              <img src="assets/images/surgical_robot.jpg" alt="Micro-Surgical Teleoperation" loading="lazy" />
+              <span class="robot-img-overlay font-mono">MICROSURGERY</span>
+              <span class="robot-hud-tag font-mono">5:1 SCALE</span>
             </div>
-            <div class="p-3 bg-sky-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">MOTION SCALE</span>
-              <span class="font-bold text-heading mt-1 block">5:1</span>
-            </div>
-            <div class="p-3 bg-sky-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">INCISION</span>
-              <span class="font-bold text-heading mt-1 block">&lt; 8 mm</span>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">BIO-ENGINEERING</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Micro-Surgical Teleoperation</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Robotic teleoperation consoles eliminate natural human hand tremors and scale fine movements (5:1 ratio), enabling surgeons to suture delicate nerve fibers and perform minimally invasive keyhole operations.
+              </p>
+              <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+                <div class="p-3 bg-sky-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">TREMOR FILTER</span>
+                  <span class="font-bold text-heading mt-1 block">100%</span>
+                </div>
+                <div class="p-3 bg-sky-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">MOTION SCALE</span>
+                  <span class="font-bold text-heading mt-1 block">5:1</span>
+                </div>
+                <div class="p-3 bg-sky-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">INCISION</span>
+                  <span class="font-bold text-heading mt-1 block">&lt; 8 mm</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- 3. Space Rovers -->
-        <div class="cream-card">
-          <div class="page-badge font-mono mb-2">SPACE EXPLORATION</div>
-          <h3 class="font-orbitron text-xl text-heading mb-2">Planetary Rovers (Mars)</h3>
-          <p class="text-sm text-body leading-relaxed mb-4">
-            Robots operating in deep space must withstand harsh radiation, extreme temperatures (-130°C to +30°C), and 20-minute radio communication latency through on-board autonomous visual hazard avoidance.
-          </p>
-          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
-            <div class="p-3 bg-amber-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">MISSION LIFE</span>
-              <span class="font-bold text-heading mt-1 block">12+ YRS</span>
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="robot-img-box">
+              <img src="assets/images/mobile_amr.jpg" alt="Planetary Mobile Rover" loading="lazy" />
+              <span class="robot-img-overlay font-mono">DEEP SPACE</span>
+              <span class="robot-hud-tag font-mono">AUTONAV</span>
             </div>
-            <div class="p-3 bg-amber-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">RAD RATING</span>
-              <span class="font-bold text-heading mt-1 block">HARDENED</span>
-            </div>
-            <div class="p-3 bg-amber-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">AUTONOMY</span>
-              <span class="font-bold text-heading mt-1 block">AUTO-NAV</span>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">SPACE EXPLORATION</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Planetary Rovers (Mars)</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Robots operating in deep space must withstand harsh radiation, extreme temperatures (-130°C to +30°C), and 20-minute radio communication latency through on-board autonomous visual hazard avoidance.
+              </p>
+              <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">MISSION LIFE</span>
+                  <span class="font-bold text-heading mt-1 block">12+ YRS</span>
+                </div>
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">RAD RATING</span>
+                  <span class="font-bold text-heading mt-1 block">HARDENED</span>
+                </div>
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">AUTONOMY</span>
+                  <span class="font-bold text-heading mt-1 block">AUTO-NAV</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 4. Agriculture -->
-        <div class="cream-card">
-          <div class="page-badge font-mono mb-2">AGRITECH</div>
-          <h3 class="font-orbitron text-xl text-heading mb-2">Autonomous Laser Agriculture</h3>
-          <p class="text-sm text-body leading-relaxed mb-4">
-            Smart weeding rovers utilize high-speed computer vision to distinguish weeds from valuable crops at millisecond speeds, zapping them with high-energy laser pulses and reducing herbicide chemical usage by 95%.
-          </p>
-          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
-            <div class="p-3 bg-emerald-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">HERBICIDE RED.</span>
-              <span class="font-bold text-heading mt-1 block">-95%</span>
+        <!-- 4. Next-Gen Humanoid Workforce -->
+        <div class="cream-card p-0 overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="robot-img-box">
+              <img src="assets/images/humanoid.jpg" alt="Humanoid General-Purpose Worker" loading="lazy" />
+              <span class="robot-img-overlay font-mono">BIOMIMICRY</span>
+              <span class="robot-hud-tag font-mono">VLA CORE</span>
             </div>
-            <div class="p-3 bg-emerald-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">PULSE RATE</span>
-              <span class="font-bold text-heading mt-1 block">20 HZ</span>
-            </div>
-            <div class="p-3 bg-emerald-50/60 rounded-lg">
-              <span class="text-muted block text-[10px]">ACCURACY</span>
-              <span class="font-bold text-heading mt-1 block">&plusmn; 1 mm</span>
+            <div class="p-6">
+              <div class="page-badge font-mono mb-2">GENERAL PURPOSE</div>
+              <h3 class="font-orbitron text-xl text-heading mb-2">Next-Gen Humanoid Logistics</h3>
+              <p class="text-sm text-body leading-relaxed mb-4">
+                Bipedal humanoids integrate multimodal Vision-Language-Action (VLA) models and tactile array fingertips to transport totes, operate elevators, and seamlessly collaborate alongside human staff without facility redesign.
+              </p>
+              <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">PAYLOAD</span>
+                  <span class="font-bold text-heading mt-1 block">25 KG</span>
+                </div>
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">RUNTIME</span>
+                  <span class="font-bold text-heading mt-1 block">8 HOURS</span>
+                </div>
+                <div class="p-3 bg-amber-50/60 rounded-lg">
+                  <span class="text-muted block text-[10px]">ZERO FACILITY</span>
+                  <span class="font-bold text-heading mt-1 block">CHANGES</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -181,9 +213,12 @@
 
   <footer class="main-footer">
     <div class="footer-inner">
-      <div>
-        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
-        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      <div class="flex items-center gap-3">
+        <img src="assets/images/logo.jpg" alt="ROBOTIX Emblem" class="w-9 h-9 rounded-lg border border-amber-500 object-cover" />
+        <div>
+          <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+          <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+        </div>
       </div>
       <nav class="footer-nav">
         <a href="index.html" class="footer-link">Home</a>
