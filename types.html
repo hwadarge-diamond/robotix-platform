@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robot Classifications & Types // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Explore the major taxonomies of robots: industrial arms, mobile AMRs, humanoids, surgical systems, aerial drones, and swarms." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-hex">
+          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill">Anatomy</a>
+        <a href="types.html" class="nav-pill active">Robot Types</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="applications.html" class="nav-pill">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="simulators.html" class="nav-cta font-orbitron hidden sm:inline-flex">OPEN LAB &rarr;</a>
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link active">03 // Robot Taxonomies</a>
+        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
+        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
+        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">CHAPTER 02 // TAXONOMY</div>
+        <h1 class="page-title font-orbitron">Classification of Robots</h1>
+        <p class="page-subtitle">
+          Robots are categorized by mechanical topology, degrees of freedom (DOF), and locomotion method to suit diverse operating environments.
+        </p>
+      </div>
+
+      <!-- Grid of Classifications -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+        <!-- 1. Industrial Arms -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-3">MANIPULATION</div>
+            <h3 class="font-orbitron text-xl text-heading mb-2">Industrial Manipulators</h3>
+            <p class="text-sm text-body leading-relaxed mb-4">
+              Fixed-base articulated, SCARA, and Delta robots engineered for high-speed repeatability (&plusmn;0.01 mm) in automated manufacturing.
+            </p>
+            <ul class="text-xs text-muted space-y-2 mb-6">
+              <li><strong>Kinematics:</strong> Denavit-Hartenberg (D-H) parameter models.</li>
+              <li><strong>DOF:</strong> 4 to 7 serial or parallel rotary joints.</li>
+              <li><strong>Key Tasks:</strong> Spot welding, painting, pick-and-place, CNC feeding.</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+            <span>FANUC, KUKA, ABB</span>
+            <span>0.01mm TOLERANCE</span>
+          </div>
+        </div>
+
+        <!-- 2. Mobile AMRs -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-3">NAVIGATION</div>
+            <h3 class="font-orbitron text-xl text-heading mb-2">Autonomous Mobile (AMRs)</h3>
+            <p class="text-sm text-body leading-relaxed mb-4">
+              Wheeled and tracked platforms using 2D/3D LiDAR Simultaneous Localization and Mapping (SLAM) for warehouse and factory transport.
+            </p>
+            <ul class="text-xs text-muted space-y-2 mb-6">
+              <li><strong>Steering:</strong> Differential drive or Mecanum omnidirectional.</li>
+              <li><strong>Planning:</strong> A* global path + Dynamic Window local avoidance.</li>
+              <li><strong>Safety:</strong> PL-d rated optical safety laser zones.</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+            <span>AMAZON KIVA, MIR</span>
+            <span>UP TO 1500 KG</span>
+          </div>
+        </div>
+
+        <!-- 3. Humanoids -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-3">BIOMIMICRY</div>
+            <h3 class="font-orbitron text-xl text-heading mb-2">Humanoid Robotics</h3>
+            <p class="text-sm text-body leading-relaxed mb-4">
+              Anthropomorphic bipedal morphology configured to navigate human spaces, climb stairs, open doors, and operate human tools.
+            </p>
+            <ul class="text-xs text-muted space-y-2 mb-6">
+              <li><strong>Locomotion:</strong> Zero Moment Point (ZMP) & Model Predictive Control.</li>
+              <li><strong>Hands:</strong> Dexterous tendon-driven 5-finger tactile arrays.</li>
+              <li><strong>AI Core:</strong> Vision-Language-Action (VLA) foundation models.</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+            <span>FIGURE 01, ATLAS</span>
+            <span>28-54+ DOF</span>
+          </div>
+        </div>
+
+        <!-- 4. Surgical Robots -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-3">HEALTHCARE</div>
+            <h3 class="font-orbitron text-xl text-heading mb-2">Surgical Tele-Robots</h3>
+            <p class="text-sm text-body leading-relaxed mb-4">
+              Master-slave teleoperation systems that eliminate human hand tremors and scale surgeon motion down 5:1 for laparoscopic procedures.
+            </p>
+            <ul class="text-xs text-muted space-y-2 mb-6">
+              <li><strong>Haptics:</strong> Bilateral impedance force feedback.</li>
+              <li><strong>Wrist:</strong> 7-DOF EndoWrist mimicking human hand rotation.</li>
+              <li><strong>Vision:</strong> Stereoscopic 3D 4K magnified real-time feed.</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+            <span>DA VINCI, MAKO</span>
+            <span>SUB-MM ACCURACY</span>
+          </div>
+        </div>
+
+        <!-- 5. Drones & UAVs -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-3">AEROSPACE</div>
+            <h3 class="font-orbitron text-xl text-heading mb-2">Aerial Drones & UAVs</h3>
+            <p class="text-sm text-body leading-relaxed mb-4">
+              Multirotor autonomous aerial systems with fast-loop cascaded PID attitude stabilization and optical flow navigation.
+            </p>
+            <ul class="text-xs text-muted space-y-2 mb-6">
+              <li><strong>Autopilot:</strong> STM32 running PX4 or ArduPilot firmware.</li>
+              <li><strong>State Estimator:</strong> Extended Kalman Filter (EKF2).</li>
+              <li><strong>Actuation:</strong> High-speed brushless motors with digital ESCs.</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+            <span>SKYDIO, INGENUITY</span>
+            <span>8 KHZ GYRO LOOP</span>
+          </div>
+        </div>
+
+        <!-- 6. Swarm Robotics -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-3">COLLECTIVE</div>
+            <h3 class="font-orbitron text-xl text-heading mb-2">Swarm Robotics</h3>
+            <p class="text-sm text-body leading-relaxed mb-4">
+              Decentralized ensembles of simple robots coordinating through local peer-to-peer sensing to accomplish emergent tasks.
+            </p>
+            <ul class="text-xs text-muted space-y-2 mb-6">
+              <li><strong>Architecture:</strong> Zero single-point-of-failure mesh.</li>
+              <li><strong>Algorithms:</strong> Flocking (Boids), consensus, distributed mapping.</li>
+              <li><strong>Use Cases:</strong> Search and rescue, environmental surveys.</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-amber-100 flex justify-between text-xs font-mono text-amber">
+            <span>KILOBOTS, INTEL</span>
+            <span>1000+ AGENTS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forward Navigation -->
+      <div class="mt-14 text-center">
+        <a href="simulators.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
+          <span>Next Chapter: Interactive Simulators Lab</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div>
+        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

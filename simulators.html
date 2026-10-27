@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Simulators & Kinematics // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Hands-on interactive engineering simulators: ultrasonic echo waves, DC motor optical encoder, PWM servo horn, and 2-joint planar kinematics arm." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-hex">
+          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill">Anatomy</a>
+        <a href="types.html" class="nav-pill">Robot Types</a>
+        <a href="simulators.html" class="nav-pill active">Simulators</a>
+        <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="applications.html" class="nav-pill">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="quiz.html" class="nav-cta font-orbitron hidden sm:inline-flex">TEST SKILLS &rarr;</a>
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
+        <a href="simulators.html" class="mobile-link active">04 // Interactive Simulators</a>
+        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
+        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">CHAPTER 03 // HANDS-ON LAB</div>
+        <h1 class="page-title font-orbitron">Hardware & Kinematics Simulators</h1>
+        <p class="page-subtitle">
+          Experience real-time interactive physics models: acoustic distance sensing, optical motor encoders, PWM servo actuation, and 2-joint forward/inverse kinematics.
+        </p>
+      </div>
+
+      <!-- 3 Sensor & Actuator Simulators Grid -->
+      <div class="simulators-grid">
+        <!-- 1. Ultrasonic Sonar -->
+        <div class="sim-card">
+          <span class="font-mono text-xs text-amber font-bold">LAB 01 // ACOUSTIC ECHO</span>
+          <h3 class="font-orbitron text-lg text-heading mt-1">Ultrasonic Rangefinder (HC-SR04)</h3>
+          <p class="text-xs text-muted mt-1 leading-relaxed">
+            Emits 40 kHz pulses. Measures round-trip flight duration to calculate obstacle distance: $d = \frac{v \cdot \Delta t}{2}$ ($v = 343\text{ m/s}$).
+          </p>
+
+          <div class="sim-canvas-box">
+            <canvas id="sim-sonar-canvas"></canvas>
+          </div>
+
+          <div class="mt-2">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>OBSTACLE DISTANCE:</span>
+              <span id="sim-sonar-dist" class="text-amber font-bold">120 cm</span>
+            </div>
+            <input type="range" id="sim-sonar-slider" min="15" max="300" value="120" class="cream-slider" />
+          </div>
+
+          <div class="sim-meta-box font-mono">
+            <span>ROUND-TRIP TOF:</span>
+            <span id="sim-sonar-time" class="font-bold text-heading">6997 µs</span>
+          </div>
+        </div>
+
+        <!-- 2. DC Motor & Encoder -->
+        <div class="sim-card">
+          <span class="font-mono text-xs text-amber font-bold">LAB 02 // ROTATION & TICKS</span>
+          <h3 class="font-orbitron text-lg text-heading mt-1">DC Motor & Optical Encoder</h3>
+          <p class="text-xs text-muted mt-1 leading-relaxed">
+            A slotted wheel interrupts a phototransistor beam to generate digital pulses, allowing the controller to calculate angular velocity and position.
+          </p>
+
+          <div class="sim-canvas-box">
+            <canvas id="sim-motor-canvas"></canvas>
+          </div>
+
+          <div class="mt-2">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>TARGET VELOCITY:</span>
+              <span id="sim-motor-rpm" class="text-amber font-bold">1500 RPM</span>
+            </div>
+            <input type="range" id="sim-motor-slider" min="0" max="3000" step="50" value="1500" class="cream-slider" />
+          </div>
+
+          <div class="flex items-center justify-between mt-3 font-mono text-xs">
+            <button id="sim-motor-dir" class="px-3 py-1 bg-amber-100 text-amber-800 rounded font-bold cursor-pointer hover:bg-amber-200">
+              DIR: CLOCKWISE
+            </button>
+            <div class="text-muted">TICKS: <span id="sim-motor-ticks" class="font-bold text-heading">0</span></div>
+          </div>
+        </div>
+
+        <!-- 3. Servo Motor Horn -->
+        <div class="sim-card">
+          <span class="font-mono text-xs text-amber font-bold">LAB 03 // POSITION SERVO</span>
+          <h3 class="font-orbitron text-lg text-heading mt-1">PWM Servo Motor Position</h3>
+          <p class="text-xs text-muted mt-1 leading-relaxed">
+            Hobby servos position their output shaft proportionally to pulse width: 1.0 ms (0°), 1.5 ms (90° neutral), and 2.0 ms (180° max) at 50 Hz.
+          </p>
+
+          <div class="sim-canvas-box">
+            <canvas id="sim-servo-canvas"></canvas>
+          </div>
+
+          <div class="mt-2">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>SERVO ANGLE:</span>
+              <span id="sim-servo-angle" class="text-amber font-bold">90°</span>
+            </div>
+            <input type="range" id="sim-servo-slider" min="0" max="180" value="90" class="cream-slider" />
+          </div>
+
+          <div class="sim-meta-box font-mono">
+            <span>PULSE DURATION:</span>
+            <span id="sim-servo-pulse" class="font-bold text-heading">1.50 ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Interactive Kinematics Viewport -->
+      <section class="mt-16 cream-card">
+        <div class="text-center mb-6">
+          <div class="page-badge font-mono">LAB 04 // MANIPULATOR KINEMATICS</div>
+          <h2 class="font-orbitron text-2xl text-heading">2-Link Planar Kinematics Arm</h2>
+          <p class="text-sm text-muted mt-1 max-w-xl mx-auto">
+            Drag the red end-effector on the canvas to solve <strong>Inverse Kinematics (IK)</strong> via the Law of Cosines, or adjust joint sliders for <strong>Forward Kinematics</strong>.
+          </p>
+        </div>
+
+        <div class="kin-layout">
+          <div class="kin-canvas-wrap">
+            <canvas id="kinematics-interactive-canvas"></canvas>
+          </div>
+
+          <div class="flex flex-col justify-between p-2">
+            <div>
+              <h4 class="font-orbitron text-base text-heading mb-4">Joint Angles Control</h4>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span>SHOULDER (&theta;<sub>1</sub>):</span>
+                  <span id="kin-t1-val" class="font-bold text-amber">45°</span>
+                </div>
+                <input type="range" id="kin-t1-slider" min="0" max="180" value="45" class="cream-slider" />
+              </div>
+
+              <div class="mb-6">
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span>ELBOW (&theta;<sub>2</sub>):</span>
+                  <span id="kin-t2-val" class="font-bold text-sky-700">45°</span>
+                </div>
+                <input type="range" id="kin-t2-slider" min="-150" max="150" value="45" class="cream-slider" />
+              </div>
+
+              <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200">
+                <span class="font-mono text-xs text-amber font-bold block mb-2">FORWARD KINEMATICS FORMULAS:</span>
+                <div class="font-mono text-xs text-slate-800 space-y-1">
+                  <div>x = L<sub>1</sub> &middot; cos(&theta;<sub>1</sub>) + L<sub>2</sub> &middot; cos(&theta;<sub>1</sub> + &theta;<sub>2</sub>)</div>
+                  <div>y = L<sub>1</sub> &middot; sin(&theta;<sub>1</sub>) + L<sub>2</sub> &middot; sin(&theta;<sub>1</sub> + &theta;<sub>2</sub>)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-200 font-mono text-xs flex justify-between items-center">
+              <span>END-EFFECTOR (X, Y):</span>
+              <span id="kin-coords-val" class="font-bold text-base text-amber">(150, 150)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation to Next Page -->
+      <div class="mt-14 text-center">
+        <a href="electronics.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
+          <span>Next Chapter: Digital Electronics & PWM</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div>
+        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robot Anatomy & Components // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Interactive 3D model and detailed breakdown of the five core components of a robot: sensors, actuators, controller, power, and end effectors." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-hex">
+          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill active">Anatomy</a>
+        <a href="types.html" class="nav-pill">Robot Types</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="applications.html" class="nav-pill">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="simulators.html" class="nav-cta font-orbitron hidden sm:inline-flex">OPEN LAB &rarr;</a>
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link active">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
+        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
+        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
+        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">CHAPTER 01 // ANATOMY</div>
+        <h1 class="page-title font-orbitron">Components of a Robot</h1>
+        <p class="page-subtitle">
+          Every autonomous robot is synthesized from five foundational subsystems. Click the interactive buttons below to inspect each subsystem on the 3D model.
+        </p>
+      </div>
+
+      <!-- 3D Interactive Explorer -->
+      <div class="explorer-layout">
+        <!-- 3D Viewport -->
+        <div class="explorer-viewport">
+          <canvas id="structure-canvas"></canvas>
+          <div class="part-selectors px-4 pb-4">
+            <button class="part-btn active" data-part="sensors">01. Sensors</button>
+            <button class="part-btn" data-part="actuators">02. Actuators</button>
+            <button class="part-btn" data-part="controller">03. Controller</button>
+            <button class="part-btn" data-part="power">04. Power Supply</button>
+            <button class="part-btn" data-part="effector">05. End Effector</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Spec Card -->
+        <div class="cream-card flex flex-col justify-between">
+          <div>
+            <div class="page-badge font-mono mb-2" id="comp-spec-tag">SUBSYSTEM DOSSIER</div>
+            <h3 class="font-orbitron text-2xl text-heading mb-3" id="comp-detail-title">
+              Sensors: The Senses of the Machine
+            </h3>
+            <p class="text-sm text-body leading-relaxed mb-6" id="comp-detail-desc">
+              Sensory transducers measure environment metrics and internal joint positions, transforming optical, acoustic, and magnetic stimuli into calibrated digital readings.
+            </p>
+
+            <div class="spec-grid-2x2">
+              <div class="spec-box">
+                <span class="spec-label">TYPICAL HARDWARE</span>
+                <span class="spec-val" id="comp-spec-hw">LiDAR, Cameras, IMU, Ultrasonic</span>
+              </div>
+              <div class="spec-box">
+                <span class="spec-label">BUS PROTOCOLS</span>
+                <span class="spec-val" id="comp-spec-bus">I2C, SPI, CAN-FD, GigE Vision</span>
+              </div>
+              <div class="spec-box">
+                <span class="spec-label">UPDATE RATE</span>
+                <span class="spec-val" id="comp-spec-freq">100 Hz – 1000 Hz</span>
+              </div>
+              <div class="spec-box">
+                <span class="spec-label">CRITICAL METRIC</span>
+                <span class="spec-val" id="comp-spec-metric">Sub-millimeter precision</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 mt-4">
+            <strong>Key Insight:</strong> Sensor fusion algorithms (like Extended Kalman Filters) merge fast, noisy IMU readings with slower absolute LiDAR frames to prevent robot positional drift.
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Subsystem Deep Dives -->
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="cream-card">
+          <span class="font-orbitron text-amber font-bold text-sm">01 // PERCEPTION</span>
+          <h3 class="font-orbitron text-xl text-heading mt-1">Sensory Transducers</h3>
+          <p class="text-sm text-body mt-2 leading-relaxed">
+            Internal sensors (rotary encoders, current monitors) detect the robot's own joint angles and motor effort. External sensors (LiDAR, depth cameras, sonar) build spatial maps and detect dynamic obstacles.
+          </p>
+        </div>
+
+        <div class="cream-card">
+          <span class="font-orbitron text-amber font-bold text-sm">02 // ACTUATION</span>
+          <h3 class="font-orbitron text-xl text-heading mt-1">Motors & Linkages</h3>
+          <p class="text-sm text-body mt-2 leading-relaxed">
+            Brushless DC (BLDC) motors paired with zero-backlash harmonic drive reducers deliver the extreme torque density needed for high-speed repeatability in articulated arm joints.
+          </p>
+        </div>
+
+        <div class="cream-card">
+          <span class="font-orbitron text-amber font-bold text-sm">03 // COMPUTATION</span>
+          <h3 class="font-orbitron text-xl text-heading mt-1">Embedded Controllers</h3>
+          <p class="text-sm text-body mt-2 leading-relaxed">
+            A dual-tier compute architecture is standard: low-level ARM Cortex-M microcontrollers handle 1 kHz motor PID loops with microsecond determinism, while high-level SBCs run SLAM navigation.
+          </p>
+        </div>
+
+        <div class="cream-card">
+          <span class="font-orbitron text-amber font-bold text-sm">04 // ENERGY</span>
+          <h3 class="font-orbitron text-xl text-heading mt-1">Power Regulation & BMS</h3>
+          <p class="text-sm text-body mt-2 leading-relaxed">
+            High-discharge lithium chemistry packs (LiFePO4/LiPo) are paired with switching buck/boost converters to isolate microcontrollers from inductive voltage spikes generated by motors.
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation to Next Module -->
+      <div class="mt-14 text-center">
+        <a href="types.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
+          <span>Next Chapter: Robot Classifications</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div>
+        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

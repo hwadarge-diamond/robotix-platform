@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-World Applications // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Discover how robotics is revolutionizing manufacturing, healthcare, space exploration, agriculture, and artificial intelligence." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-hex">
+          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill">Anatomy</a>
+        <a href="types.html" class="nav-pill">Robot Types</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="electronics.html" class="nav-pill">Electronics</a>
+        <a href="applications.html" class="nav-pill active">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="quiz.html" class="nav-cta font-orbitron hidden sm:inline-flex">TEST SKILLS &rarr;</a>
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
+        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
+        <a href="electronics.html" class="mobile-link">05 // Digital Electronics</a>
+        <a href="applications.html" class="mobile-link active">06 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">CHAPTER 05 // REAL-WORLD HORIZONS</div>
+        <h1 class="page-title font-orbitron">Transformative Applications</h1>
+        <p class="page-subtitle">
+          How modern robotics is scaling from micron-level surgical precision inside human veins to autonomous extraterrestrial rovers exploring Mars.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+        <!-- 1. Gigafactories -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">AEROSPACE & AUTOMOTIVE</div>
+          <h3 class="font-orbitron text-xl text-heading mb-2">Automated Gigafactories</h3>
+          <p class="text-sm text-body leading-relaxed mb-4">
+            Thousands of synchronized 6-DOF industrial arms work in tandem with automated guided vehicles to assemble electric vehicles, weld structural frames, and produce lithium cells with 99.8% continuous uptime.
+          </p>
+          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+            <div class="p-3 bg-amber-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">CYCLE TIME</span>
+              <span class="font-bold text-heading mt-1 block">42 SEC</span>
+            </div>
+            <div class="p-3 bg-amber-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">REPEATABILITY</span>
+              <span class="font-bold text-heading mt-1 block">&plusmn;0.02 mm</span>
+            </div>
+            <div class="p-3 bg-amber-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">AVAILABILITY</span>
+              <span class="font-bold text-heading mt-1 block">99.8%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Surgery -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">BIO-ENGINEERING</div>
+          <h3 class="font-orbitron text-xl text-heading mb-2">Micro-Surgical Teleoperation</h3>
+          <p class="text-sm text-body leading-relaxed mb-4">
+            Robotic teleoperation consoles eliminate natural human hand tremors and scale fine movements (5:1 ratio), enabling surgeons to suture delicate nerve fibers and perform minimally invasive keyhole operations.
+          </p>
+          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+            <div class="p-3 bg-sky-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">TREMOR FILTER</span>
+              <span class="font-bold text-heading mt-1 block">100%</span>
+            </div>
+            <div class="p-3 bg-sky-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">MOTION SCALE</span>
+              <span class="font-bold text-heading mt-1 block">5:1</span>
+            </div>
+            <div class="p-3 bg-sky-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">INCISION</span>
+              <span class="font-bold text-heading mt-1 block">&lt; 8 mm</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Space Rovers -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">SPACE EXPLORATION</div>
+          <h3 class="font-orbitron text-xl text-heading mb-2">Planetary Rovers (Mars)</h3>
+          <p class="text-sm text-body leading-relaxed mb-4">
+            Robots operating in deep space must withstand harsh radiation, extreme temperatures (-130°C to +30°C), and 20-minute radio communication latency through on-board autonomous visual hazard avoidance.
+          </p>
+          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+            <div class="p-3 bg-amber-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">MISSION LIFE</span>
+              <span class="font-bold text-heading mt-1 block">12+ YRS</span>
+            </div>
+            <div class="p-3 bg-amber-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">RAD RATING</span>
+              <span class="font-bold text-heading mt-1 block">HARDENED</span>
+            </div>
+            <div class="p-3 bg-amber-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">AUTONOMY</span>
+              <span class="font-bold text-heading mt-1 block">AUTO-NAV</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Agriculture -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">AGRITECH</div>
+          <h3 class="font-orbitron text-xl text-heading mb-2">Autonomous Laser Agriculture</h3>
+          <p class="text-sm text-body leading-relaxed mb-4">
+            Smart weeding rovers utilize high-speed computer vision to distinguish weeds from valuable crops at millisecond speeds, zapping them with high-energy laser pulses and reducing herbicide chemical usage by 95%.
+          </p>
+          <div class="grid grid-cols-3 gap-2 font-mono text-center text-xs">
+            <div class="p-3 bg-emerald-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">HERBICIDE RED.</span>
+              <span class="font-bold text-heading mt-1 block">-95%</span>
+            </div>
+            <div class="p-3 bg-emerald-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">PULSE RATE</span>
+              <span class="font-bold text-heading mt-1 block">20 HZ</span>
+            </div>
+            <div class="p-3 bg-emerald-50/60 rounded-lg">
+              <span class="text-muted block text-[10px]">ACCURACY</span>
+              <span class="font-bold text-heading mt-1 block">&plusmn; 1 mm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forward to Quiz -->
+      <div class="mt-14 text-center">
+        <a href="quiz.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
+          <span>Ready for the Assessment Quiz?</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div>
+        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

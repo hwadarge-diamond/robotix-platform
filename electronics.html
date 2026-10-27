@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Electronics & PWM // ROBOTIX ACADEMY</title>
+  <meta name="description" content="Explore logic gates, truth tables, PWM duty cycles, microcontrollers, and communication buses used in robotics." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-fixed">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-hex">
+          <svg class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-orbitron">ROBOTIX</span>
+          <span class="brand-sub font-mono">ACADEMY</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-pill">Home</a>
+        <a href="components.html" class="nav-pill">Anatomy</a>
+        <a href="types.html" class="nav-pill">Robot Types</a>
+        <a href="simulators.html" class="nav-pill">Simulators</a>
+        <a href="electronics.html" class="nav-pill active">Electronics</a>
+        <a href="applications.html" class="nav-pill">Applications</a>
+        <a href="quiz.html" class="nav-pill">Quiz</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="quiz.html" class="nav-cta font-orbitron hidden sm:inline-flex">TEST SKILLS &rarr;</a>
+        <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+      <div class="mobile-links font-orbitron">
+        <a href="index.html" class="mobile-link">01 // Home & Foundations</a>
+        <a href="components.html" class="mobile-link">02 // Robot Anatomy</a>
+        <a href="types.html" class="mobile-link">03 // Robot Taxonomies</a>
+        <a href="simulators.html" class="mobile-link">04 // Interactive Simulators</a>
+        <a href="electronics.html" class="mobile-link active">05 // Digital Electronics</a>
+        <a href="applications.html" class="mobile-link">06 // Real-World Applications</a>
+        <a href="quiz.html" class="mobile-link">07 // Assessment Quiz</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="container-narrow">
+      <div class="page-header">
+        <div class="page-badge font-mono">CHAPTER 04 // CIRCUITS & SIGNALS</div>
+        <h1 class="page-title font-orbitron">Digital Electronics in Robotics</h1>
+        <p class="page-subtitle">
+          Logic gates, microcontrollers, and Pulse-Width Modulation (PWM) form the bridge between software commands and electro-mechanical motor actuation.
+        </p>
+      </div>
+
+      <div class="circuits-layout">
+        <!-- Interactive Logic Gate Tester -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">CIRCUIT LAB 01 // LOGIC GATES</div>
+          <h3 class="font-orbitron text-xl text-heading mb-3">Interactive Logic Gate Tester</h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Select a logic gate and toggle input switches to see real-time output states on the LED and highlighted truth table.
+          </p>
+
+          <!-- Gate Selection Tabs -->
+          <div class="gate-select-bar">
+            <button class="gate-tab-btn active" data-gate="AND">AND</button>
+            <button class="gate-tab-btn" data-gate="OR">OR</button>
+            <button class="gate-tab-btn" data-gate="NOT">NOT</button>
+            <button class="gate-tab-btn" data-gate="NAND">NAND</button>
+            <button class="gate-tab-btn" data-gate="NOR">NOR</button>
+            <button class="gate-tab-btn" data-gate="XOR">XOR</button>
+          </div>
+
+          <!-- Schematic Interactive Panel -->
+          <div class="p-6 rounded-xl bg-amber-50/50 border border-amber-200 mb-6 flex items-center justify-between">
+            <div class="flex flex-col gap-3">
+              <button id="gate-switch-a" class="toggle-switch-cream font-mono text-xs">INPUT A: 0</button>
+              <div id="gate-switch-b-wrap">
+                <button id="gate-switch-b" class="toggle-switch-cream font-mono text-xs">INPUT B: 0</button>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <div class="font-orbitron text-2xl font-bold text-amber" id="gate-formula">Y = A · B</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div id="gate-led" class="logic-led-cream"></div>
+              <span class="text-[10px] font-mono font-bold text-muted mt-2">OUTPUT LED</span>
+            </div>
+          </div>
+
+          <!-- Truth Table -->
+          <div>
+            <div class="text-xs font-mono font-bold text-muted mb-2">DYNAMIC TRUTH TABLE:</div>
+            <table class="cream-table font-mono">
+              <thead>
+                <tr><th>Input A</th><th>Input B</th><th>Output Y</th></tr>
+              </thead>
+              <tbody id="gate-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PWM Duty Cycle Simulator -->
+        <div class="cream-card">
+          <div class="page-badge font-mono mb-2">CIRCUIT LAB 02 // MODULATION</div>
+          <h3 class="font-orbitron text-xl text-heading mb-3">PWM Duty Cycle & Motor Voltage</h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            PWM delivers variable average power to motors by switching voltage at high frequencies. Average voltage is: $V_{\text{avg}} = V_{\text{bus}} \cdot D$.
+          </p>
+
+          <!-- Oscilloscope Viewport -->
+          <div class="sim-canvas-box">
+            <canvas id="pwm-scope-canvas"></canvas>
+          </div>
+
+          <div class="mt-4">
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span>DUTY CYCLE:</span>
+              <span id="pwm-duty-label" class="text-amber font-bold">50%</span>
+            </div>
+            <input type="range" id="pwm-duty-slider" min="0" max="100" value="50" class="cream-slider" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <div class="p-4 bg-amber-50/50 border border-amber-200 rounded-xl text-center">
+              <span class="text-xs font-mono text-muted block">AVERAGE VOLTAGE</span>
+              <span id="pwm-volt-label" class="font-orbitron text-2xl font-bold text-heading mt-1 block">6.00 V</span>
+              <span class="text-[10px] text-muted">OF 12.0 V SUPPLY</span>
+            </div>
+            <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-xl text-center">
+              <span class="text-xs font-mono text-muted block">APPLIED REGIME</span>
+              <span class="font-orbitron text-base font-bold text-sky-800 mt-2 block">HALF SPEED</span>
+              <span class="text-[10px] text-muted">BALANCED TORQUE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Microcontroller & Protocol Guide -->
+      <section class="mt-16 cream-card">
+        <h3 class="font-orbitron text-2xl text-heading mb-2">Robotics Microcontrollers & Buses</h3>
+        <p class="text-sm text-muted mb-6">Comparison of common processors used in hobby and industrial robotic platforms.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-inter">
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">STM32 / ARM</h4>
+            <p class="text-muted">High-frequency deterministic RTOS execution. Perfect for flight controllers and motor FOC control.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">ESP32</h4>
+            <p class="text-muted">Dual-core with built-in Wi-Fi and Bluetooth. Ideal for IoT telemetry and wireless robot control.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">Raspberry Pi 5</h4>
+            <p class="text-muted">Full Linux Single Board Computer. Runs ROS 2, OpenCV computer vision, and LiDAR point clouds.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+            <h4 class="font-orbitron font-bold text-amber text-sm mb-1">NVIDIA Jetson</h4>
+            <p class="text-muted">CUDA-accelerated edge AI platform. Runs real-time deep neural networks and Isaac Sim policies.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation to Next Page -->
+      <div class="mt-14 text-center">
+        <a href="applications.html" class="btn-primary-cream font-orbitron inline-flex items-center gap-2">
+          <span>Next Chapter: Real-World Applications</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-inner">
+      <div>
+        <span class="font-orbitron text-sm font-bold text-heading">ROBOTIX ACADEMY</span>
+        <p class="text-xs text-muted">&copy; 2026. Clean & Convenient Open Educational Resource.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="components.html" class="footer-link">Anatomy</a>
+        <a href="types.html" class="footer-link">Types</a>
+        <a href="simulators.html" class="footer-link">Simulators</a>
+        <a href="electronics.html" class="footer-link">Electronics</a>
+        <a href="quiz.html" class="footer-link">Quiz</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
